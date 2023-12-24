@@ -12,26 +12,25 @@ import com.projeto.mastergreen.repository.FornecedorGramaRepository;
 
 @Service
 public class ServiceFornecedorGrama {
-
-	@Autowired
-	private FornecedorGramaRepository FornecedorGramaRepository;
+    @Autowired
+    private FornecedorGramaRepository fornecedorGramaRepository;
 
 	//cria um fornecedor de grama e salva
 	@Transactional
     public FornecedorGrama criarFornecedorGrama(FornecedorGrama fornecedorGrama) {
-        return FornecedorGramaRepository.save(fornecedorGrama);
+        return fornecedorGramaRepository.save(fornecedorGrama);
     }
 	
 	//faz a alteraçã o no fornecedor selecionado
 	@Transactional
     public FornecedorGrama alterarFornecedorGrama(Long id, String nome, String tamanho, String tipo, Float valor) {
-        FornecedorGrama fornecedorGrama = FornecedorGramaRepository.findById(id).orElse(null);
+        FornecedorGrama fornecedorGrama = fornecedorGramaRepository.findById(id).orElse(null);
         if (fornecedorGrama != null) {
             fornecedorGrama.setNomeFornec(nome);
             fornecedorGrama.setTamanhoGrama(tamanho);
             fornecedorGrama.setTipoGrama(tipo);
             fornecedorGrama.setValGrama(valor);
-            return FornecedorGramaRepository.save(fornecedorGrama);
+            return fornecedorGramaRepository.save(fornecedorGrama);
         }
         return null; // Pode ser útil lidar com o caso em que o fornecedor não é encontrado
     }
@@ -39,11 +38,11 @@ public class ServiceFornecedorGrama {
 	//exclui o fornecedor desejado
     @Transactional
     public void excluirFornecedorGrama(Long id) {
-        FornecedorGramaRepository.deleteById(id);
+        fornecedorGramaRepository.deleteById(id);
     }
 
     //lista todos os fornecedores
     public List<FornecedorGrama> listarTodosOsFornecedores() {
-        return FornecedorGramaRepository.findAll();
+        return fornecedorGramaRepository.findAll();
     }
 }

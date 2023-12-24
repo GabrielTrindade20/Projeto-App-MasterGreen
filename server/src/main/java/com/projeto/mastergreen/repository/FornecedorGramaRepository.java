@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.projeto.mastergreen.model.FornecedorGrama;
@@ -17,7 +18,7 @@ public interface FornecedorGramaRepository extends JpaRepository<FornecedorGrama
 	@Transactional
 	@Modifying
 	@Query("UPDATE FornecedorGrama f SET f.nomeFornec = :nome, f.tamanhoGrama = :tamanho, f.tipoGrama = :tipo, f.valGrama = :valor WHERE f.idFornecedor = :id")
-	void alterarFornecedorGrama(Long id, String nome, String tamanho, String tipo, Float valor);
+	void alterarFornecedorGrama(@Param("id") Long id, @Param("nome") String nome, @Param("tamanho") String tamanho, @Param("tipo") String tipo, @Param("valor") Float valor);
 
 	@Query("SELECT f FROM FornecedorGrama f")
 	List<FornecedorGrama> listarTodosOsFornecedores();

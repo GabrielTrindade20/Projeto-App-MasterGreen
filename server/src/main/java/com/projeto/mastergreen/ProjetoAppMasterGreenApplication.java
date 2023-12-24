@@ -9,9 +9,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.RestController;
 
-@EntityScan(basePackages = "com.projeto.senac. ")
-@ComponentScan(basePackages = "com.projeto.senac.*")
-@EnableJpaRepositories(basePackages = "com.projeto.senac.repository")
+@EntityScan(basePackages = "com.projeto.mastergreen.*")
+@ComponentScan(basePackages = "com.projeto.mastergreen.*")
+@EnableJpaRepositories(basePackages = "com.projeto.mastergreen.repository")
 @EnableTransactionManagement
 @RestController
 @EnableAutoConfiguration

@@ -14,18 +14,19 @@ import com.projeto.mastergreen.service.ServiceFornecedorGrama;
 @Controller
 @RequestMapping("/fornecedoresgrama")
 public class FornecedorGramaController {
+    private final ServiceFornecedorGrama fornecedorGramaService;
 
-	@Autowired
-	private ServiceFornecedorGrama fornecedorGramaService;
-
-	public FornecedorGramaController(ServiceFornecedorGrama fornecedorGramaService) {
+    @Autowired
+    public FornecedorGramaController(ServiceFornecedorGrama fornecedorGramaService) {
         this.fornecedorGramaService = fornecedorGramaService;
     }
-
-    @PostMapping("/atualizar")
+    
+	@PostMapping("/fornecedoresgrama")
     public ResponseEntity<?> atualizarFornecedorGrama(@RequestBody FornecedorGrama fornecedorGrama) {
         try {
-            FornecedorGrama fornecedorGramaAtualizado = fornecedorGramaService.criarFornecedorGrama(fornecedorGrama);
+            // Método corrigido para realizar a atualização
+            FornecedorGrama fornecedorGramaAtualizado = fornecedorGramaService
+                    .criarFornecedorGrama(fornecedorGrama);
             return ResponseEntity.ok(fornecedorGramaAtualizado);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
