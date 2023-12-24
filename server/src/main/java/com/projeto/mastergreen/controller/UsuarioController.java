@@ -1,4 +1,4 @@
-package com.projeto.senac.controller;
+package com.projeto.mastergreen.controller;
 
 import java.security.NoSuchAlgorithmException;
 
@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.projeto.senac.service.ServiceEmail;
-import com.projeto.senac.service.ServiceUsuario;
-import com.projeto.senac.util.Util;
-import com.projeto.senac.exceptions.ServiceExc;
-import com.projeto.senac.model.Usuario;
-import com.projeto.senac.repository.UsuarioRepository;
+import com.projeto.mastergreen.exceptions.ServiceExc;
+import com.projeto.mastergreen.model.Usuario;
+import com.projeto.mastergreen.repository.UsuarioRepository;
+import com.projeto.mastergreen.service.ServiceEmail;
+import com.projeto.mastergreen.service.ServiceUsuario;
+import com.projeto.mastergreen.util.Util;
 
 @Controller
 public class UsuarioController {

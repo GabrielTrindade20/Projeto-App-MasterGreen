@@ -1,4 +1,4 @@
-package com.projeto.senac.model;
+package com.projeto.mastergreen.model;
 
 import java.io.Serializable;
 import java.util.Objects;

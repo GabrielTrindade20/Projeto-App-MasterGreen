@@ -1,4 +1,4 @@
-package com.projeto.senac.model;
+package com.projeto.mastergreen.model;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,8 +16,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
-import com.projeto.senac.Enum.Curso;
-import com.projeto.senac.Enum.Periodo;
+import com.projeto.mastergreen.Enum.Curso;
+import com.projeto.mastergreen.Enum.Periodo;
 
 @Entity
 @SequenceGenerator(name = "seq_turma", sequenceName = "seq_turma", allocationSize = 1, initialValue = 1)

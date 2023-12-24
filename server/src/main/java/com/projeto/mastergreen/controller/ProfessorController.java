@@ -1,4 +1,4 @@
-package com.projeto.senac.controller;
+package com.projeto.mastergreen.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.projeto.senac.model.Professor;
-import com.projeto.senac.repository.ProfessorRepository;
-import com.projeto.senac.service.ServiceProfessor;
+import com.projeto.mastergreen.model.Professor;
+import com.projeto.mastergreen.repository.ProfessorRepository;
+import com.projeto.mastergreen.service.ServiceProfessor;
 
 @Controller
 public class ProfessorController {

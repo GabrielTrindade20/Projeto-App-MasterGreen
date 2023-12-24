@@ -1,10 +1,10 @@
-package com.projeto.senac.service;
+package com.projeto.mastergreen.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.projeto.senac.model.Turma;
-import com.projeto.senac.repository.TurmaRepository;
+import com.projeto.mastergreen.model.Turma;
+import com.projeto.mastergreen.repository.TurmaRepository;
 
 @Service
 public class ServiceTurma {

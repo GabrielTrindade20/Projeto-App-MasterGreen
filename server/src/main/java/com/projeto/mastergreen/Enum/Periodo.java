@@ -1,4 +1,4 @@
-package com.projeto.senac.Enum;
+package com.projeto.mastergreen.Enum;
 
 public enum Periodo {
 	

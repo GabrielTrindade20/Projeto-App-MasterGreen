@@ -1,4 +1,4 @@
-package com.projeto.senac.controller;
+package com.projeto.mastergreen.controller;
 
 import java.util.List;
 
@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.projeto.senac.Enum.Status;
-import com.projeto.senac.model.Aluno;
-import com.projeto.senac.model.Professor;
-import com.projeto.senac.model.Turma;
-import com.projeto.senac.repository.AlunoRepository;
-import com.projeto.senac.repository.ProfessorRepository;
-import com.projeto.senac.repository.TurmaRepository;
-import com.projeto.senac.service.ServiceTurma;
+import com.projeto.mastergreen.Enum.Status;
+import com.projeto.mastergreen.model.Aluno;
+import com.projeto.mastergreen.model.Professor;
+import com.projeto.mastergreen.model.Turma;
+import com.projeto.mastergreen.repository.AlunoRepository;
+import com.projeto.mastergreen.repository.ProfessorRepository;
+import com.projeto.mastergreen.repository.TurmaRepository;
+import com.projeto.mastergreen.service.ServiceTurma;
 
 @Controller
 public class TurmaController {

@@ -1,4 +1,4 @@
-package com.projeto.senac.exceptions;
+package com.projeto.mastergreen.exceptions;
 
 public class ServiceExc extends Exception{
 

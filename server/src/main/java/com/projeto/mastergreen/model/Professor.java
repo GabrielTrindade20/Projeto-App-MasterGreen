@@ -1,4 +1,4 @@
-package com.projeto.senac.model;
+package com.projeto.mastergreen.model;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
-import com.projeto.senac.Enum.Titulacao;
+import com.projeto.mastergreen.Enum.Titulacao;
 
 @Entity
 @SequenceGenerator(name="seq_professor", sequenceName="seq_professor", allocationSize = 1, initialValue = 1)

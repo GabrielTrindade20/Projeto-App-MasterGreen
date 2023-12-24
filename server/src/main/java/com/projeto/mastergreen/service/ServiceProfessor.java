@@ -1,10 +1,10 @@
-package com.projeto.senac.service;
+package com.projeto.mastergreen.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.projeto.senac.model.Professor;
-import com.projeto.senac.repository.ProfessorRepository;
+import com.projeto.mastergreen.model.Professor;
+import com.projeto.mastergreen.repository.ProfessorRepository;
 
 @Service
 public class ServiceProfessor {

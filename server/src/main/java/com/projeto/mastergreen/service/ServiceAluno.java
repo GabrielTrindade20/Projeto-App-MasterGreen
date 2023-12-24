@@ -1,4 +1,4 @@
-package com.projeto.senac.service;
+package com.projeto.mastergreen.service;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -6,8 +6,8 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.projeto.senac.model.Aluno;
-import com.projeto.senac.repository.AlunoRepository;
+import com.projeto.mastergreen.model.Aluno;
+import com.projeto.mastergreen.repository.AlunoRepository;
 
 @Service
 public class ServiceAluno {

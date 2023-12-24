@@ -1,10 +1,11 @@
-package com.projeto.senac.repository;
+package com.projeto.mastergreen.repository;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import com.projeto.senac.model.Professor;
+
+import com.projeto.mastergreen.model.Professor;
 
 
 public interface ProfessorRepository extends CrudRepository<Professor, Long>{

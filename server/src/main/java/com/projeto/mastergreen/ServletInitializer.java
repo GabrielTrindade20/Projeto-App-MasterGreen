@@ -1,4 +1,4 @@
-package com.projeto.senac;
+package com.projeto.mastergreen;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

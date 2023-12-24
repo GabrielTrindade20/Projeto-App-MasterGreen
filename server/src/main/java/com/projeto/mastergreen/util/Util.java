@@ -1,4 +1,4 @@
-package com.projeto.senac.util;
+package com.projeto.mastergreen.util;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

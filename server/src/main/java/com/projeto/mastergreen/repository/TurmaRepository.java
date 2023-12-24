@@ -1,11 +1,11 @@
-package com.projeto.senac.repository;
+package com.projeto.mastergreen.repository;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import com.projeto.senac.model.Turma;
+import com.projeto.mastergreen.model.Turma;
 
 public interface TurmaRepository extends CrudRepository<Turma, Long> {
 	

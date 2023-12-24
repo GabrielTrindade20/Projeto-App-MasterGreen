@@ -1,14 +1,14 @@
-package com.projeto.senac.service;
+package com.projeto.mastergreen.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.projeto.senac.model.Usuario;
-import com.projeto.senac.repository.UsuarioRepository;
-import com.projeto.senac.util.Util;
-import com.projeto.senac.exceptions.EmailExistsException;
-import com.projeto.senac.exceptions.CriptoExistsException;
-import com.projeto.senac.exceptions.ServiceExc;
+import com.projeto.mastergreen.exceptions.CriptoExistsException;
+import com.projeto.mastergreen.exceptions.EmailExistsException;
+import com.projeto.mastergreen.exceptions.ServiceExc;
+import com.projeto.mastergreen.model.Usuario;
+import com.projeto.mastergreen.repository.UsuarioRepository;
+import com.projeto.mastergreen.util.Util;
 
 @Service
 public class ServiceUsuario {

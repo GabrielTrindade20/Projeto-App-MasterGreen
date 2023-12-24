@@ -1,4 +1,4 @@
-package com.projeto.senac.model;
+package com.projeto.mastergreen.model;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,8 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 
-import com.projeto.senac.Enum.Curso;
-import com.projeto.senac.Enum.Status;
+import com.projeto.mastergreen.Enum.Curso;
+import com.projeto.mastergreen.Enum.Status;
 @Entity
 @SequenceGenerator(name="seq_aluno", sequenceName = "seq_aluno", 
 allocationSize = 1, initialValue = 1)
