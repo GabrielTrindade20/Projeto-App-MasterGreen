@@ -1,20 +1,21 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, SafeAreaView } from 'react-native';
+
+import Header from './src/components/Header';
+import Orcamento from './src/screens/Orcamento';
+import InfoInicial from './src/components/InfoInicial';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={{
+      backgroundColor: '#002B17',
+      flex: 1,
+      marginTop: StatusBar.currentHeight || 0
+    }}>
+
+      <Header />
+      <Orcamento />
+      <InfoInicial />
+    </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
