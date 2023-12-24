@@ -7,20 +7,20 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.projeto.mastergreen.Enum.Curso;
 import com.projeto.mastergreen.Enum.Status;
-import com.projeto.mastergreen.model.Aluno;
+import com.projeto.mastergreen.model.FornecedorGrama;
 
 
-public interface AlunoRepository extends CrudRepository<Aluno, Long>{
+public interface ValorFuncionarioRepository extends CrudRepository<FornecedorGrama, Long>{
 	
 	@Query("SELECT a FROM Aluno a WHERE a.id=(SELECT MAX(a2.id) FROM Aluno a2)")
-	public Aluno findLastInsertedAluno();
+	public FornecedorGrama findLastInsertedAluno();
 
 	@Query("SELECT a FROM Aluno a WHERE a.cpf=:cpf")
-	public Aluno findByCpf(String cpf);
+	public FornecedorGrama findByCpf(String cpf);
 	
 	@Query("SELECT a FROM Aluno a ORDER BY a.id")
-	public List<Aluno> findAllOrderedById();
+	public List<FornecedorGrama> findAllOrderedById();
 	
 	@Query("SELECT a FROM Aluno a WHERE a.turno= :turno AND a.curso= :curso AND a.status= :status ORDER BY a.nome")
-	public List<Aluno> findByTurnoAndCursoAndStatus(String turno, Curso curso, Status status);
+	public List<FornecedorGrama> findByTurnoAndCursoAndStatus(String turno, Curso curso, Status status);
 }

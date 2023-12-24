@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @EnableAutoConfiguration
 @SpringBootApplication
-public class ProjetosenacApplication {
+public class ProjetoAppMasterGreenApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ProjetosenacApplication.class, args);
+		SpringApplication.run(ProjetoAppMasterGreenApplication.class, args);
 	}
 	
 	
