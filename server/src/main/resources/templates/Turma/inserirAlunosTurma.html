@@ -1,0 +1,145 @@
+<html lang="pt-br" xsi=schemaLocation="http://www.thymeleaf.org">
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+	<title>Cadastrar Alunos na Turma</title>
+</head>
+
+<body>
+	<header>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+			<div class="collapse navbar-collapse" id="textoNavbar">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<a class="nav-link" th:href="@{home}"><i class="fa fa-home"></i> Home <span
+								class="sr-only">(Página atual)</span></a>
+					</li>
+
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">
+							<i class="fa fa-user"></i> Aluno
+						</a>
+
+						<div class="dropdown-menu">
+							<a class="dropdown-item" th:href="@{inserirAluno}">
+								<i class="fa fa-graduation-cap"></i> Cadastrar Alunos
+							</a>
+							<a class="dropdown-item" th:href="@{listarExcluirAluno}">
+								<i class="fa fa-trash"></i> Excluir Alunos
+							</a>
+							<a class="dropdown-item" th:href="@{listarAlterarAlunos}">
+								<i class="fa fa-pencil-square"></i> Editar Alunos
+							</a>
+							<a class="dropdown-item" th:href="@{listarAlunos}">
+								<i class="fa fa-graduation-capsearch"></i> Listar Alunos
+							</a>
+						</div>
+					</li>
+
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">
+							<i class="fa fa-user"></i> Professor
+						</a>
+
+						<div class="dropdown-menu">
+							<a class="dropdown-item" th:href="@{inserirProfessor}">
+								<i class="fa fa-graduation-cap"></i> Cadastrar Professor
+							</a>
+							<a class="dropdown-item" th:href="@{listarExcluirProfessor}">
+								<i class="fa fa-trash"></i> Excluir Professor
+							</a>
+							<a class="dropdown-item" th:href="@{listarAlterarProfessores}">
+								<i class="fa fa-pencil-square"></i> Editar Professor
+							</a>
+							<a class="dropdown-item" th:href="@{listarProfessores}">
+								<i class="fa fa-graduation-capsearch"></i> Listar Professores
+							</a>
+						</div>
+					</li>
+
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">
+							<i class="fa fa-user"></i> Turma
+						</a>
+
+						<div class="dropdown-menu">
+							<a class="dropdown-item" th:href="@{inserirAluno}">
+								<i class="fa fa-graduation-cap"></i> Cadastrar Turma
+							</a>
+						</div>
+					</li>
+				</ul>
+				<span class="navbar-text">
+					<div class="collapse navbar-collapse" id="textoNavbar">
+						<ul class="navbar-nav mr-auto">
+							<li class="nav-item">
+								<a class="nav-link" href="#"><i class="fa fa-times"></i> Sair</a>
+							</li>
+						</ul>
+					</div>
+				</span>
+			</div>
+		</nav>
+	</header>
+
+	<h2>+ Inserir Aluno na Turma</h2>
+	<form action="/inserirAlunosTurma" th:object="${turma}" method="post" name="inserirTurma">
+		
+		<input type="hidden" name="curso" id="curso" th:field="*{curso}">
+		<input type="hidden" name="periodo" id="periodo" th:field="*{periodo}">
+		<input type="hidden" name="turno" id="turno" th:field="*{turno}">
+		
+		<div class="form-group">
+			<div class="alert alert-danger" role="alert" th:if="${msg}">
+				<strong th:text="${msg}"></strong>
+			</div>
+			<div class=" col-md-6 offset-md-3">
+				<label>Código da Turma</label>
+				<input type="text" name="codTurma" id="codTurma" class="form-control" th:field="*{codTurma}" readonly="readonly">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-md-6 offset-md-3">
+				<label>Selecione o Professor</label>
+				<input type="text" name="professor" id="professor" class="form-control" th:field="*{professor}" readonly="readonly">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-md-6 offset-md-3">
+				<label>Selecione os Alunos</label>
+				<select multiple class="form-control" th:field="*{alunos}">
+					<option th:each="aluno :${alunos}" th:value="${aluno.id}"
+						th:text="${aluno.nome}">
+					</option>
+				</select>
+			</div>
+		</div>
+
+		
+
+		<div class="form-group">
+			<div class="col-md-8 offset-md-5">
+				<input type="submit" value="Salvar" class="btn btn-primary" name="Salvar">
+			</div>
+		</div>
+	</form>
+
+	<footer class="bg-primary text-center text-lg-start">
+		<!-- Grid container -->
+		<div>
+			<!-- Copyright -->
+			<div class="text-center p-3" style="color: #fff; font-weight: bold;">
+				© 2023 Copyright: SENAC
+
+			</div>
+	</footer>
+</body>
+
+</html>
