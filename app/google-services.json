@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "320660252639",
+    "project_id": "appmastergreen",
+    "storage_bucket": "appmastergreen.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:320660252639:android:f9aa2011b6c588cafb066a",
+        "android_client_info": {
+          "package_name": "com.projeto.mastergreen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvrdh-O2WCBa9J4beqbkkBngkNl47Le3w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
