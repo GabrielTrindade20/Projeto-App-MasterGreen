@@ -1,13 +1,13 @@
-package com.projeto.descoberto.service;
+package com.projeto.mastergreen.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.projeto.descoberto.exception.CriptoExistsException;
-import com.projeto.descoberto.exception.EmailExistsException;
-import com.projeto.descoberto.model.Usuario;
-import com.projeto.descoberto.repository.UsuarioRepository;
-import com.projeto.descoberto.util.Util;
+import com.projeto.mastergreen.exception.CriptoExistsException;
+import com.projeto.mastergreen.exception.EmailExistsException;
+import com.projeto.mastergreen.model.Usuario;
+import com.projeto.mastergreen.repository.UsuarioRepository;
+import com.projeto.mastergreen.util.Util;
 
 @Service
 public class ServiceUsuario {

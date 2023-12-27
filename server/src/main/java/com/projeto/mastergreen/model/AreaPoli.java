@@ -1,4 +1,4 @@
-package com.projeto.descoberto.model;
+package com.projeto.mastergreen.model;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.projeto.descoberto.model;
+package com.projeto.mastergreen.model;
 
 import java.sql.Date;
 import java.util.List;

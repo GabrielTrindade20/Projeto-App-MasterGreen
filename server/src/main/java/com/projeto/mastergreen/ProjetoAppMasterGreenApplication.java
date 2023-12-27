@@ -8,18 +8,21 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.RestController;
-@EntityScan(basePackages = "com.projeto.descoberto.model")
-@ComponentScan(basePackages = "com.projeto.descoberto.*")
 
-@EnableJpaRepositories(basePackages = "com.projeto.descoberto.repository")
+@EntityScan(basePackages = "com.projeto.mastergreen.*")
+@ComponentScan(basePackages = "com.projeto.mastergreen.*")
+@EnableJpaRepositories(basePackages = "com.projeto.mastergreen.repository")
 @EnableTransactionManagement
 @RestController
 @EnableAutoConfiguration
 @SpringBootApplication
-public class ProjetoDescobertoApplication {
+public class ProjetoAppMasterGreenApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ProjetoDescobertoApplication.class, args);
+		SpringApplication.run(ProjetoAppMasterGreenApplication.class, args);
 	}
+	
+	
+
 
 }

@@ -1,13 +1,13 @@
-package com.projeto.descoberto.service;
+package com.projeto.mastergreen.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.projeto.descoberto.model.Periodo;
-import com.projeto.descoberto.model.Usuario;
-import com.projeto.descoberto.repository.PeriodoRepository;
+import com.projeto.mastergreen.model.Periodo;
+import com.projeto.mastergreen.model.Usuario;
+import com.projeto.mastergreen.repository.PeriodoRepository;
 
 @Service
 public class ServicePeriodo {

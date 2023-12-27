@@ -1,4 +1,4 @@
-package com.projeto.descoberto.repository;
+package com.projeto.mastergreen.repository;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.projeto.descoberto.model.AreaPoli;
-import com.projeto.descoberto.model.Periodo;
+import com.projeto.mastergreen.model.AreaPoli;
+import com.projeto.mastergreen.model.Periodo;
 
 
 public interface AreaPoliRepository extends JpaRepository<AreaPoli, Long> {

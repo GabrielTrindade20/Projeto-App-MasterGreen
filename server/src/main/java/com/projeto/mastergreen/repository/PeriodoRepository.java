@@ -1,10 +1,10 @@
-package com.projeto.descoberto.repository;
+package com.projeto.mastergreen.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import com.projeto.descoberto.model.Periodo;
-import com.projeto.descoberto.model.Usuario;
+import com.projeto.mastergreen.model.Periodo;
+import com.projeto.mastergreen.model.Usuario;
 
 import java.sql.Date;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.projeto.descoberto.controller;
+package com.projeto.mastergreen.controller;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.projeto.descoberto.model.Periodo;
-import com.projeto.descoberto.model.Usuario;
-import com.projeto.descoberto.repository.UsuarioRepository;
-import com.projeto.descoberto.service.ServicePeriodo;
+import com.projeto.mastergreen.model.Periodo;
+import com.projeto.mastergreen.model.Usuario;
+import com.projeto.mastergreen.repository.UsuarioRepository;
+import com.projeto.mastergreen.service.ServicePeriodo;
 
 @RequestMapping("/api/periodo")
 @RestController

@@ -1,4 +1,4 @@
-package com.projeto.descoberto.controller;
+package com.projeto.mastergreen.controller;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.projeto.descoberto.model.AreaPoli;
-import com.projeto.descoberto.model.Periodo;
-import com.projeto.descoberto.service.ServiceAreaPoli;
+import com.projeto.mastergreen.model.AreaPoli;
+import com.projeto.mastergreen.model.Periodo;
+import com.projeto.mastergreen.service.ServiceAreaPoli;
 
 @RestController
 @RequestMapping("/api/areapoli")

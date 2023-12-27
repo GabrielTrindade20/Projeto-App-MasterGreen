@@ -1,4 +1,4 @@
-package com.projeto.descoberto.exception;
+package com.projeto.mastergreen.exception;
 
 public class EmailExistsException extends Exception{
 	private static final long serialVersionUID = 1L;

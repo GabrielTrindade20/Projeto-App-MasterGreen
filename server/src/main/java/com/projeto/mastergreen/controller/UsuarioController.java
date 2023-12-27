@@ -1,4 +1,4 @@
-package com.projeto.descoberto.controller;
+package com.projeto.mastergreen.controller;
 
 import java.security.NoSuchAlgorithmException;
 
@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.projeto.descoberto.exception.CriptoExistsException;
-import com.projeto.descoberto.exception.EmailExistsException;
-import com.projeto.descoberto.model.Usuario;
-import com.projeto.descoberto.repository.UsuarioRepository;
-import com.projeto.descoberto.service.ServiceUsuario;
-import com.projeto.descoberto.util.Util;
+import com.projeto.mastergreen.exception.CriptoExistsException;
+import com.projeto.mastergreen.exception.EmailExistsException;
+import com.projeto.mastergreen.model.Usuario;
+import com.projeto.mastergreen.repository.UsuarioRepository;
+import com.projeto.mastergreen.service.ServiceUsuario;
+import com.projeto.mastergreen.util.Util;
 
 @RestController
 @RequestMapping("/api")

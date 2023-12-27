@@ -1,4 +1,4 @@
-package com.projeto.descoberto.model;
+package com.projeto.mastergreen.model;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -9,7 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
-import com.projeto.descoberto.model.Usuario;
+import com.projeto.mastergreen.model.Usuario;
 
 @Entity
 @SequenceGenerator(name = "seq_usuario", sequenceName = "seq_usuario", allocationSize = 1, initialValue = 1)
