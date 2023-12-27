@@ -16,21 +16,26 @@ import com.projeto.mastergreen.service.ServiceFornecedorGrama;
 @RestController
 @RequestMapping("/fornecedoresgrama")
 public class FornecedorGramaController {
-    // ... restante do código
+    private final ServiceFornecedorGrama serviceFornecedorGrama;
+      
+    @Autowired
+    private ServiceFornecedorGrama ServiceFornecedorGrama;
+       
     
-	@Autowired
-    private ServiceFornecedorGrama serviceFornecedorGrama;
-    
-        
     @PostMapping
     public FornecedorGrama criarFornecedorGrama(@RequestBody FornecedorGrama fornecedorGrama) {
-        return serviceFornecedorGrama.criarFornecedorGrama(fornecedorGrama);
+        return ServiceFornecedorGrama.criarFornecedorGrama(fornecedorGrama);
+    }
+    
+    @Autowired
+    public FornecedorGramaController(ServiceFornecedorGrama serviceFornecedorGrama) {
+    	this.serviceFornecedorGrama = serviceFornecedorGrama;
     }
 
 
-    @GetMapping("/listar")
-    public ResponseEntity<List<FornecedorGrama>> listarTodosFornecedores() {
-        List<FornecedorGrama> fornecedores = serviceFornecedorGrama.listarTodosOsFornecedores();
-        return ResponseEntity.ok(fornecedores);
-    }
+//	@GetMapping("/listar")
+//    public ResponseEntity<List<FornecedorGrama>> listarTodosFornecedores() {
+//        List<FornecedorGrama> fornecedores = serviceFornecedorGrama.listarTodosOsFornecedores();
+//        return ResponseEntity.ok(fornecedores);
+//    }
 }

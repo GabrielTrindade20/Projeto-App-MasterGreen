@@ -14,8 +14,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.projeto.mastergreen.Enum.Curso;
-import com.projeto.mastergreen.Enum.Status;
 
 @Entity
 @Table(name = "valorFuncionario")
@@ -35,7 +33,7 @@ public class ValorFuncionario implements Serializable {
 		return valMaoObra;
 	}
 
-	public void setValMaoObra(Double valMaoObra) {
+public void setValMaoObra(Double valMaoObra) {
 		this.valMaoObra = valMaoObra;
 	}
 
