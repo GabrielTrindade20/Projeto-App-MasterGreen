@@ -10,7 +10,7 @@ const Header = () => {
           style={styles.iconeMenu}
         />
 
-        <Text style={styles.titulo}>Nome da página</Text>
+        <Text style={styles.titulo}>Orçamento</Text>
 
       <Image
         source={require('../imagens/logoSemFundo.png')}

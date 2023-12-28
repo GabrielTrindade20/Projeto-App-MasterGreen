@@ -35,7 +35,7 @@ const TextComponent = ({ style, children }) => {
             // Outros estilos
         },
         textInfo: {
-            fontSize: 20,
+            fontSize: 25,
             flexDirection: 'row',
             fontWeight: 'bold',
             marginVertical: 2,
