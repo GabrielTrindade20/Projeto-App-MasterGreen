@@ -1,10 +1,7 @@
 import { StyleSheet, Text, View, StatusBar, SafeAreaView, ScrollView } from 'react-native';
 
 import Header from './src/components/Header'
-import InfoInicial from './src/components/componentes orçamentos/InfoInicial';
-import Metragem from './src/components/componentes orçamentos/Metragem';
-import Servico from './src/components/componentes orçamentos/Servico'
-import ValorFinal from './src/components/componentes orçamentos/ValorFinal';
+import Orcamento from './src/components/componentes orçamentos/Orcamento';
 
 export default function App() {
   return (
@@ -16,10 +13,7 @@ export default function App() {
       }}>
 
         <Header />
-        <InfoInicial />
-        <Metragem />
-        <Servico />
-        <ValorFinal />
+        <Orcamento />
 
       </SafeAreaView>
     </ScrollView>
