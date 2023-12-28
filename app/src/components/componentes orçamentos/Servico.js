@@ -6,27 +6,8 @@ import ComInstalacao from './ComInstalacao';
 import SemInstalacao from './SemInstalacao';
 import ValorFinal from './ValorFinal';
 
-export default function Servico({choices, setChoices}) {
+export default Servico = () => {
     const [escolhaServico, setEscolhaServico] = useState(null);
-    const opcoesServico = ['Com instalação', 'Sem instalação'];
-
-    const valorFinal = choices;
-
-    const setValorFinal = (value) => {
-        setChoices({...choices, valorFinal: value});
-    }
-
-    const calcularValor = () => {
-        // Faça os cálculos necessários e atualize o estado
-        const novoValorCalculado = // ... faça seus cálculos aqui
-        setValorCalculado(novoValorCalculado);
-    };
-
-     // Chame a função de cálculo quando necessário
-     useEffect(() => {
-        calcularValor();
-    }, [/* Dependências que acionam o cálculo */]);
-
     const [dadosComInstalacao, setDadosComInstalacao] = useState({
         deslocamento: '',
         alimentacao: '',
@@ -34,16 +15,26 @@ export default function Servico({choices, setChoices}) {
         qtdColas: '',
     });
 
-    const onOpcaoChange = (value) => {
-        setEscolhaServico(value);
-    };
-
     const handleDadosComInstalacao = (novosDados) => {
         setDadosComInstalacao((prevDados) => ({
             ...prevDados,
             ...novosDados,
         }));
     };
+
+    // Chame a função de cálculo quando necessário
+    const calcularValor = () => {
+        // Faça os cálculos necessários e atualize o estado
+        const novoValorCalculado = // ... faça seus cálculos aqui
+            setValorCalculado(novoValorCalculado);
+    };
+
+
+    const onOpcaoChange = (value) => {
+        setEscolhaServico(value);
+    };
+
+
 
     const comInstalacao = () => {
         // Converta os valores para números antes de somar
@@ -55,7 +46,7 @@ export default function Servico({choices, setChoices}) {
         // Realize a soma
         const somaTotal = deslocamento + alimentacao + valorEntrega + qtdColas;
 
-        somaTotal = valorFinal;
+        return somaTotal;
     };
 
     useEffect(() => {
@@ -74,18 +65,17 @@ export default function Servico({choices, setChoices}) {
         <View style={styles.container}>
             <TextComponent style="textSubBranco">Serviço</TextComponent>
 
-          
-
-
             <View style={styles.containerOpcao}>
-                {opcoesServico.map((opcao) => (
-                    <OpcaoSelecao
-                        key={opcao}
-                        value={opcao}
-                        selectedValue={escolhaServico}
-                        onValueChange={onOpcaoChange}
-                    />
-                ))}
+                <OpcaoSelecao
+                    value="Com instalação"
+                    selectedValue={escolhaServico}
+                    onValueChange={onOpcaoChange}
+                />
+                <OpcaoSelecao
+                    value="Sem instalação"
+                    selectedValue={escolhaServico}
+                    onValueChange={onOpcaoChange}
+                />
             </View>
 
             {escolhaServico === 'Com instalação' ? (
@@ -100,7 +90,10 @@ export default function Servico({choices, setChoices}) {
                 />
             ) : null}
             {/* Mostrar a soma ao usuário */}
-
+            <View style={styles.resultadoContainer}>
+                <TextComponent style="textSubBranco">Resultado:</TextComponent>
+                <TextComponent style="textSubBranco">{comInstalacao()}</TextComponent>
+            </View>
             {/* Passa o valor calculado para o componente ValorFinal */}
         </View>
     );

@@ -35,7 +35,6 @@ const ValorFinal = () => {
             <View style={styles.containerValFinal}>
                 <View style={styles.textOpcoes}>
                     <Text style={styles.textInfo}>VALOR BRUTO DO SERVIÇO</Text>
-                    <ValorFinal valorCalculado={valorCalculado} />
                 </View>
 
                 <View style={styles.textOpcoes}>
