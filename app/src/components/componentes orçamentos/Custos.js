@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 
+import TextComponent from '../TextComp';
+
 const Custos = ({ onCustoChange, onValorPorMetroChange }) => {
     const [custo, setCusto] = useState('');
     const [valorPorMetro, setValorPorMetro] = useState('');
@@ -20,7 +22,7 @@ const Custos = ({ onCustoChange, onValorPorMetroChange }) => {
       <View style={styles.container}>
         <View style={styles.containerOpcao}>
           <View style={styles.containerCont}>
-            <Text style={styles.textInfo}>CUSTOS</Text>
+            <TextComponent style={"textInfo"}>CUSTOS</TextComponent>
             <TextInput
               style={styles.input}
               onChangeText={(number) => handleChange(number, 'custo')}
@@ -32,7 +34,7 @@ const Custos = ({ onCustoChange, onValorPorMetroChange }) => {
   
         <View style={styles.containerOpcao}>
           <View style={styles.containerCont}>
-            <Text style={styles.textInfo}>VALOR POR METRO</Text>
+            <TextComponent style={"textInfo"}>VALOR POR METRO</TextComponent>
             <TextInput
               style={styles.input}
               onChangeText={(number) => handleChange(number, 'valorPorMetro')}
@@ -50,8 +52,6 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
         alignItems: 'center',
-        marginVertical: 5,
-        backgroundColor: "#fff"
     },
     containerOpcao: {
         flexDirection: 'row',
@@ -59,22 +59,24 @@ const styles = StyleSheet.create({
         width: '95%',
         borderRadius: 10,
         padding: 15,
+        marginVertical: 5,
     },
     containerCont: {
+        alignItems: 'center',
         flex: 1,
         marginRight: 10,
     },
-    textInfo: {
-        fontSize: 16,
-        marginBottom: 5,
-        color: '#333',
-    },
+
     input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
-        padding: 10,
-        fontSize: 16,
+        height: 40,
+        margin: 5,
+        borderWidth: 2,
+        padding: 5,
+        borderRadius: 10,
+        width: '80%',
+        textAlign: 'center',
+        fontSize: 25,
+        fontWeight: 'bold'
     },
 });
 

@@ -5,35 +5,43 @@ import TextComponent from "../TextComp";
 import Orcamento from "./Orcamento";
 
 const ValorFinal = ({ custos, valorPorMetro, metragem }) => {
+    const [totalLucroEmpresa, setTotalLucroEmpresa] = useState('');
+    const [desconto, setDesconto] = useState('');
+    const [valorServico, setValorServico] = useState('')
+    const [valorNotaFiscal, setValorNotaFiscal] = useState('')
+    const [valorFinalCliente, setValorFinalCliente] = useState('')
 
-    const valorServico = custos * metragem;
-    const valorFinalCliente = valorPorMetro * metragem
-    const valorNotafiscal = valorFinalCliente * 4.5 / 100
-    const totalLucroEmpresa = valorFinalCliente - valorNotafiscal
-    const desconto = 0
-
-
-
+    useEffect(() => {
+        const valorFinalClienteCalculado = valorPorMetro * metragem;
+        const valorNotaFiscalCalculado = (valorFinalClienteCalculado * 4.5) / 100;
+        const valorServicoCalculado = custos * metragem;
+    
+        setValorFinalCliente(valorFinalClienteCalculado);
+        setValorNotaFiscal(valorNotaFiscalCalculado);
+        setValorServico(valorServicoCalculado);
+    
+        let totalLucroEmpresaCalculado;
+    
+        if (desconto !== "") {
+            const descontoDecimal = parseFloat(desconto) || 0;
+            const valorDesconto = valorFinalClienteCalculado * descontoDecimal / 100;
+            totalLucroEmpresaCalculado = valorFinalClienteCalculado - (valorDesconto + valorNotaFiscalCalculado + valorServicoCalculado);
+        } else {
+            totalLucroEmpresaCalculado = valorFinalClienteCalculado - valorNotaFiscalCalculado - valorServicoCalculado;
+        }
+    
+        setTotalLucroEmpresa(totalLucroEmpresaCalculado.toFixed(2));
+    }, [custos, valorPorMetro, metragem, desconto]);
 
     return (
         <View style={styles.container}>
-            {/* <View style={styles.opcoes}>
-                <TextComponent style={"textInfo"}>Lucro da Empresa %</TextComponent>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(number) => setLucroEmpresa(number)}
-                    value={String(lucroEmpresa)}
-                    placeholder="ex: 10"
-                    keyboardType="numeric"
-                />
-            </View> */}
 
             <View style={styles.opcoes}>
                 <TextComponent style={"textInfo"}>Desconto %</TextComponent>
                 <TextInput
                     style={styles.input}
                     onChangeText={(number) => setDesconto(number)}
-                    value={String(desconto)}
+                    value={desconto}
                     placeholder="ex: 10"
                     keyboardType="numeric"
                 />
@@ -43,28 +51,28 @@ const ValorFinal = ({ custos, valorPorMetro, metragem }) => {
                 <View style={styles.textOpcoes}>
                     <Text style={styles.textInfo}>CUSTOS</Text>
                     <Text style={[{ color: "#BE1701" }, styles.textValores]}>
-                        {parseFloat(valorServico).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        {parseFloat(valorServico).toLocaleString("pt-BR", { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })}
                     </Text>
                 </View>
 
                 <View style={styles.textOpcoes}>
                     <Text style={styles.textInfo}>VALOR FINAL DO CLIENTE</Text>
                     <Text style={[{ color: "#BE1701" }, styles.textValores]}>
-                        {parseFloat(valorFinalCliente).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        {parseFloat(valorFinalCliente).toLocaleString("pt-BR", { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })}
                     </Text>
                 </View>
 
                 <View style={styles.textOpcoes}>
                     <Text style={styles.textInfo}>VALOR DA NOTA FISCAL</Text>
                     <Text style={[{ color: "#FF9516" }, styles.textValores]}>
-                        {parseFloat(valorNotafiscal).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        {parseFloat(valorNotaFiscal).toLocaleString("pt-BR", { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })}
                     </Text>
                 </View>
 
                 <View style={styles.textOpcoes}>
                     <Text style={styles.textInfo}>VALOR DO LUCRO DA EMPRESA</Text>
                     <Text style={[{ color: "#1DAC46" }, styles.textValores]}>
-                        {parseFloat(totalLucroEmpresa).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        {parseFloat(totalLucroEmpresa).toLocaleString("pt-BR", { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })}
                     </Text>
                 </View>
 

@@ -25,27 +25,12 @@ const Orcamento = () => {
 
     return (
         <View style={styles.container}>
-            <TextComponent style="textSubBranco">Serviço</TextComponent>
-
             <Custos
                 onCustoChange={handleCustoChange}
                 onValorPorMetroChange={handleValorPorMetroChange}
             />
 
             <Metragem onMetragemChange={handleMetragemChange} />
-
-            <View style={styles.resultadoContainer}>
-                <TextComponent style="textSubBranco">CUSTOS:</TextComponent>
-                <TextComponent style="textSubBranco">{custo}</TextComponent>
-            </View>
-            <View style={styles.resultadoContainer}>
-                <TextComponent style="textSubBranco">valor por metro:</TextComponent>
-                <TextComponent style="textSubBranco">{valorPorMetro}</TextComponent>
-            </View>
-            <View style={styles.resultadoContainer}>
-                <TextComponent style="textSubBranco">METRAGEM:</TextComponent>
-                <TextComponent style="textSubBranco">{metragem}</TextComponent>
-            </View>
 
             <ValorFinal
                 custos={custo}
