@@ -1,43 +1,65 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, TextInput } from "react-native";
 
 import TextComponent from "../TextComp";
 
-export default props = () => {
-    const [metragem, onChangeMetragem] = React.useState('');
-
+const Metragem = ({ onMetragemChange }) => {
+    const [metragem, setMetragem] = useState('');
+  
+    useEffect(() => {
+      const metragemFloat = parseFloat(metragem);
+      if (!isNaN(metragemFloat)) {
+        onMetragemChange(metragemFloat);
+      }
+    }, [metragem, onMetragemChange]);
+  
     return (
-        <View style={styles.conteiner}>
-            <TextComponent style={'textTitulo'}>Metragem (m²)</TextComponent>
+      <View style={styles.container}>
+        <View style={styles.containerOpcao}>
+          <View style={styles.containerCont}>
+            <Text style={styles.textInfo}>METRAGEM (m²)</Text>
             <TextInput
-                style={styles.input}
-                onChangeText={onChangeMetragem}
-                value={metragem}
-                placeholder="ex: 10"
-                keyboardType="numeric"
+              style={styles.input}
+              onChangeText={setMetragem}
+              value={metragem}
+              placeholder="ex: 10"
+              keyboardType="numeric"
             />
+          </View>
         </View>
-    )
-}
+      </View>
+    );
+  };
 
 const styles = StyleSheet.create({
-    conteiner: {
-        backgroundColor: '#fff',
-        margin: 15,
-        padding: 20,
+    container: {
         flexDirection: 'column',
         alignItems: 'center',
-        borderRadius: 20,
+        marginVertical: 5,
+        backgroundColor: "#fff"
+    },
+    containerOpcao: {
+        flexDirection: 'row',
+        backgroundColor: '#fff',
+        width: '95%',
+        borderRadius: 10,
+        padding: 15,
+    },
+    containerCont: {
+        flex: 1,
+        marginRight: 10,
+    },
+    textInfo: {
+        fontSize: 16,
+        marginBottom: 5,
+        color: '#333',
     },
     input: {
-        height: 40,
-        margin: 5,
-        borderWidth: 2,
-        padding: 5,
-        borderRadius: 10,
-        width: '80%',
-        textAlign: 'center',
-        fontSize: 25,
-        fontWeight: 'bold'
-    }
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        padding: 10,
+        fontSize: 16,
+    },
 })
+export default Metragem

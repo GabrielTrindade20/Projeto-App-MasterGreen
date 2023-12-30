@@ -1,105 +1,61 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-import OpcaoSelecao from '../OpcaoSelecao';
 import TextComponent from '../TextComp';
-import InfoInicial from './InfoInicial'
-import ComInstalacao from './ComInstalacao';
-import SemInstalacao from './SemInstalacao';
+import Custos from './Custos';
 import ValorFinal from './ValorFinal';
-
+import Metragem from './Metragem';
 
 const Orcamento = () => {
-    const [escolhaServico, setEscolhaServico] = useState(null);
-    const [somaComInstalacao, setSomaComInstalacao] = useState(0);
+    const [custo, setCusto] = useState(0);
+    const [valorPorMetro, setValorPorMetro] = useState(0);
+    const [metragem, setMetragem] = useState(0);
 
-    const [dadosComInstalacao, setDadosComInstalacao] = useState({
-        deslocamento: '',
-        alimentacao: '',
-        valorEntrega: '',
-        qtdColas: '',
-    });
-
-    const handleSomaComInstalacao = (soma) => {
-        setSomaComInstalacao(soma);
+    const handleMetragemChange = (metragem) => {
+        setMetragem(metragem);
     };
 
-    const handleDadosComInstalacao = (novosDados) => {
-        setDadosComInstalacao((prevDados) => ({
-            ...prevDados,
-            ...novosDados,
-        }));
+    const handleCustoChange = (custo) => {
+        setCusto(custo);
     };
 
-    const handleValorCalculado = (soma) => {
-        setSomaComInstalacao(soma);
-    };
-
-
-
-    // Função para renderizar o componente com base na escolha do usuário
-    const renderizarComponente = () => {
-        switch (escolhaServico) {
-            case 'Com instalação':
-                return (
-                    // <ComInstalacao
-                    //     dadosEscolhidos={dadosComInstalacao}
-                    //     setDadosEscolha={handleDadosComInstalacao}
-                    //     onSomaChange={handleSomaComInstalacao}
-                    // />
-                    <ComInstalacao
-                        dadosEscolhidos={dadosComInstalacao}
-                        setDadosEscolha={handleDadosComInstalacao}
-                        onSomaChange={handleValorCalculado}
-                    />
-                );
-            case 'Sem instalação':
-                return (
-                    <SemInstalacao
-                        dadosEscolhidos={dadosComInstalacao}
-                        setDadosEscolha={handleDadosComInstalacao}
-                    />
-                );
-            default:
-                return null;
-        }
-    };
-
-    const onOpcaoChange = (value) => {
-        setEscolhaServico(value);
+    const handleValorPorMetroChange = (valorPorMetro) => {
+        setValorPorMetro(valorPorMetro);
     };
 
     return (
         <View style={styles.container}>
-            <InfoInicial />
-
             <TextComponent style="textSubBranco">Serviço</TextComponent>
 
-            <View style={styles.containerOpcao}>
-                <OpcaoSelecao
-                    value="Com instalação"
-                    selectedValue={escolhaServico}
-                    onValueChange={onOpcaoChange}
-                />
-                <OpcaoSelecao
-                    value="Sem instalação"
-                    selectedValue={escolhaServico}
-                    onValueChange={onOpcaoChange}
-                />
-            </View>
+            <Custos
+                onCustoChange={handleCustoChange}
+                onValorPorMetroChange={handleValorPorMetroChange}
+            />
 
-            {renderizarComponente()}
-            {/* Mostrar a soma ao usuário */}
+            <Metragem onMetragemChange={handleMetragemChange} />
+
             <View style={styles.resultadoContainer}>
-                <TextComponent style="textSubBranco">Resultado:</TextComponent>
-                <TextComponent style="textSubBranco">{somaComInstalacao}</TextComponent>
+                <TextComponent style="textSubBranco">CUSTOS:</TextComponent>
+                <TextComponent style="textSubBranco">{custo}</TextComponent>
             </View>
-            {/* Passa o valor calculado para o componente ValorFinal */}
+            <View style={styles.resultadoContainer}>
+                <TextComponent style="textSubBranco">valor por metro:</TextComponent>
+                <TextComponent style="textSubBranco">{valorPorMetro}</TextComponent>
+            </View>
+            <View style={styles.resultadoContainer}>
+                <TextComponent style="textSubBranco">METRAGEM:</TextComponent>
+                <TextComponent style="textSubBranco">{metragem}</TextComponent>
+            </View>
 
-            <ValorFinal somaComInstalacao={somaComInstalacao} />
+            <ValorFinal
+                custos={custo}
+                valorPorMetro={valorPorMetro}
+                metragem={metragem}
+            />
         </View>
     );
-}
+};
+
 
 const styles = StyleSheet.create({
     container: {
