@@ -1,34 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 
-export default function ComInstalacao({ DadosEscolhidos, setDadosEscolha }) {
+const ComInstalacao = ({ dadosEscolhidos, setDadosEscolha, onSomaChange }) => {
 
     const {
         deslocamento,
         alimentacao,
         valorEntrega,
         qtdColas
-    } = DadosEscolhidos || {};
+    } = dadosEscolhidos || {};
+    // Sua lógica para calcular a soma
+    useEffect(() => {
+        // Calcula a soma das variáveis
+        const somaCalculada = deslocamento + alimentacao + valorEntrega + qtdColas;
+        // Passa o resultado para a função onSomaChange
+        onSomaChange(somaCalculada);
+    }, [deslocamento, alimentacao, valorEntrega, qtdColas]);
 
-    const setDeslocamento = (value) => {
+    const handleChange = (key, value) => {
         const parsedValue = parseFloat(value);
-        setDadosEscolha({ ...(DadosEscolhidos || {}), deslocamento: isNaN(parsedValue) ? '' : parsedValue });
+        setDadosEscolha({ ...dadosEscolhidos, [key]: isNaN(parsedValue) ? '' : parsedValue });
     };
 
-    const setAlimentacao = (value) => {
-        const parsedValue = parseFloat(value);
-        setDadosEscolha({ ...(DadosEscolhidos || {}), alimentacao: isNaN(parsedValue) ? '' : parsedValue });
-    };
 
-    const setValorEntrega = (value) => {
-        const parsedValue = parseFloat(value);
-        setDadosEscolha({ ...(DadosEscolhidos || {}), valorEntrega: isNaN(parsedValue) ? '' : parsedValue });
-    };
-
-    const setQtdColas = (value) => {
-        const parsedValue = parseFloat(value);
-        setDadosEscolha({ ...(DadosEscolhidos || {}), qtdColas: isNaN(parsedValue) ? '' : parsedValue });
-    };
 
     return (
         <View style={styles.container}>
@@ -37,8 +31,8 @@ export default function ComInstalacao({ DadosEscolhidos, setDadosEscolha }) {
                     <Text style={styles.textInfo}>Deslocamento</Text>
                     <TextInput
                         style={styles.input}
-                        value={deslocamento}
-                        onChangeText={(number) => setDeslocamento(number)}
+                        value={String(deslocamento)}
+                        onChangeText={(number) => handleChange('deslocamento', number)}
                         placeholder="ex: 10,00"
                         keyboardType="numeric"
                     />
@@ -48,8 +42,8 @@ export default function ComInstalacao({ DadosEscolhidos, setDadosEscolha }) {
                     <Text style={styles.textInfo}>Alimentação</Text>
                     <TextInput
                         style={styles.input}
-                        value={alimentacao}
-                        onChangeText={(number) => setAlimentacao(number)}
+                        value={String(alimentacao)}
+                        onChangeText={(number) => handleChange('alimentacao', number)}
                         placeholder="ex: 10,00"
                         keyboardType="numeric"
                     />
@@ -61,8 +55,8 @@ export default function ComInstalacao({ DadosEscolhidos, setDadosEscolha }) {
                     <Text style={styles.textInfo}>Valor da Entrega</Text>
                     <TextInput
                         style={styles.input}
-                        value={valorEntrega}
-                        onChangeText={(number) => setValorEntrega(number)}
+                        value={String(valorEntrega)}
+                        onChangeText={(number) => handleChange('valorEntrega', number)}
                         placeholder="ex: 10,00"
                         keyboardType="numeric"
                     />
@@ -72,8 +66,8 @@ export default function ComInstalacao({ DadosEscolhidos, setDadosEscolha }) {
                     <Text style={styles.textInfo}>Qtd. Colas</Text>
                     <TextInput
                         style={styles.input}
-                        value={qtdColas}
-                        onChangeText={(number) => setQtdColas(number)}
+                        value={String(qtdColas)}
+                        onChangeText={(number) => handleChange('qtdColas', number)}
                         placeholder="ex: 10,00"
                         keyboardType="numeric"
                     />
@@ -114,4 +108,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
 });
+
+export default ComInstalacao;
 

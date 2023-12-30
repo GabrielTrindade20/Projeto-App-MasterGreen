@@ -1,32 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, TextInput } from "react-native";
 
 import TextComponent from "../TextComp";
-import Servico from "./Servico";
+import Orcamento from "./Orcamento";
 
-const ValorFinal = () => {
-    const [lucroEmpresa, onChangeLucroEmpresa] = React.useState('');
-    const [desconto, onChangeDesconto] = React.useState('');
+const ValorFinal = ({ somaComInstalacao }) => {
+    
+    const [lucroEmpresa, setLucroEmpresa] = useState("");
+    const [desconto, setDesconto] = useState(0);
+    const [valorBruto, setValorBruto] = useState(0);
+    const [totalValorCliente, setTotalValorCliente] = useState(0);
+    const [totalNotaFiscal, setTotalNotaFiscal] = useState(0);
+    const [totalLucroEmpresa, setTotalLucroEmpresa] = useState(0);
+
+
+    useEffect(() => {
+        setValorBruto(somaComInstalacao);
+    }, [somaComInstalacao]);
+
+
+    useEffect(() => {
+        // Converte o valor para float ou mantém como 0 se vazio
+        const lucroEmpresaFloat = parseFloat(lucroEmpresa) || 0;
+
+        // Atualiza o totalValorCliente apenas se lucroEmpresa tiver um valor
+        setTotalValorCliente(lucroEmpresaFloat !== 0 ? somaComInstalacao + (lucroEmpresaFloat * somaComInstalacao / 100) : 0);
+        // Atualiza o totalNotaFiscal apenas se lucroEmpresa tiver um valor
+        setTotalNotaFiscal(lucroEmpresaFloat !== 0 ? totalValorCliente * 4.5 / 100 : 0);
+        // Atualiza o totalLucroEmpresa apenas se lucroEmpresa tiver um valor
+        setTotalLucroEmpresa(lucroEmpresaFloat !== 0 ? lucroEmpresaFloat * somaComInstalacao / 100 : 0);
+    }, [lucroEmpresa, somaComInstalacao]);
+
 
     return (
         <View style={styles.container}>
             <View style={styles.opcoes}>
-                <TextComponent style={'textInfo'}>Lucro da Empresa %</TextComponent>
+                <TextComponent style={"textInfo"}>Lucro da Empresa %</TextComponent>
                 <TextInput
                     style={styles.input}
-                    onChangeText={onChangeLucroEmpresa}
-                    value={lucroEmpresa}
+                    onChangeText={(number) => setLucroEmpresa(number)}
+                    value={String(lucroEmpresa)}
                     placeholder="ex: 10"
                     keyboardType="numeric"
                 />
             </View>
 
             <View style={styles.opcoes}>
-                <TextComponent style={'textInfo'}>Desconto %</TextComponent>
+                <TextComponent style={"textInfo"}>Desconto %</TextComponent>
                 <TextInput
                     style={styles.input}
-                    onChangeText={onChangeDesconto}
-                    value={desconto}
+                    onChangeText={(number) => setDesconto(number)}
+                    value={String(desconto)}
                     placeholder="ex: 10"
                     keyboardType="numeric"
                 />
@@ -35,25 +59,36 @@ const ValorFinal = () => {
             <View style={styles.containerValFinal}>
                 <View style={styles.textOpcoes}>
                     <Text style={styles.textInfo}>VALOR BRUTO DO SERVIÇO</Text>
+                    <Text style={[{ color: "#BE1701" }, styles.textValores]}>
+                        {parseFloat(valorBruto).toFixed(2)}
+                    </Text>
                 </View>
 
                 <View style={styles.textOpcoes}>
                     <Text style={styles.textInfo}>VALOR FINAL DO CLIENTE</Text>
-                    <Text style={[{ color: '#BE1701' }, styles.textValores]}>000.000.000</Text>
+                    <Text style={[{ color: "#BE1701" }, styles.textValores]}>
+                        {parseFloat(totalValorCliente).toFixed(2)}
+                    </Text>
                 </View>
 
                 <View style={styles.textOpcoes}>
                     <Text style={styles.textInfo}>VALOR DA NOTA FISCAL</Text>
-                    <Text style={[{ color: '#FF9516' }, styles.textValores]}>000.000.000</Text>
+                    <Text style={[{ color: "#FF9516" }, styles.textValores]}>
+                        {parseFloat(totalNotaFiscal).toFixed(2)}
+                    </Text>
                 </View>
+
                 <View style={styles.textOpcoes}>
-                    <Text style={styles.textInfo}>LUCRO DA EMPRESA</Text>
-                    <Text style={[{ color: '#00AA00' }, styles.textValores]}>000.000.000</Text>
+                    <Text style={styles.textInfo}>VALOR DO LUCRO DA EMPRESA</Text>
+                    <Text style={[{ color: "#1DAC46" }, styles.textValores]}>
+                        {parseFloat(totalLucroEmpresa).toFixed(2)}
+                    </Text>
                 </View>
+                {/* Adicione as outras seções conforme necessário */}
             </View>
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -107,3 +142,6 @@ const styles = StyleSheet.create({
 })
 
 export default ValorFinal;
+
+
+

@@ -4,11 +4,22 @@ import { Picker } from '@react-native-picker/picker';
 
 import TextComp from '../TextComp'
 
-export default props => {
-  const [tipoGrama, setTipoGrama] = useState('');
-  const [fornecedorGrama, setfornecedorGrama] = useState('');
+export default function OpcoesGrama(dadosEscolhidos, setDadosEscolhidos) {
+  // const [tipoGrama, setTipoGrama] = useState('');
+  // const [fornecedorGrama, setfornecedorGrama] = useState('');
 
+  const {
+    tipoGrama,
+    fornecedorGrama
+  } = dadosEscolhidos
 
+  const setTipoGrama = (value) => {
+    setTipoGrama({...dadosEscolhidos, tipoGrama: value})
+  }
+
+  const setfornecedorGrama = (value) => {
+    setfornecedorGrama({...dadosEscolhidos, fornecedorGrama: value})
+  }
 
   const opcoesGrama = [
     { label: '22 mm', value: 'high' },
@@ -30,7 +41,7 @@ export default props => {
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={tipoGrama}
-            onValueChange={(itemValue, itemIndex) => setTipoGrama(itemValue)}
+            onValueChange={(value) => setTipoGrama(value)}
             style={styles.picker}
             mode={'dropdown'}
           >
@@ -47,7 +58,7 @@ export default props => {
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={fornecedorGrama}
-            onValueChange={(itemValue, itemIndex) => setfornecedorGrama(itemValue)}
+            onValueChange={(value) => setFornecedorGrama(value)}
             style={styles.picker}
             mode={'dropdown'}
           >

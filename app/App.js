@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, StatusBar, SafeAreaView, ScrollView } from 'react-native';
 
 import Header from './src/components/Header'
-import Orcamento from './src/components/componentes orçamentos/Orcamento';
+import Orcamento from './src/components/componentes orçamentos/Orcamento'
 
 export default function App() {
   return (
@@ -13,6 +13,7 @@ export default function App() {
       }}>
 
         <Header />
+
         <Orcamento />
 
       </SafeAreaView>
