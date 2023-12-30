@@ -5,31 +5,55 @@ import TextComponent from "../TextComp";
 import Orcamento from "./Orcamento";
 
 const ValorFinal = ({ somaComInstalacao }) => {
-    
+
     const [lucroEmpresa, setLucroEmpresa] = useState("");
-    const [desconto, setDesconto] = useState(0);
+    const [desconto, setDesconto] = useState("");
     const [valorBruto, setValorBruto] = useState(0);
     const [totalValorCliente, setTotalValorCliente] = useState(0);
     const [totalNotaFiscal, setTotalNotaFiscal] = useState(0);
     const [totalLucroEmpresa, setTotalLucroEmpresa] = useState(0);
-
 
     useEffect(() => {
         setValorBruto(somaComInstalacao);
     }, [somaComInstalacao]);
 
 
-    useEffect(() => {
-        // Converte o valor para float ou mantém como 0 se vazio
-        const lucroEmpresaFloat = parseFloat(lucroEmpresa) || 0;
+    // useEffect(() => {
+    //     // Converte o valor para float ou mantém como 0 se vazio
+    //     const lucroEmpresaFloat = parseFloat(lucroEmpresa) || 0;
 
-        // Atualiza o totalValorCliente apenas se lucroEmpresa tiver um valor
-        setTotalValorCliente(lucroEmpresaFloat !== 0 ? somaComInstalacao + (lucroEmpresaFloat * somaComInstalacao / 100) : 0);
-        // Atualiza o totalNotaFiscal apenas se lucroEmpresa tiver um valor
-        setTotalNotaFiscal(lucroEmpresaFloat !== 0 ? totalValorCliente * 4.5 / 100 : 0);
-        // Atualiza o totalLucroEmpresa apenas se lucroEmpresa tiver um valor
-        setTotalLucroEmpresa(lucroEmpresaFloat !== 0 ? lucroEmpresaFloat * somaComInstalacao / 100 : 0);
-    }, [lucroEmpresa, somaComInstalacao]);
+    //     // Atualiza o totalValorCliente apenas se lucroEmpresa tiver um valor
+    //     setTotalValorCliente(lucroEmpresaFloat !== 0 ? somaComInstalacao + (lucroEmpresaFloat * somaComInstalacao / 100) : 0);
+    //     // Atualiza o totalNotaFiscal apenas se lucroEmpresa tiver um valor
+    //     setTotalNotaFiscal(lucroEmpresaFloat !== 0 ? totalValorCliente * 4.5 / 100 : 0);
+    //     // Atualiza o totalLucroEmpresa apenas se lucroEmpresa tiver um valor
+    //     setTotalLucroEmpresa(lucroEmpresaFloat !== 0 ? lucroEmpresaFloat * somaComInstalacao / 100 : 0);
+    // }, [lucroEmpresa, somaComInstalacao]);
+
+    useEffect(() => {
+        const lucroEmpresaFloat = parseFloat(lucroEmpresa) || 0;
+        const descontoFloat = desconto !== '' ? parseFloat(desconto) : 0;
+
+        const valorComLucroEmpresa = somaComInstalacao + (lucroEmpresaFloat * somaComInstalacao / 100);
+        const valorComDesconto = valorComLucroEmpresa - (valorComLucroEmpresa * descontoFloat / 100);
+
+        // Se lucroEmpresa não tiver valor, define totalValorCliente como 0
+        setTotalValorCliente(lucroEmpresaFloat !== 0 ? (descontoFloat !== 0 ? valorComDesconto : valorComLucroEmpresa) : 0);
+
+        setTotalNotaFiscal(lucroEmpresaFloat !== 0 ? (descontoFloat !== 0 ? valorComDesconto * 4.5 / 100 : valorComLucroEmpresa * 4.5 / 100) : 0);
+
+        let valorLucroEmpresa = 0;
+
+        if (descontoFloat !== 0) {
+            valorLucroEmpresa = somaComInstalacao - Math.abs(valorComDesconto - (valorComDesconto * 4.5 / 100));
+        } else {
+            valorLucroEmpresa = somaComInstalacao - Math.abs(valorComLucroEmpresa - (valorComLucroEmpresa * 4.5 / 100));
+        }
+
+        // Se lucroEmpresa não tiver valor, define totalLucroEmpresa como 0
+        setTotalLucroEmpresa(lucroEmpresaFloat !== 0 ? Math.abs(valorLucroEmpresa) : 0);
+
+    }, [lucroEmpresa, desconto, somaComInstalacao]);
 
 
     return (
