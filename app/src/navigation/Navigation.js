@@ -10,22 +10,8 @@ const Stack = createStackNavigator();
 const Navigation = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="Orcamento"
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: '#002B17',
-          },
-          headerTintColor: '#fff',
-        }}
-      >
-        <Stack.Screen
-          name="Orcamento"
-          component={Orcamento}
-          options={({ navigation }) => ({
-            header: () => <Header navigation={navigation} />,
-          })}
-        />
+      <Stack.Navigator initialRouteName="Orcamento">
+        <Stack.Screen name="Orcamento" component={Orcamento} options={{ headerShown: false }} />
         {/* Adicione outras telas conforme necessário */}
       </Stack.Navigator>
     </NavigationContainer>

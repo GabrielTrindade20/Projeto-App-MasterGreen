@@ -4,7 +4,7 @@
     "slug": "AppMasterGreen",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./src/imagens/logoSemFundo.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.gab_roch.MasterGreen"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "17ee6e08-809f-43e3-9d61-3cc78e06ea52"
+      }
     }
   }
 }
