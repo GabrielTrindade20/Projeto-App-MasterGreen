@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, TextInput } from "react-native";
 
 import TextComponent from "../TextComp";
-import Orcamento from "./Orcamento";
+import Orcamento from "../../screens/Orcamento";
 
 const ValorFinal = ({ custos, valorPorMetro, metragem }) => {
     const [totalLucroEmpresa, setTotalLucroEmpresa] = useState('');
