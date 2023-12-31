@@ -1,6 +1,6 @@
 import { StyleSheet, View, StatusBar } from 'react-native';
-import Navigation from './src/navigation/Navigation';
 import Header from './src/components/Header'
+import Orcamento from './src/screens/Orcamento';
 
 // No seu componente App
 export default function App() {
@@ -8,7 +8,7 @@ export default function App() {
     <View style={styles.container}>
       <StatusBar backgroundColor="#002B17" barStyle="light-content" />
       <Header /> 
-      <Navigation />
+      <Orcamento />
     </View>
   );
 }

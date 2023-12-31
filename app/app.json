@@ -4,7 +4,7 @@
     "slug": "AppMasterGreen",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/imagens/logoSemFundo.png",
+    "icon": "./assets/logoSemFundo.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",

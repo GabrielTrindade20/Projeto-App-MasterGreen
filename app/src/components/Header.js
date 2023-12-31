@@ -3,15 +3,14 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 // No seu arquivo onde está definido o componente Header
 // No seu componente Header
-const Header = ({ navigation }) => {
+const Header = () => {
   return (
     <View style={styles.header}>
-      <TouchableOpacity onPress={() => navigation.openDrawer()}>
         <Image
           source={require('../imagens/icones/iconeMenu.png')}
           style={styles.iconeMenu}
         />
-      </TouchableOpacity>
+
 
       <Text style={styles.titulo}>Orçamento</Text>
 
