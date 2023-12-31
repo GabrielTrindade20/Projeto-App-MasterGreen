@@ -37,12 +37,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     containerOpcao: {
-        flexDirection: 'row',
-        backgroundColor: '#fff',
-        width: '95%',
-        borderRadius: 10,
-        padding: 15,
-        marginVertical: 5,
+      flexDirection: 'row',
+      backgroundColor: '#fff',
+      borderRadius: 10,
+      padding: 15,
+      marginHorizontal: 15,
+      marginVertical: 10,
     },
     containerCont: {
         alignItems: 'center',

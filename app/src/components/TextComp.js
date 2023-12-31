@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet } from 'react-native';
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
 const TextComponent = ({ style, children }) => {
     const styles = {
@@ -35,10 +36,11 @@ const TextComponent = ({ style, children }) => {
             // Outros estilos
         },
         textInfo: {
-            fontSize: 25,
+            fontSize: 18,
             flexDirection: 'row',
             fontWeight: 'bold',
             marginVertical: 2,
+            fontSize: RFValue(15, 680)
             // Outros estilos
         },
     };
