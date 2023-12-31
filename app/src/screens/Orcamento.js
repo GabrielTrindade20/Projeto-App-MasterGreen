@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
+
 import TextComponent from '../components/TextComp';
 import Custos from '../components/componentes orçamentos/Custos';
 import ValorFinal from '../components/componentes orçamentos/ValorFinal';

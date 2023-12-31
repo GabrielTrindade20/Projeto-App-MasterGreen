@@ -4,59 +4,33 @@ import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
 const TextComponent = ({ style, children }) => {
     const styles = {
-        defaultStyle: {
-            fontSize: 20,
-            color: 'black',
+        valores: {
+            fontWeight: 'bold',
+            marginVertical: 2,
+            fontSize: RFPercentage(2),
             // Defina estilos comuns aqui
         },
-        textTitulo: {
-            fontSize: 30,
-            color: '#000',
-            fontWeight: 'bold',
-            paddingBottom: 5,
-
-            // Outros estilos
-        },
-        textSubBranco: {
-            fontSize: 25,
-            fontWeight: 'bold',
-            marginVertical: 2,
-            color: '#fff',
-            paddingBottom: 5,
-
-            // Outros estilos
-        },
-        textSubPreto: {
-            fontSize: 25,
-            fontWeight: 'bold',
-            marginVertical: 2,
-            color: '#000',
-            paddingBottom: 5,
-
-            // Outros estilos
-        },
         textInfo: {
-            fontSize: 18,
-            flexDirection: 'row',
             fontWeight: 'bold',
             marginVertical: 2,
-            fontSize: RFValue(15, 680)
+            fontSize: RFPercentage(2),
             // Outros estilos
         },
+        numeros: {
+            fontWeight: 'bold',
+            marginVertical: 2,
+            fontSize: RFValue(12, 680)
+        }
     };
 
     const getStyle = (style) => {
         switch (style) {
-            case 'textTitulo':
-                return styles.textTitulo;
-            case 'textSubBranco':
-                return styles.textSubBranco;
-            case 'textSubPreto':
-                return styles.textSubPreto;
             case 'textInfo':
                 return styles.textInfo;
+            case 'valores':
+                return styles.valores;
             default:
-                return styles.defaultStyle;
+                return styles.numeros;
         }
     };
 

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, TextInput } from "react-native";
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+
 
 import TextComponent from "../TextComp";
 import Orcamento from "../../screens/Orcamento";
@@ -43,21 +45,21 @@ const ValorFinal = ({ custos, valorPorMetro, metragem }) => {
             <View style={styles.containerOpcao}>
                 <View style={styles.containerCont}>
                     <View style={styles.textOpcoes}>
-                        <Text style={styles.textInfo}>CUSTOS</Text>
+                        <TextComponent style={"valores"}>CUSTOS</TextComponent>
                         <Text style={[{ color: "#BE1701" }, styles.textValores]}>
                             {parseFloat(valorServico).toLocaleString("pt-BR", { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })}
                         </Text>
                     </View>
 
                     <View style={styles.textOpcoes}>
-                        <Text style={styles.textInfo}>VALOR FINAL DO CLIENTE</Text>
+                        <TextComponent style={"valores"}>VALOR FINAL DO CLIENTE</TextComponent>
                         <Text style={[{ color: "#0002B8" }, styles.textValores]}>
                             {parseFloat(valorFinalCliente).toLocaleString("pt-BR", { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })}
                         </Text>
                     </View>
 
                     <View style={styles.textOpcoes}>
-                        <Text style={styles.textInfo}>VALOR DA NOTA FISCAL</Text>
+                        <TextComponent style={"valores"}>VALOR DA NOTA FISCAL</TextComponent>
                         <Text style={[{ color: "#FF9516" }, styles.textValores]}>
                             {parseFloat(valorNotaFiscal).toLocaleString("pt-BR", { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })}
                         </Text>
@@ -65,14 +67,14 @@ const ValorFinal = ({ custos, valorPorMetro, metragem }) => {
 
 
                     <View style={styles.textOpcoes}>
-                        <Text style={styles.textInfo}>TOTAL DO DESCONTO</Text>
+                        <TextComponent s style={"valores"}>TOTAL DO DESCONTO</TextComponent>
                         <Text style={[{ color: "#FF9516" }, styles.textValores]}>
                             {parseFloat(totalDesconto).toLocaleString("pt-BR", { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })}
                         </Text>
                     </View>
 
                     <View style={styles.textOpcoes}>
-                        <Text style={styles.textInfo}>VALOR DO LUCRO DA EMPRESA</Text>
+                        <TextComponent style={"valores"}>VALOR DO LUCRO DA EMPRESA</TextComponent>
                         <Text style={[{ color: "#1DAC46" }, styles.textValores]}>
                             {parseFloat(totalLucroEmpresa).toLocaleString("pt-BR", { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })}
                         </Text>
@@ -80,7 +82,7 @@ const ValorFinal = ({ custos, valorPorMetro, metragem }) => {
                 </View>
                 {/* Adicione as outras seções conforme necessário */}
             </View>
-            
+
             <View style={[{ marginTop: 10, marginBottom: 50 }, styles.containerOpcao]}>
                 <View style={styles.containerCont}>
                     <TextComponent style={"textInfo"}>DESCONTO %</TextComponent>
@@ -115,44 +117,24 @@ const styles = StyleSheet.create({
         flex: 1,
         marginRight: 10,
     },
-    opcoes: {
-        width: '100%',
-        flexDirection: 'column',
-        alignItems: 'center',
-        borderRadius: 20,
-        marginBottom: 5,
-    },
     input: {
         height: 40,
         margin: 5,
         borderWidth: 2,
-        padding: 5,
         borderRadius: 10,
         width: '80%',
         textAlign: 'center',
-        fontSize: 25,
+        fontSize: 20,
         fontWeight: 'bold'
-    },
-    containerValFinal: {
-        flexDirection: 'collum',
-        alignItems: 'center',
-        marginTop: 10,
     },
     textOpcoes: {
         marginVertical: 5,
         alignItems: 'center',
     },
-    textInfo: {
-        fontSize: 15,
-        flexDirection: 'row',
-        fontWeight: 'bold',
-        marginVertical: 2,
-    },
     textValores: {
-        fontSize: 25,
-        flexDirection: 'row',
         fontWeight: 'bold',
         marginVertical: 2,
+        fontSize: RFPercentage(3),
         // Outros estilos
     },
 })

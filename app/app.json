@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "AppMasterGreen",
+    "name": "MasterGreen",
     "slug": "AppMasterGreen",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logoSemFundo.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/logoSemFundo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logoSemFundo.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.gab_roch.MasterGreen"
