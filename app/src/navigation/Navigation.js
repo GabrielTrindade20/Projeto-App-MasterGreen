@@ -1,33 +1,35 @@
+// No seu componente Navigation
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
-import Orcamento from '../screens/Orcamento'
+import Header from '../components/Header';
+import Orcamento from '../screens/Orcamento';
 
 const Stack = createStackNavigator();
 
-export default function Navigation() {
+const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="Orcamento"
         screenOptions={{
           headerStyle: {
-            backgroundColor: '#002B17', // Cor de fundo da barra de navegação
+            backgroundColor: '#002B17',
           },
-          headerTintColor: '#fff', // Cor dos ícones e do texto na barra de navegação
+          headerTintColor: '#fff',
         }}
       >
         <Stack.Screen
-          name="null"
+          name="Orcamento"
           component={Orcamento}
-          options={{
-            headerShown: false,
-          }}
+          options={({ navigation }) => ({
+            header: () => <Header navigation={navigation} />,
+          })}
         />
-        {/* Adicione outras telas principais conforme necessário */}
+        {/* Adicione outras telas conforme necessário */}
       </Stack.Navigator>
     </NavigationContainer>
-
   );
-}
+};
+
+export default Navigation;
