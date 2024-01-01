@@ -1,29 +1,65 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
-import OpcaoSelecao from '../components/Servico'
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
-export default function AreaTapq({ choices, setChoices }) {
 
-    const teste = choices;
+import TextComponent from '../components/TextComp';
+import Custos from '../components/componentes orçamentos/Custos';
+import ValorFinal from '../components/componentes orçamentos/ValorFinal';
+import Metragem from '../components/componentes orçamentos/Metragem';
 
-    const setTeste = (value) => {
-        setChoices({ ...choices, teste: value })
-    }
+const Orcamento = () => {
+    const [custo, setCusto] = useState(0);
+    const [valorPorMetro, setValorPorMetro] = useState(0);
+    const [metragem, setMetragem] = useState(0);
+
+    const handleMetragemChange = (metragem) => {
+        setMetragem(metragem);
+    };
+
+    const handleCustoChange = (custo) => {
+        setCusto(custo);
+    };
+
+    const handleValorPorMetroChange = (valorPorMetro) => {
+        setValorPorMetro(valorPorMetro);
+    };
 
     return (
-        <View>
-            <Text style='textQuestoes'></Text>
-            <OpcaoSelecao
-                value="Sim"
-                selectedValue={teste}
-                onValueChange={(value) => setTeste(value)}
+        <ScrollView contentContainerStyle={styles.container}>
+            <Custos
+                onCustoChange={handleCustoChange}
+                onValorPorMetroChange={handleValorPorMetroChange}
             />
-            <OpcaoSelecao
-                value="Não"
-                selectedValue={teste}
-                onValueChange={(value) => setTeste(value)}
-            />
-        </View>
 
-    )
-}
+            <Metragem onMetragemChange={handleMetragemChange} />
+
+            <ValorFinal
+                custos={custo}
+                valorPorMetro={valorPorMetro}
+                metragem={metragem}
+            />
+        </ScrollView>
+    );
+};
+
+
+const styles = StyleSheet.create({
+    container: {
+        flexGrow: 1,
+        justifyContent: 'space-between',
+        backgroundColor: '#002B17',
+    },
+    containerOpcao: {
+        flexDirection: 'row',
+        backgroundColor: '#fff',
+        width: '95%',
+        borderRadius: 10,
+        padding: 15,
+    },
+    text: {
+        fontSize: 25,
+        color: '#fff',
+    },
+});
+
+export default Orcamento;

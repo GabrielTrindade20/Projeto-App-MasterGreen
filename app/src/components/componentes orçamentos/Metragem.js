@@ -1,43 +1,63 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, TextInput } from "react-native";
 
 import TextComponent from "../TextComp";
 
-export default props = () => {
-    const [metragem, onChangeMetragem] = React.useState('');
+const Metragem = ({ onMetragemChange }) => {
+  const [metragem, setMetragem] = useState('');
 
-    return (
-        <View style={styles.conteiner}>
-            <TextComponent style={'textTitulo'}>Metragem (m²)</TextComponent>
-            <TextInput
-                style={styles.input}
-                onChangeText={onChangeMetragem}
-                value={metragem}
-                placeholder="ex: 10"
-                keyboardType="numeric"
-            />
+  useEffect(() => {
+    const metragemFloat = parseFloat(metragem);
+    if (!isNaN(metragemFloat)) {
+      onMetragemChange(metragemFloat);
+    }
+  }, [metragem, onMetragemChange]);
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.containerOpcao}>
+        <View style={styles.containerCont}>
+          <TextComponent style={"textInfo"}>METRAGEM (m²)</TextComponent>
+          <TextInput
+            style={styles.input}
+            onChangeText={setMetragem}
+            value={metragem}
+            placeholder="ex: 10"
+            keyboardType="numeric"
+          />
         </View>
-    )
-}
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    conteiner: {
-        backgroundColor: '#fff',
-        margin: 15,
-        padding: 20,
-        flexDirection: 'column',
-        alignItems: 'center',
-        borderRadius: 20,
-    },
-    input: {
-        height: 40,
-        margin: 5,
-        borderWidth: 2,
-        padding: 5,
-        borderRadius: 10,
-        width: '80%',
-        textAlign: 'center',
-        fontSize: 25,
-        fontWeight: 'bold'
-    }
+  container: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  containerOpcao: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 15,
+    marginHorizontal: 15,
+    marginVertical: 10,
+  },
+  containerCont: {
+    alignItems: 'center',
+    flex: 1,
+    marginRight: 10,
+  },
+  input: {
+    height: 40,
+    margin: 5,
+    borderWidth: 2,
+    borderRadius: 10,
+    width: '80%',
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
 })
+export default Metragem

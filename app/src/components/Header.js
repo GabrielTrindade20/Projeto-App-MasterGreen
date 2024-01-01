@@ -1,25 +1,28 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
+// No seu arquivo onde está definido o componente Header
+// No seu componente Header
 const Header = () => {
-
   return (
     <View style={styles.header}>
         <Image
-        source={require('../imagens/icones/iconeMenu.png')}
+          source={require('../imagens/icones/iconeMenu.png')}
           style={styles.iconeMenu}
         />
 
-        <Text style={styles.titulo}>Orçamento</Text>
+
+      <Text style={styles.titulo}>Orçamento</Text>
 
       <Image
         source={require('../imagens/logoSemFundo.png')}
         style={styles.logoMg}
       />
-
     </View>
   );
 };
+
+
 
 const styles = StyleSheet.create({
   header: {
