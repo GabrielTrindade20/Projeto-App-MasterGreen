@@ -30,6 +30,7 @@ const ValorFinal = ({ custos, valorPorMetro, metragem }) => {
             const valorDesconto = valorFinalClienteCalculado * descontoDecimal / 100;
             setTotalDesconto(valorDesconto)
             totalLucroEmpresaCalculado = valorFinalClienteCalculado - (valorDesconto + valorNotaFiscalCalculado + valorServicoCalculado);
+            setValorFinalCliente(valorFinalClienteCalculado - valorDesconto)
         } else {
             setTotalDesconto(0)
             totalLucroEmpresaCalculado = valorFinalClienteCalculado - valorNotaFiscalCalculado - valorServicoCalculado;
