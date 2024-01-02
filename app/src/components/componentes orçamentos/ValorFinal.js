@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, TextInput } from "react-native";
+import { View, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
-
+import { useNavigation } from '@react-navigation/native';
 
 import TextComponent from "../TextComp";
 import Orcamento from "../../screens/Orcamento";
+import Proposta from "../../screens/Proposta";
 
 const ValorFinal = ({ custos, valorPorMetro, metragem }) => {
+    const navigation = useNavigation();
+
     const [totalLucroEmpresa, setTotalLucroEmpresa] = useState('');
     const [desconto, setDesconto] = useState('');
     const [valorServico, setValorServico] = useState('')
@@ -38,6 +41,10 @@ const ValorFinal = ({ custos, valorPorMetro, metragem }) => {
 
         setTotalLucroEmpresa(totalLucroEmpresaCalculado.toFixed(2));
     }, [custos, valorPorMetro, metragem, desconto]);
+
+    const irParaProposta = () => {
+        navigation.navigate('Proposta');
+    };
 
     return (
         <View style={styles.container}>
@@ -84,7 +91,7 @@ const ValorFinal = ({ custos, valorPorMetro, metragem }) => {
                 {/* Adicione as outras seções conforme necessário */}
             </View>
 
-            <View style={[{ marginTop: 10, marginBottom: 50 }, styles.containerOpcao]}>
+            <View style={[{ marginTop: 10, marginBottom: 20 }, styles.containerOpcao]}>
                 <View style={styles.containerCont}>
                     <TextComponent style={"textInfo"}>DESCONTO %</TextComponent>
                     <TextInput
@@ -96,7 +103,14 @@ const ValorFinal = ({ custos, valorPorMetro, metragem }) => {
                     />
                 </View>
             </View>
-        </View>
+
+            <TouchableOpacity
+                style={styles.botao}
+                onPress={irParaProposta}
+            >
+                <Text style={styles.textoBotao}>Fazer Proposta</Text>
+            </TouchableOpacity>
+        </View >
     );
 };
 
@@ -126,7 +140,8 @@ const styles = StyleSheet.create({
         width: '80%',
         textAlign: 'center',
         fontSize: 20,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        textAlign: 'center',
     },
     textOpcoes: {
         marginVertical: 5,
@@ -138,7 +153,24 @@ const styles = StyleSheet.create({
         fontSize: RFPercentage(3),
         // Outros estilos
     },
-})
+    botao: {
+        backgroundColor: '#138600', // Cor de fundo do botão
+        padding: 15,
+        borderRadius: 5,
+        marginTop: 20,
+        width: '65%',
+        textAlign: "center",
+        alignContent: 'center',
+        marginVertical: 50,
+    },
+    textoBotao: {
+        color: '#FFFFFF', // Cor do texto
+        fontSize: RFPercentage(3),
+        textAlign: 'center',
+        fontWeight: 'bold',
+
+    },
+});
 
 export default ValorFinal;
 

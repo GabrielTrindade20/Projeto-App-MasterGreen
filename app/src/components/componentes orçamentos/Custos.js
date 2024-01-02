@@ -26,7 +26,7 @@ const Custos = ({ onCustoChange, onValorPorMetroChange }) => {
           <TextInput
             style={styles.input}
             onChangeText={(number) => handleChange(number, 'custo')}
-            placeholder="ex: 10,00"
+            placeholder="ex: 10"
             keyboardType="numeric"
           />
         </View>
@@ -38,7 +38,7 @@ const Custos = ({ onCustoChange, onValorPorMetroChange }) => {
           <TextInput
             style={styles.input}
             onChangeText={(number) => handleChange(number, 'valorPorMetro')}
-            placeholder="ex: 10,00"
+            placeholder="ex: 10"
             keyboardType="numeric"
           />
         </View>
@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 

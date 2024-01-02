@@ -1,15 +1,21 @@
-import { StyleSheet, View, StatusBar } from 'react-native';
+import React from "react";
+import { StyleSheet, SafeAreaView, StatusBar } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import Screens from './src/components/navigation/Screens'
+
 import Header from './src/components/Header'
-import Orcamento from './src/screens/Orcamento';
+// import Orcamento from './src/screens/Orcamento';
 
 // No seu componente App
-export default function App() {
+export default () => {
   return (
-    <View style={styles.container}>
-      <StatusBar backgroundColor="#002B17" barStyle="light-content" />
-      <Header /> 
-      <Orcamento />
-    </View>
+    <SafeAreaView style={{ flex: 1, marginTop: StatusBar.currentHeight || 0 }}>
+      <NavigationContainer>
+        {/* <Header />  
+        <Orcamento /> */}
+        <Screens />
+      </NavigationContainer>
+    </SafeAreaView>
   );
 }
 
