@@ -5,17 +5,17 @@ import { NavigationContainer } from '@react-navigation/native';
 // import Screens from './src/components/navigation/Screens'
 import Header from "./src/components/Header";
 import Orcamento from './src/screens/Orcamento';
+import Tab from "./src/components/navigation/Tab";
 
 // No seu componente App
 export default () => {
   return (
-    <SafeAreaView style={{ flex: 1, marginTop: StatusBar.currentHeight || 0 }}>
-      <NavigationContainer>
-        <Header />  
-        <Orcamento />
-        {/* <Screens /> */}
-      </NavigationContainer>
-    </SafeAreaView>
+    <NavigationContainer>
+      {/* <Header />  
+        <Orcamento /> */}
+      {/* <Screens /> */}
+      <Tab />
+    </NavigationContainer>
   );
 }
 

@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+
 
 import Menu from './componentes orçamentos/Menu';
 import Screens from './navigation/Screens'
@@ -8,25 +10,21 @@ import Screens from './navigation/Screens'
 const Header = ({ navigation, route }) => {
 
   // const title = route.name
-  
+
   const title = 'Orçamento'
-  
+
   return (
     <View style={styles.container}>
-      <View>
-        <Menu navigation={navigation}/>
-      </View>
+      <Text style={styles.titulo}>{title}</Text>
 
-      <View>
-        <Text style={styles.titulo}>{title}</Text>
-      </View>
-
-      <View>
+      <View style={styles.containerImg}>
         <Image
           source={require('../imagens/logoSemFundo.png')}
           style={styles.logoMg}
         />
       </View>
+
+
     </View>
   );
 };
@@ -39,7 +37,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFF',
     height: 70, // Altura do cabeçalho
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
+    borderBottomWidth: 2, // Adiciona uma borda na parte inferior
+    borderBottomColor: '#E2E2E2', // Cor da borda
   },
   logoMg: {
     width: 80, // Largura da imagem
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   titulo: {
-    fontSize: 25, // Tamanho da fonte do nome do aplicativo
+    fontSize: RFValue(30, 680),
     fontWeight: 'bold', // Peso da fonte
     color: '#000', // Cor do texto
   },
