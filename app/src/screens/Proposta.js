@@ -10,10 +10,11 @@ const PropostaForm = () => {
 
     return (
         <View>
-            <TouchableOpacity style={styles.botao}
+            <Text>tela do pdf</Text>
+            {/* <TouchableOpacity style={styles.botao}
                 onPress={gerarPDF}            >
                 <Text style={styles.label}>Gerar PDF</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
         </View>
     );
