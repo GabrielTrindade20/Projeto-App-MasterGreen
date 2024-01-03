@@ -7,7 +7,9 @@ import Screens from './navigation/Screens'
 // No seu componente Header
 const Header = ({ navigation, route }) => {
 
-  const title = route.name
+  // const title = route.name
+  
+  const title = 'Orçamento'
   
   return (
     <View style={styles.container}>
