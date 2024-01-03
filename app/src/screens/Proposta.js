@@ -1,51 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect }  from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import Teste1 from '../components/propostas/teste1'
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
-import { useState, useEffect } from 'react';
+import * as Print from 'expo-print';
+import { shareAsync } from 'expo-sharing';
 
-const PropostaForm = ({ onAdicionarProduto }) => {
-    const [htmlString, setHtmlString] = useState('');
+const PropostaForm = () => {
 
-    // Assume que escopoProposta.js está no mesmo diretório do componente
-    const filePath = './escopoProposta.js';
-
-    useEffect(() => {
-        const carregarHtmlExterno = async () => {
-            try {
-                const response = await fetch(filePath);
-                const htmlContent = await response.text();
-                setHtmlString(htmlContent);
-            } catch (error) {
-                console.error('Erro ao carregar o arquivo HTML externo:', error);
-            }
-        };
-    
-        carregarHtmlExterno();
-    }, []);
-    
-
-    const gerarPDF = async () => {
-        if (!htmlString) {
-            console.error('Conteúdo HTML não carregado.');
-            return;
-        }
-
-        const options = {
-            html: htmlString,
-            fileName: 'proposta',
-            directory: 'Documents',
-        };
-
-        try {
-            const file = await RNHTMLtoPDF.convert(options);
-            console.log('Caminho do arquivo PDF gerado:', file.filePath);
-        } catch (error) {
-            console.error('Erro ao gerar o PDF:', error);
-        }
-    };
 
     return (
         <View>
@@ -53,8 +14,6 @@ const PropostaForm = ({ onAdicionarProduto }) => {
                 onPress={gerarPDF}            >
                 <Text style={styles.label}>Gerar PDF</Text>
             </TouchableOpacity>
-
-            <Teste1 />
 
         </View>
     );

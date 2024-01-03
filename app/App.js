@@ -10,12 +10,14 @@ import Tab from "./src/components/navigation/Tab";
 // No seu componente App
 export default () => {
   return (
-    <NavigationContainer>
-      {/* <Header />  
+    <SafeAreaView>
+      <NavigationContainer>
+        {/* <Header />  
         <Orcamento /> */}
-      {/* <Screens /> */}
-      <Tab />
-    </NavigationContainer>
+        {/* <Screens /> */}
+        <Tab />
+      </NavigationContainer>
+    </SafeAreaView>
   );
 }
 
