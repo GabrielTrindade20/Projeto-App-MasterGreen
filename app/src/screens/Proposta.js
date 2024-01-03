@@ -1,61 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-// import { shareAsync } from 'expo-sharing';
-// import * as Print from 'expo-print';
-// import * as Sharing from 'expo-sharing';
-
-import * as Sharing from 'expo-sharing';
+import { shareAsync } from 'expo-sharing';
+import * as Print from 'expo-print';
 import * as FileSystem from 'expo-file-system';
-import * as MediaLibrary from 'expo-media-library';
-import * as Permissions from 'expo-permissions';
-import htmlToPdf from 'html-to-pdf-js';
-
-const Proposta = () => {
-    const [cliente, setCliente] = useState("")
-    const [ac, setAc] = useState("")
+import { gerarHTML } from '../components/propostas/escopo'
 
 
-    let html = `
-    <html>
-        <body>
-            <h1>Olá ${cliente}</h1>
-            <p>seus cuidados estão com ${ac}</p>
-        </body>
-    </html>
-    `;
-
-    // let gerarPDF = async () => {
-    //     const file = await Print.printAsync({
-    //         html: html,
-    //         base64: false
-    //     });
-
-    //     await shareAsync(file.uri);
-    // };
+const TelaPDF = () => {
+    const [cliente, setCliente] = useState("");
+    const [ac, setAc] = useState("");
+    const caminhoDoHTML = '../components/propostas/banner.png';
 
     const gerarPDF = async () => {
-        try {
-            const { uri } = await htmlToPdf.generatePDF(html);
-            const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY_WRITE_ONLY);
-
-            if (status === 'granted') {
-                const asset = await MediaLibrary.createAssetAsync(uri);
-                await Sharing.shareAsync(asset.uri);
-            } else {
-                console.error('Permissão de gravação na biblioteca de mídia não concedida.');
-            }
-        } catch (error) {
-            console.error('Erro ao gerar ou compartilhar o PDF:', error);
-        }
-    };   
-    
+      // Use a função gerarHTML do arquivo escopo.js para gerar o HTML com os dados
+      const html = gerarHTML(cliente, ac, caminhoDoHTML);
+  
+      
+      // Imprimir o PDF
+      const pdf = await Print.printAsync({ html, base64: true });
+    //   await shareAsync(pdf.uri);
+    };
 
 
     return (
-        <View>
+        <View style={styles.container}>
             <Text>tela do pdf</Text>
-
             <TextInput
                 placeholder="Cliente"
                 value={cliente}
@@ -68,20 +38,24 @@ const Proposta = () => {
                 onChangeText={(text) => setAc(text)}
                 style={styles.input}
             />
-
-            <TouchableOpacity style={styles.botao}
-                onPress={gerarPDF}            >
-                <Text style={styles.label}>Gerar PDF</Text>
+            <TouchableOpacity
+                style={styles.botao}
+                onPress={gerarPDF}
+            >
+                <Text style={styles.textoBotao}>Gerar PDF</Text>
             </TouchableOpacity>
-
-
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     botao: {
-        backgroundColor: '#138600', // Cor de fundo do botão
+        backgroundColor: '#138600',
         padding: 15,
         borderRadius: 5,
         marginTop: 20,
@@ -91,7 +65,7 @@ const styles = StyleSheet.create({
         marginVertical: 50,
     },
     textoBotao: {
-        color: '#FFFFFF', // Cor do texto
+        color: '#FFFFFF',
         fontSize: RFPercentage(3),
         textAlign: 'center',
         fontWeight: 'bold',
@@ -109,5 +83,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Proposta;
-
+export default TelaPDF;

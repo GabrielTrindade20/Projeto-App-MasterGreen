@@ -21,7 +21,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/logoSemFundo.png",
         "backgroundColor": "#ffffff",
-        "blockedPermissions": ["android.permission.RECORD_AUDIO"]
+        "blockedPermissions": [
+          "android.permission.RECORD_AUDIO"
+        ]
       },
       "package": "com.gab_roch.MasterGreen"
     },
@@ -38,8 +40,13 @@
         "expo-media-library",
         {
           "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
-          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
-          "isAccessMediaLocationEnabled": true
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
     ]

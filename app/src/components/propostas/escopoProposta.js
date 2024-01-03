@@ -1,6 +1,3 @@
-const gerarPDF = async () => {
-  const options = {
-    html: `
 <!DOCTYPE html>
 <html lang="en">
 
@@ -115,68 +112,20 @@ const gerarPDF = async () => {
   <h2>PROPOSTA PARA VENDA E INSTALAÇÃO DE GRAMA SINTÉTICA</h2>
 
   <div class="texto-cliente">
-    <p><span>Ao</span>${dados.cliente}</p>
-    <p><span>A/C:</span> ${dados.ac}</p>
-    <p><span>Telefone:</span>${dados.telefone}</p>
-    <p><span>Endereço:</span> ${dados.endereco}</p>
-    <p><span>CNPJ:</span>${dados.cnpj}</p>
-    <p><span>Data da proposta:</span>${dados.dataProposta}</p>
+    <p><span>Ao</span>${cliente}</p>
+    <p><span>A/C:</span> ${ac}</p>
+    
   </div>
 
-  <table border="1">
-  <thead>
-  <th>
-    <span> ITEM</span>
-  </th>
-  <th>
-    <span> QTD. (m²) </span>
-  </th>
-  <th>
-    <span> DESCRIÇÃO DO PRODUTO</span>
-  </th>
-  <th>
-    <span> VALOR UNIT. </span>
-  </th>
-  <th>
-    <span> VALOR TOTAL </span>
-  </th>
-</thead>
-    <tbody>
-      {produtos.map((produto) => (
-      <tr key=${produto.id}>
-        <td>${produto.id}</td>
-        <td>
-          <input type="number" value=${produto.quantidade} onChange={(e)=> atualizarQuantidade(produto.id,
-          e.target.value)}
-          />
-        </td>
-        <td>
-          <input type="text" value=${produto.descricao} onChange={(e)=> atualizarDescricao(produto.id, e.target.value)}
-          />
-        </td>
-        <td>
-          <input type="number" value=${produto.valorUnitario} onChange={(e)=> atualizarValorUnitario(produto.id,
-          e.target.value)}
-          />
-        </td>
-        <td>${calcularValorTotal(produto)}</td>
-      </tr>
-      ))}
-      <tr>
-        <td colSpan="4">TOTAL</td>
-        <td>${calcularValorTotalTodosProdutos()}</td>
-      </tr>
-    </tbody>
-  </table>
-
+ 
   <h3>
     <span> Dados da Proposta: </span>
   </h3>
   <div class="dados-proposta">
-    <p><span>Descrição do produto:</span> ${produto.descricao} </p>
+    <p><span>Descrição do produto:</span>  </p>
     <p><span>Prazo de garantia:</span> 1 ano (garantia da fábrica).</p>
     <p><span>Forma de pagamento:</span> 50% de entrada + 50% na entrega</p>
-    <p><span>Frete:</span> ${produto.frente} </p>
+    <p><span>Frete:</span>  </p>
     <p><span>Tributos:</span> incluso no preço.</p>
     <p><span>Validade desta proposta:</span> 30 dias</p>
   </div>
@@ -196,13 +145,3 @@ const gerarPDF = async () => {
 </body>
 
 </html>
-`, fileName: 'proposta',
-    directory: 'Documents',
-  };
-  try {
-    const file = await RNHTMLtoPDF.convert(options);
-    console.log('Caminho do arquivo PDF gerado:', file.filePath);
-  } catch (error) {
-    console.error('Erro ao gerar o PDF:', error);
-  }
-};
