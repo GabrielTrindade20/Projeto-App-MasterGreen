@@ -20,7 +20,8 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/logoSemFundo.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
+        "blockedPermissions": ["android.permission.RECORD_AUDIO"]
       },
       "package": "com.gab_roch.MasterGreen"
     },
@@ -31,6 +32,16 @@
       "eas": {
         "projectId": "17ee6e08-809f-43e3-9d61-3cc78e06ea52"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
+          "isAccessMediaLocationEnabled": true
+        }
+      ]
+    ]
   }
 }

@@ -35,6 +35,11 @@ export default props => (
               ? 'ios-football'
               : 'ios-football-outline';
             break;
+          case 'Proposta':
+            iconName = focused
+              ? 'reader'
+              : 'reader-outline';
+            break;
         }
 
         // You can return any component that you like here!
@@ -59,7 +64,7 @@ export default props => (
       options={{
         title: 'Campo',
         header: ({ navigation, route }) => (
-          <Header title='Campo' navigation={navigation} route={route} />
+          <Header title='Orçamento Campo' navigation={navigation} route={route} />
         ),
       }}
     />
