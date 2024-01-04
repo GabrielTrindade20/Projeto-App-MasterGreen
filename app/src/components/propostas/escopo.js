@@ -93,6 +93,7 @@ const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, frete) =
         width: 100%;
         height: auto;
         position: absolute;
+        top: -660; 
       }
     </style>
   </head>
@@ -148,7 +149,6 @@ const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, frete) =
   </div>
 
 
-  <img src="https://github.com/GabrielTrindade20/Projeto-App-MasterGreen/blob/mastergreen/app/src/imagens/grama.png?raw=true" alt="grama" width="100px" id="footer">
 
 
 </body>
