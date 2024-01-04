@@ -3,48 +3,44 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image } from 'reac
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { shareAsync } from 'expo-sharing';
 import * as Print from 'expo-print';
-import * as FileSystem from 'expo-file-system';
-import { gerarHTML } from '../components/propostas/escopo'
-
+import { gerarHTML } from '../components/propostas/escopo';
 
 const TelaPDF = () => {
     const [cliente, setCliente] = useState("");
     const [ac, setAc] = useState("");
 
-    // const gerarPDF = async () => {
-    //     const caminhoDoHTML = '../components/propostas/banner.png';
-    //     // Use a função gerarHTML do arquivo escopo.js para gerar o HTML com os dados
-    //     const html = gerarHTML(cliente, ac, caminhoDoHTML);
+    const visualizarPDF = async () => {
+        const html = gerarHTML(cliente, ac);
 
-    //     const options = {
-    //         html,
-    //         fileName: 'proposta',
-    //         directory: 'Documents',
-    //     };
+        const options = {
+            html,
+            fileName: 'Proposta',
+        };
 
-    //     // Imprimir o PDF
-    //     const pdf = await Print.printAsync({ html, base64: true });
-    //     //   await shareAsync(pdf.uri);
-    // };
+        // Gerar o PDF e obter o caminho do arquivo
+        const pdf = await Print.printToFileAsync(options);
+
+        // Exibir o PDF
+        await Print.printAsync({ uri: pdf.uri, base64: false, });
+    };
 
     const gerarPDF = async () => {
-        const caminhoDoHTML = '../imagens/banner.jpeg';
         // Use a função gerarHTML do arquivo escopo.js para gerar o HTML com os dados
-        const html = gerarHTML(cliente, ac, caminhoDoHTML);
-    
+        const html = gerarHTML(cliente, ac,);
+
         const options = {
-          html,
-          fileName: 'proposta',
-          directory: 'Documents',
+            html,
+            fileName: 'proposta',
+            directory: 'Documents',
         };
-    
+
         // Imprimir o PDF e obter o caminho do arquivo
         const pdf = await Print.printToFileAsync(options);
-        
+
         // Agora você pode usar o caminho do arquivo para compartilhar ou fazer outras ações
         // Exemplo de compartilhamento:
         await shareAsync(pdf.uri);
-      };
+    };
 
     return (
         <View style={styles.container}>
@@ -67,6 +63,13 @@ const TelaPDF = () => {
             >
                 <Text style={styles.textoBotao}>Gerar PDF</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.botao}
+                onPress={visualizarPDF}
+            >
+                <Text style={styles.textoBotao}>visualizar PDF</Text>
+            </TouchableOpacity>
+
         </View>
     );
 };

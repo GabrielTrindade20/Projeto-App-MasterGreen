@@ -1,6 +1,5 @@
 
-const gerarHTML = (cliente, ac, caminhoDoHTML) => {
-  const caminhoImagem = '../../imagens/banner.svg'
+const gerarHTML = (cliente, ac) => {
 
   return `
   <!DOCTYPE html>
