@@ -10,7 +10,7 @@ import { gerarHTML } from '../components/propostas/escopo'
 const TelaPDF = () => {
     const [cliente, setCliente] = useState("");
     const [ac, setAc] = useState("");
-    const caminhoDoHTML = '../components/propostas/banner.png';
+    // const caminhoDoHTML = '../components/propostas/banner.png';
 
     const gerarPDF = async () => {
       // Use a função gerarHTML do arquivo escopo.js para gerar o HTML com os dados
