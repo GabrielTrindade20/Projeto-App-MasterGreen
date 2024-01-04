@@ -10,18 +10,41 @@ import { gerarHTML } from '../components/propostas/escopo'
 const TelaPDF = () => {
     const [cliente, setCliente] = useState("");
     const [ac, setAc] = useState("");
-    const caminhoDoHTML = '../components/propostas/banner.png';
+
+    // const gerarPDF = async () => {
+    //     const caminhoDoHTML = '../components/propostas/banner.png';
+    //     // Use a função gerarHTML do arquivo escopo.js para gerar o HTML com os dados
+    //     const html = gerarHTML(cliente, ac, caminhoDoHTML);
+
+    //     const options = {
+    //         html,
+    //         fileName: 'proposta',
+    //         directory: 'Documents',
+    //     };
+
+    //     // Imprimir o PDF
+    //     const pdf = await Print.printAsync({ html, base64: true });
+    //     //   await shareAsync(pdf.uri);
+    // };
 
     const gerarPDF = async () => {
-      // Use a função gerarHTML do arquivo escopo.js para gerar o HTML com os dados
-      const html = gerarHTML(cliente, ac, caminhoDoHTML);
-  
-      
-      // Imprimir o PDF
-      const pdf = await Print.printAsync({ html, base64: true });
-    //   await shareAsync(pdf.uri);
-    };
-
+        const caminhoDoHTML = '../imagens/banner.jpeg';
+        // Use a função gerarHTML do arquivo escopo.js para gerar o HTML com os dados
+        const html = gerarHTML(cliente, ac, caminhoDoHTML);
+    
+        const options = {
+          html,
+          fileName: 'proposta',
+          directory: 'Documents',
+        };
+    
+        // Imprimir o PDF e obter o caminho do arquivo
+        const pdf = await Print.printToFileAsync(options);
+        
+        // Agora você pode usar o caminho do arquivo para compartilhar ou fazer outras ações
+        // Exemplo de compartilhamento:
+        await shareAsync(pdf.uri);
+      };
 
     return (
         <View style={styles.container}>

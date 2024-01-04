@@ -1,5 +1,6 @@
+
 const gerarHTML = (cliente, ac, caminhoDoHTML) => {
-  const caminhoImagem = './banner.png'
+  const caminhoImagem = '../../imagens/banner.svg'
 
   return `
   <!DOCTYPE html>
@@ -101,13 +102,9 @@ const gerarHTML = (cliente, ac, caminhoDoHTML) => {
   
     <header class="central">
       <div id="banner-logo">
-      <img id="imagem" alt="Naõ foi" width="500" height="200" />
+      <img src="https://github.com/GabrielTrindade20/Projeto-App-MasterGreen/blob/mastergreen/app/src/imagens/banner.jpeg?raw=true" alt="Banner MasterGreen" width="400" height="100" />
       </div>
 
-      <script>
-        const caminhoImagem = './banner.png'; // Ajuste o caminho conforme necessário
-        document.getElementById('imagem').src = ./banner.png;
-      </script>
 
   
       <div class="texto-empresa">
