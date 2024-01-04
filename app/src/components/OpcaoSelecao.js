@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+
 
 function RadioButton(props) {
   const { label, value, selectedValue, onValueChange } = props;
-  const isSelected = selectedValue === value;
 
   return (
     <View style={styles.container}>
@@ -20,11 +21,12 @@ function RadioButton(props) {
             <Text style={[styles.innerCircle, styles.selectedInnerCircle]} />
           )}
         </TouchableOpacity>
-        <Text style={[styles.select, isSelected && styles.selectedText]}>{value}</Text>
+        <Text style={[styles.select, selectedValue === value && styles.selectedText]}>{value}</Text>
       </View>
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -53,12 +55,12 @@ const styles = StyleSheet.create({
   },
   selectedInnerCircle: {
     backgroundColor: '#0C5AA5',
-    width: 18,
-    height: 18,
+    width: 19,
+    height: 19,
   },
   select: {
     color: 'black',
-    fontSize: 20,
+    fontSize: RFPercentage(2.5),
     fontWeight: 'bold',
   },
   selectedText: {

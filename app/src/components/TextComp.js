@@ -19,12 +19,12 @@ const TextComponent = ({ style, children }) => {
         numeros: {
             fontWeight: 'bold',
             marginVertical: 2,
-            fontSize: RFValue(12, 680)
+            fontSize: RFPercentage(3, 680)
         },
         titulo: {
             fontWeight: 'bold',
             marginVertical: 2,
-            fontSize: RFValue(25, 680)
+            fontSize: RFPercentage(4, 680)
         }
     };
 

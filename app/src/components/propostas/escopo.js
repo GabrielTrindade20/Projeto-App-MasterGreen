@@ -1,6 +1,18 @@
 
-const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, frete) => {
+export const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, frete, dadosInputs) => {
+  // ... Restante do código HTML
 
+  const tabelaItens = dadosInputs.map((item, index) => `
+    <tr>
+        <td>${index + 1}</td>
+        <td>${item.qtd}</td>
+        <td>${item.descricao}</td>
+        <td>R$ ${item.valorUnitario}</td>
+        <td>R$ ${item.valorTotal}</td>
+    </tr>
+  `).join('');
+
+  //criação das tabelas
   return `
   <!DOCTYPE html>
   <html lang="en">
@@ -24,8 +36,9 @@ const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, frete) =
         margin-bottom: 50px;
       }
   
-      #newton {
-        margin-top: 100px;
+      .newton {
+        margin-top: 30px;
+        text-align: center;
       }
   
       span {
@@ -43,12 +56,16 @@ const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, frete) =
         text-align: center;
       }
   
+      #titulo-principal{
+        margin-bottom: 0px;
+      }
+
       .texto-cliente {
-        margin-bottom: 50px;
+        margin-bottom: 20px;
       }
   
       #dados-pagamento {
-        padding-top: 30px;
+        padding-top: "2%";
         font-style: italic;
       }
   
@@ -56,45 +73,32 @@ const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, frete) =
         text-align: center;
       }
   
-      table,
-      th,
-      td {
-        border: 1px solid black;
-      }
-  
       table {
-        border-collapse: collapse;
+        max-width: 90%;
+        width: 90%;
         margin: auto;
       }
-  
+    
       th,
       td {
-        padding: 2px;
+        padding: 8px; /* Adjust the padding for better spacing */
         text-align: center;
-        width: auto;
       }
-  
+    
       th {
         font-weight: bold;
         font-size: 15px;
       }
-  
-  
+    
       tr:nth-child(even) {
         background-color: #DCEBE6;
       }
-  
+    
       tr:hover:nth-child(1n + 2) {
         background-color: #085F63;
         color: #fff;
       }
   
-      #footer {
-        width: 100%;
-        height: auto;
-        position: absolute;
-        top: -660; 
-      }
     </style>
   </head>
   
@@ -108,15 +112,15 @@ const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, frete) =
 
   
       <div class="texto-empresa">
-      <p>Razão Social: Master Green Grama Sintética</p>
+      <p>Razão Social: MasterGreen Grama Sintética</p>
       <p>CNPJ: 36.347.491/0001-99</p>
-      <p> Endereço: QNN 24 Conjunto E Lote 14, Ceilândia /Sul/DF</p>
+      <p> Endereço: QNN 24 Conjunto E Lote 14, Ceilândia Sul - DF</p>
       <p> Telefone: (61) 98412-4179 </p>
       <p>E-mail: mastergreendf@gmail.com</p>
     </div>
   </header>
 
-  <h2>PROPOSTA PARA VENDA E INSTALAÇÃO DE GRAMA SINTÉTICA</h2>
+  <h2 id="titulo-principal">PROPOSTA PARA VENDA E INSTALAÇÃO DE GRAMA SINTÉTICA</h2>
 
   <div class="texto-cliente">
     <p><span>Ao</span> ${cliente}</p>
@@ -126,6 +130,28 @@ const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, frete) =
     <p><span>CNPJ:</span> ${cnpj}</p>
     <p><span>Data da Proposta:</span> ${dataProposta}</p>
   </div>
+
+
+  <table border="1">
+  <thead>
+      <tr>
+          <th>ITEM</th>
+          <th>QTD. (m²)</th>
+          <th>DESCRIÇÃO DO PRODUTO</th>
+          <th>VALOR UNIT.</th>
+          <th>VALOR TOTAL</th>
+      </tr>
+  </thead>
+  <tbody>
+            ${tabelaItens}
+        </tbody>
+  <tfoot>
+      <tr>
+          <td colspan="4">TOTAL</td>
+          <td>R$ 0,00</td>
+      </tr>
+  </tfoot>
+</table>
 
 
   <h3>
@@ -143,13 +169,10 @@ const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, frete) =
   <h3 id="dados-pagamento">Dados para pagamento:</h3>
   <p><span>PIX:</span> 36.347.491/0001-99 - CNPJ em nome da Rocha Comércio e Instalação de Grama Sintética</p>
 
-  <div class="central" id="newton">
+  <div class="newton">
     <p>JOSÉ NEWTON DE ALMEIDA ROCHA</p>
     <p>Administrador</p>
   </div>
-
-
-
 
 </body>
 
@@ -159,4 +182,4 @@ const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, frete) =
 };
 
 
-module.exports = { gerarHTML };
+export default { gerarHTML };
