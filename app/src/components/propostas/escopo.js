@@ -1,5 +1,5 @@
 
-const gerarHTML = (cliente, ac) => {
+const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, frete) => {
 
   return `
   <!DOCTYPE html>
@@ -107,50 +107,53 @@ const gerarHTML = (cliente, ac) => {
 
   
       <div class="texto-empresa">
-        <p>Razão Social: Master Green Grama Sintética</p>
-        <p>CNPJ: 36.347.491/0001-99</p>
-        <p> Endereço: QNN 24 Conjunto E Lote 14, Ceilândia /Sul/DF</p>
-        <p> Telefone: (61) 98412-4179 </p>
-        <p>E-mail: mastergreendf@gmail.com</p>
-      </div>
-    </header>
-  
-    <h2>PROPOSTA PARA VENDA E INSTALAÇÃO DE GRAMA SINTÉTICA</h2>
-  
-    <div class="texto-cliente">
-      <p><span>Ao</span>${cliente}</p>
-      <p><span>A/C:</span> ${ac}</p>
-      
+      <p>Razão Social: Master Green Grama Sintética</p>
+      <p>CNPJ: 36.347.491/0001-99</p>
+      <p> Endereço: QNN 24 Conjunto E Lote 14, Ceilândia /Sul/DF</p>
+      <p> Telefone: (61) 98412-4179 </p>
+      <p>E-mail: mastergreendf@gmail.com</p>
     </div>
-  
-   
-    <h3>
-      <span> Dados da Proposta: </span>
-    </h3>
-    <div class="dados-proposta">
-      <p><span>Descrição do produto:</span>  </p>
-      <p><span>Prazo de garantia:</span> 1 ano (garantia da fábrica).</p>
-      <p><span>Forma de pagamento:</span> 50% de entrada + 50% na entrega</p>
-      <p><span>Frete:</span>  </p>
-      <p><span>Tributos:</span> incluso no preço.</p>
-      <p><span>Validade desta proposta:</span> 30 dias</p>
-    </div>
-  
-    <h3 id="dados-pagamento">Dados para pagamento:</h3>
-    <p><span>PIX:</span> 36.347.491/0001-99 - CNPJ em nome da Rocha Comércio e Instalação de Grama Sintética</p>
-  
-    <div class="central" id="newton">
-      <p>JOSÉ NEWTON DE ALMEIDA ROCHA</p>
-      <p>Administrador</p>
-    </div>
-  
-  
-    <img src="../../imagens//grama.png" alt="grama" width="100px" id="footer">
-    
-  
-  </body>
-  
-  </html>
+  </header>
+
+  <h2>PROPOSTA PARA VENDA E INSTALAÇÃO DE GRAMA SINTÉTICA</h2>
+
+  <div class="texto-cliente">
+    <p><span>Ao</span> ${cliente}</p>
+    <p><span>A/C:</span> ${ac}</p>
+    <p><span>Telefone:</span> ${telefone}</p>
+    <p><span>Endereço:</span> ${endereco}</p>
+    <p><span>CNPJ:</span> ${cnpj}</p>
+    <p><span>Data da Proposta:</span> ${dataProposta}</p>
+  </div>
+
+
+  <h3>
+    <span> Dados da Proposta: </span>
+  </h3>
+  <div class="dados-proposta">
+    <p><span>Descrição do produto:</span> </p>
+    <p><span>Prazo de garantia:</span> 1 ano (garantia da fábrica).</p>
+    <p><span>Forma de pagamento:</span> 50% de entrada + 50% na entrega.</p>
+    <p><span>Frete:</span> ${frete}.</p>
+    <p><span>Tributos:</span> incluso no preço.</p>
+    <p><span>Validade desta proposta:</span> 30 dias.</p>
+  </div>
+
+  <h3 id="dados-pagamento">Dados para pagamento:</h3>
+  <p><span>PIX:</span> 36.347.491/0001-99 - CNPJ em nome da Rocha Comércio e Instalação de Grama Sintética</p>
+
+  <div class="central" id="newton">
+    <p>JOSÉ NEWTON DE ALMEIDA ROCHA</p>
+    <p>Administrador</p>
+  </div>
+
+
+  <img src="https://github.com/GabrielTrindade20/Projeto-App-MasterGreen/blob/mastergreen/app/src/imagens/grama.png?raw=true" alt="grama" width="100px" id="footer">
+
+
+</body>
+
+</html>
   
     `;
 };

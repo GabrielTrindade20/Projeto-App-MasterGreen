@@ -20,6 +20,11 @@ const TextComponent = ({ style, children }) => {
             fontWeight: 'bold',
             marginVertical: 2,
             fontSize: RFValue(12, 680)
+        },
+        titulo: {
+            fontWeight: 'bold',
+            marginVertical: 2,
+            fontSize: RFValue(25, 680)
         }
     };
 
@@ -29,6 +34,8 @@ const TextComponent = ({ style, children }) => {
                 return styles.textInfo;
             case 'valores':
                 return styles.valores;
+            case 'titulo':
+                return styles.titulo;
             default:
                 return styles.numeros;
         }
