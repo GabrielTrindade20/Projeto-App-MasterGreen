@@ -127,8 +127,17 @@ const TelaPDF = () => {
 
 
     const gerarPDF = async () => {
+
+        const valorFinalClienteCalculado = dadosInputs.reduce((total, item) => {
+            const subtotal = parseFloat(item.valorPorMetro) * parseFloat(item.metragem);
+            const descontoDecimal = parseFloat(item.desconto) || 0;
+            const valorDesconto = subtotal * descontoDecimal / 100;
+            return total + (subtotal - valorDesconto);
+        }, 0);
+
+        setValorFinalCliente(valorFinalClienteCalculado);
         // Use a função gerarHTML do arquivo escopo.js para gerar o HTML com os dados
-        const html = gerarHTML(cliente, ac, telefone, endereco, cnpj, dataEscolhida, frete, dadosInputs);
+        const html = gerarHTML(cliente, ac, telefone, endereco, cnpj, dataEscolhida, frete, dadosInputs, valorFinalClienteCalculado);
 
         const options = {
             html,
