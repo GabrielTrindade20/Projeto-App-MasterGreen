@@ -145,8 +145,8 @@ export const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, f
         <tbody>
             ${tabelaItens}
             <td colspan="4"></td>
-            <td>R$ ${valorFinalCliente.toFixed(2)}</td>
-        </tbody>
+            <td>${valorFinalCliente.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+            </tbody>
 </table>
 
 

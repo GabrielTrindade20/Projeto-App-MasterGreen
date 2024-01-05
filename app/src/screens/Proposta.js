@@ -5,6 +5,7 @@ import { shareAsync } from 'expo-sharing';
 import * as Print from 'expo-print';
 import { gerarHTML } from '../components/propostas/escopo';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Dimensions } from 'react-native';
 
 
 import TextComponente from '../components/TextComp';
@@ -25,18 +26,17 @@ const TelaPDF = () => {
     const [descricao, setDescricao] = useState('');
     const [valorPorMetro, setValorPorMetro] = useState('');
     const [valorFinalCliente, setValorFinalCliente] = useState('')
-    // const [calculoValorTotal, setCalculoValorTotal] = useState('')
-    // const [totalDesconto, setTotalDesconto] = useState('')
     const [desconto, setDesconto] = useState('');
 
 
- 
+
     //criação das tabelas
     /*  
     VALOR UNITÁRIO = VALOR POR METRO
     QUANTIDADE = METRAGEM
     TOTAL = VALOR POR METRO * QUANTIDADE
     */
+
     useEffect(() => {
         const valorFinalClienteCalculado = valorPorMetro * metragem;
 
@@ -47,7 +47,7 @@ const TelaPDF = () => {
         } else {
             setValorFinalCliente(valorFinalClienteCalculado);
         }
-    }, [valorPorMetro, metragem, desconto]);
+    }, [valorPorMetro, metragem, desconto, valorFinalCliente]);
 
 
     // const adicionarLinhaTabela = (qtd, descricao) => {
@@ -62,7 +62,7 @@ const TelaPDF = () => {
     //     setDadosTabela([...dadosTabela, novaLinha]);
     // };
 
-    const adicionarItem = () => {    
+    const adicionarItem = () => {
 
         const novoItem = {
             qtd: metragem,
@@ -76,11 +76,17 @@ const TelaPDF = () => {
         // Limpar os estados após adicionar o item
         setMetragem('');
         setDescricao('');
-        setValorPorMetro('');       
+        setValorPorMetro('');
 
     };
 
-
+    const removerUltimoItem = () => {
+        if (dadosInputs.length > 0) {
+            const novosDadosInputs = [...dadosInputs];
+            novosDadosInputs.pop(); // Remove o último item do array
+            setDadosInputs(novosDadosInputs);
+        }
+    }
 
 
 
@@ -109,7 +115,17 @@ const TelaPDF = () => {
     //CONFIGURAÇÃO PARA DATA
 
     const visualizarPDF = async () => {
-        const html = gerarHTML(cliente, ac, telefone, endereco, cnpj, dataEscolhida, frete, dadosInputs, this.valorFinalCliente);
+        // Atualizar o valorFinalCliente antes de chamar gerarHTML
+        const valorFinalClienteCalculado = dadosInputs.reduce((total, item) => {
+            const subtotal = parseFloat(item.valorPorMetro) * parseFloat(item.metragem);
+            const descontoDecimal = parseFloat(item.desconto) || 0;
+            const valorDesconto = subtotal * descontoDecimal / 100;
+            return total + (subtotal - valorDesconto);
+        }, 0);
+
+        setValorFinalCliente(valorFinalClienteCalculado);
+
+        const html = gerarHTML(cliente, ac, telefone, endereco, cnpj, dataEscolhida, frete, dadosInputs, valorFinalClienteCalculado);
 
         const options = {
             html,
@@ -120,8 +136,9 @@ const TelaPDF = () => {
         const pdf = await Print.printToFileAsync(options);
 
         // Exibir o PDF
-        await Print.printAsync({ uri: pdf.uri, base64: false, });
+        await Print.printAsync({ uri: pdf.uri, base64: false });
     };
+
 
     const gerarPDF = async () => {
         // Use a função gerarHTML do arquivo escopo.js para gerar o HTML com os dados
@@ -222,59 +239,69 @@ const TelaPDF = () => {
                         />
                     </View>
 
-                    {dadosInputs.map((item, index) => (
-                        <View key={index}>
-                            <TextInput
-                                placeholder={`Metragem - Item ${index + 1}`}
-                                value={item.metragem}
-                                onChangeText={(text) => {
-                                    const novosDadosInputs = [...dadosInputs];
-                                    novosDadosInputs[index].metragem = text;
-                                    setDadosInputs(novosDadosInputs);
-                                }}
-                                style={styles.input}
-                                keyboardType="numeric"
-                            />
-                            <TextInput
-                                placeholder={`Descrição - Item ${index + 1}`}
-                                value={item.descricao}
-                                onChangeText={(text) => {
-                                    const novosDadosInputs = [...dadosInputs];
-                                    novosDadosInputs[index].descricao = text;
-                                    setDadosInputs(novosDadosInputs);
-                                }}
-                                style={styles.input}
-                                keyboardType="default"
-                            />
-                            <TextInput
-                                placeholder={`Valor por Metro - Item ${index + 1}`}
-                                value={item.valorPorMetro}
-                                onChangeText={(text) => {
-                                    const novosDadosInputs = [...dadosInputs];
-                                    novosDadosInputs[index].valorPorMetro = text;
-                                    setDadosInputs(novosDadosInputs);
-                                }}
-                                style={styles.input}
-                                keyboardType="numeric"
-                            />
-                            <TextInput
-                                placeholder={`Desconto - Item ${index + 1}`}
-                                value={item.desconto}
-                                onChangeText={(text) => {
-                                    const novosDadosInputs = [...dadosInputs];
-                                    novosDadosInputs[index].desconto = text;
-                                    setDadosInputs(novosDadosInputs);
-                                }}
-                                style={styles.input}
-                                keyboardType="numeric"
-                            />
-                            {/* Outros campos necessários */}
-                        </View>
-                    ))}
+                    <View styles={styles.containerItem}>
+                        {dadosInputs.map((item, index) => (
+                            <View key={index} style={styles.itens} >
+                                <TextInput
+                                    placeholder={`Metragem - Item ${index + 1}`}
+                                    value={item.metragem}
+                                    onChangeText={(text) => {
+                                        const novosDadosInputs = [...dadosInputs];
+                                        novosDadosInputs[index].metragem = text;
+                                        setDadosInputs(novosDadosInputs);
+                                    }}
+                                    style={styles.inputItens}
+                                    keyboardType="numeric"
+                                />
+                                <TextInput
+                                    placeholder={`Descrição - Item ${index + 1}`}
+                                    value={item.descricao}
+                                    onChangeText={(text) => {
+                                        const novosDadosInputs = [...dadosInputs];
+                                        novosDadosInputs[index].descricao = text;
+                                        setDadosInputs(novosDadosInputs);
+                                    }}
+                                    style={[styles.inputItens, styles.inputMultiline]} // Adiciona o estilo inputMultiline
+                                    keyboardType="default"
+                                    multiline={true} // Habilita a digitação de várias linhas
+                                    numberOfLines={4} // Define o número inicial de linhas (ajuste conforme necessário)
+                                />
+
+                                <TextInput
+                                    placeholder={`Valor por Metro - Item ${index + 1}`}
+                                    value={item.valorPorMetro}
+                                    onChangeText={(text) => {
+                                        const novosDadosInputs = [...dadosInputs];
+                                        novosDadosInputs[index].valorPorMetro = text;
+                                        setDadosInputs(novosDadosInputs);
+                                    }}
+                                    style={[styles.inputItens, { width: "100%" }]}
+                                    keyboardType="numeric"
+                                />
+
+                                <TextInput
+                                    placeholder={`Desconto - Item ${index + 1}`}
+                                    value={item.desconto}
+                                    onChangeText={(text) => {
+                                        const novosDadosInputs = [...dadosInputs];
+                                        novosDadosInputs[index].desconto = text;
+                                        setDadosInputs(novosDadosInputs);
+                                    }}
+                                    style={styles.inputItens}
+                                    keyboardType="numeric"
+                                />
+                                {/* Outros campos necessários */}
+                            </View>
+                        ))}
+                    </View>
 
 
                     <TouchableOpacity onPress={adicionarItem} style={styles.botao}>
                         <Text>Adicionar Item</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={removerUltimoItem} style={styles.botao}>
+                        <Text>Remover Último Item</Text>
                     </TouchableOpacity>
 
 
@@ -309,7 +336,34 @@ const styles = StyleSheet.create({
     containerClient: {
         flex: 1,
         alignItems: 'center',
+        width: '80%',
+        marginVertical: 20,
+    },
+    containerItem: {
         width: '100%',
+        marginVertical: 20,
+    },
+    itens: {
+    },
+    inputItens: {
+        height: 40,
+        borderWidth: 2,
+        borderRadius: 10,
+        textAlign: 'center',
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginVertical: 8,
+    },
+    input: {
+        height: 40,
+        margin: 5,
+        borderWidth: 2,
+        borderRadius: 10,
+        width: '100%',
+        textAlign: 'center',
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginVertical: 8,
     },
     opcoes: {
         width: '90%',
@@ -317,6 +371,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 15,
         flexDirection: 'row',
+    },
+    inputMultiline: {
+        textAlignVertical: 'top', // Alinha o texto no topo da caixa de texto
+        height: 60, // Altura inicial (ajuste conforme necessário)
     },
     botao: {
         backgroundColor: '#138600',
@@ -326,7 +384,6 @@ const styles = StyleSheet.create({
         width: '65%',
         textAlign: "center",
         alignContent: 'center',
-        marginVertical: 50,
     },
     textoBotao: {
         color: '#FFFFFF',
@@ -334,17 +391,35 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold',
     },
-    input: {
-        height: 40,
-        margin: 5,
+    tabelaContainer: {
+        width: '100%',
+        marginTop: 20,
         borderWidth: 2,
         borderRadius: 10,
-        width: '80%',
+        overflow: 'hidden',
+    },
+    tabelaCabecalho: {
+        flexDirection: 'row',
+        backgroundColor: '#138600',
+        paddingVertical: 10,
+    },
+    tabelaCabecalhoTexto: {
+        flex: 1,
+        color: '#FFFFFF',
+        fontSize: RFPercentage(2),
         textAlign: 'center',
-        fontSize: 20,
         fontWeight: 'bold',
+    },
+    tabelaItem: {
+        flexDirection: 'row',
+        borderBottomWidth: 1,
+        borderColor: '#138600',
+        paddingVertical: 10,
+    },
+    tabelaItemTexto: {
+        flex: 1,
+        fontSize: RFPercentage(2),
         textAlign: 'center',
-        marginVertical: 8,
     },
     containerData: {
         alignItems: 'center',
@@ -357,7 +432,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         fontSize: RFPercentage(2.5),
         fontWeight: 'bold',
-        marginTop: 5
+        marginTop: 5,
     },
     dataEscolhida: {
         color: '#00069D',
@@ -366,10 +441,9 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         fontSize: RFPercentage(2.5),
         fontWeight: 'bold',
-        marginTop: 5// ou a cor desejada para a data escolhida
-        // Outros estilos, se necessário
+        marginTop: 5,
     },
-
 });
+
 
 export default TelaPDF;
