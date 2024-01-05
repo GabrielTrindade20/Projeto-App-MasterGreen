@@ -28,9 +28,15 @@
       "permissions": [
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE"
-      ]
+      ],
+      "package": "com.gab_roch.AppMasterGreen"
     },
-    "package": "com.gab_roch.MasterGreen"
+    "package": "com.gab_roch.MasterGreen",
+    "extra": {
+      "eas": {
+        "projectId": "17ee6e08-809f-43e3-9d61-3cc78e06ea52"
+      }
+    }
   },
   "web": {
     "favicon": "./assets/favicon.png"
