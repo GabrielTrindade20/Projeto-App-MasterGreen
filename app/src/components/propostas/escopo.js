@@ -1,14 +1,14 @@
 
-export const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, frete, dadosInputs) => {
+export const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, frete, dadosInputs, valorFinalCliente) => {
   // ... Restante do código HTML
 
   const tabelaItens = dadosInputs.map((item, index) => `
     <tr>
         <td>${index + 1}</td>
-        <td>${item.qtd}</td>
+        <td>${item.metragem}</td>
         <td>${item.descricao}</td>
-        <td>R$ ${item.valorUnitario}</td>
-        <td>R$ ${item.valorTotal}</td>
+        <td>R$ ${item.valorPorMetro}</td>
+        <td></td>
     </tr>
   `).join('');
 
@@ -142,15 +142,11 @@ export const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, f
           <th>VALOR TOTAL</th>
       </tr>
   </thead>
-  <tbody>
+        <tbody>
             ${tabelaItens}
+            <td colspan="4"></td>
+            <td>R$ ${valorFinalCliente.toFixed(2)}</td>
         </tbody>
-  <tfoot>
-      <tr>
-          <td colspan="4">TOTAL</td>
-          <td>R$ 0,00</td>
-      </tr>
-  </tfoot>
 </table>
 
 

@@ -20,42 +20,64 @@ const TelaPDF = () => {
     const [frete, setFrete] = useState("");
     const [dataEscolhida, setDataEscolhida] = useState("Escolha a Data da Proposta");
     const [dadosInputs, setDadosInputs] = useState([]);
-    const [quantidade, setQuantidade] = useState('');
+
+    const [metragem, setMetragem] = useState('');
     const [descricao, setDescricao] = useState('');
+    const [valorPorMetro, setValorPorMetro] = useState('');
+    const [valorFinalCliente, setValorFinalCliente] = useState('')
+    // const [calculoValorTotal, setCalculoValorTotal] = useState('')
+    // const [totalDesconto, setTotalDesconto] = useState('')
+    const [desconto, setDesconto] = useState('');
 
 
+ 
     //criação das tabelas
     /*  
     VALOR UNITÁRIO = VALOR POR METRO
     QUANTIDADE = METRAGEM
     TOTAL = VALOR POR METRO * QUANTIDADE
     */
+    useEffect(() => {
+        const valorFinalClienteCalculado = valorPorMetro * metragem;
+
+        if (desconto !== "") {
+            const descontoDecimal = parseFloat(desconto) || 0;
+            const valorDesconto = valorFinalClienteCalculado * descontoDecimal / 100;
+            setValorFinalCliente(valorFinalClienteCalculado - valorDesconto)
+        } else {
+            setValorFinalCliente(valorFinalClienteCalculado);
+        }
+    }, [valorPorMetro, metragem, desconto]);
 
 
-    const adicionarLinhaTabela = (qtd, descricao) => {
-        const novaLinha = {
-            item: dadosTabela.length + 1,
-            qtd,
-            descricao,
-            valorUnitario: 0,
-            valorTotal: 0,
-        };
+    // const adicionarLinhaTabela = (qtd, descricao) => {
+    //     const novaLinha = {
+    //         item: dadosTabela.length + 1,
+    //         qtd,
+    //         descricao,
+    //         valorPorMetro: 0,
+    //         valorFinalCliente: valorFinalCliente,
+    //     };
 
-        setDadosTabela([...dadosTabela, novaLinha]);
-    };
+    //     setDadosTabela([...dadosTabela, novaLinha]);
+    // };
 
-    const adicionarItem = () => {
+    const adicionarItem = () => {    
+
         const novoItem = {
-            qtd: quantidade,
+            qtd: metragem,
             descricao: descricao,
+            valorPorMetro: valorPorMetro,
         };
 
         const novosDadosInputs = [...dadosInputs, novoItem];
         setDadosInputs(novosDadosInputs);
 
         // Limpar os estados após adicionar o item
-        setQuantidade('');
+        setMetragem('');
         setDescricao('');
+        setValorPorMetro('');       
+
     };
 
 
@@ -87,7 +109,7 @@ const TelaPDF = () => {
     //CONFIGURAÇÃO PARA DATA
 
     const visualizarPDF = async () => {
-        const html = gerarHTML(cliente, ac, telefone, endereco, cnpj, dataEscolhida, frete, dadosInputs);
+        const html = gerarHTML(cliente, ac, telefone, endereco, cnpj, dataEscolhida, frete, dadosInputs, this.valorFinalCliente);
 
         const options = {
             html,
@@ -203,11 +225,11 @@ const TelaPDF = () => {
                     {dadosInputs.map((item, index) => (
                         <View key={index}>
                             <TextInput
-                                placeholder={`Quantidade - Item ${index + 1}`}
-                                value={item.qtd}
+                                placeholder={`Metragem - Item ${index + 1}`}
+                                value={item.metragem}
                                 onChangeText={(text) => {
                                     const novosDadosInputs = [...dadosInputs];
-                                    novosDadosInputs[index].qtd = text;
+                                    novosDadosInputs[index].metragem = text;
                                     setDadosInputs(novosDadosInputs);
                                 }}
                                 style={styles.input}
@@ -223,6 +245,28 @@ const TelaPDF = () => {
                                 }}
                                 style={styles.input}
                                 keyboardType="default"
+                            />
+                            <TextInput
+                                placeholder={`Valor por Metro - Item ${index + 1}`}
+                                value={item.valorPorMetro}
+                                onChangeText={(text) => {
+                                    const novosDadosInputs = [...dadosInputs];
+                                    novosDadosInputs[index].valorPorMetro = text;
+                                    setDadosInputs(novosDadosInputs);
+                                }}
+                                style={styles.input}
+                                keyboardType="numeric"
+                            />
+                            <TextInput
+                                placeholder={`Desconto - Item ${index + 1}`}
+                                value={item.desconto}
+                                onChangeText={(text) => {
+                                    const novosDadosInputs = [...dadosInputs];
+                                    novosDadosInputs[index].desconto = text;
+                                    setDadosInputs(novosDadosInputs);
+                                }}
+                                style={styles.input}
+                                keyboardType="numeric"
                             />
                             {/* Outros campos necessários */}
                         </View>
