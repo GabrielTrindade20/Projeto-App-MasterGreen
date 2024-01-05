@@ -17,7 +17,7 @@ const Header = ({ route }) => {
   const resetScreen = () => {
     navigation.reset({
       index: 0,
-      routes: [{ name: route.name }] // Substitua 'Orçamento' pelo nome da sua tela inicial
+      routes: [{ name: route.name }]      
     });
   };
 

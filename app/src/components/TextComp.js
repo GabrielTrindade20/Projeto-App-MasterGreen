@@ -25,6 +25,18 @@ const TextComponent = ({ style, children }) => {
             fontWeight: 'bold',
             marginVertical: 2,
             fontSize: RFPercentage(3, 680)
+        },
+        botao: {
+            color: '#FFFFFF', // Cor do texto
+            fontSize: RFPercentage(3),
+            textAlign: 'center',
+            fontWeight: 'bold',
+        },
+        botao2: {
+            color: '#FFFFFF', // Cor do texto
+            fontSize: RFPercentage(2),
+            textAlign: 'center',
+            fontWeight: 'bold',
         }
     };
 
@@ -36,6 +48,10 @@ const TextComponent = ({ style, children }) => {
                 return styles.valores;
             case 'titulo':
                 return styles.titulo;
+            case 'botao':
+                return styles.botao;
+            case 'botao2':
+                return styles.botao2;
             default:
                 return styles.numeros;
         }

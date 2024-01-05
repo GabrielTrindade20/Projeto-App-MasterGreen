@@ -297,28 +297,29 @@ const TelaPDF = () => {
 
             <View style={styles.containerItem}>
                 <TouchableOpacity onPress={adicionarItem} style={styles.botaoItem}>
-                    <Text style={styles.textoBotao}>Adicionar Item</Text>
+                    <TextComponente style='botao2'>Adicionar Item</TextComponente>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={removerUltimoItem} style={styles.botaoItem}>
-                    <Text style={styles.textoBotao}>Remover Item</Text>
+                    <TextComponente style='botao2'>Remover Item</TextComponente>
                 </TouchableOpacity>
             </View>
 
+            <View style={{ width: "50%", marginBottom: 20 }}>
+                <TouchableOpacity
+                    style={styles.botao}
+                    onPress={gerarPDF}
+                >
+                    <TextComponente style={"botao"}>Gerar PDF</TextComponente>
+                </TouchableOpacity>
 
-            <TouchableOpacity
-                style={styles.botao}
-                onPress={gerarPDF}
-            >
-                <Text style={styles.textoBotao}>Gerar PDF</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-                style={styles.botao}
-                onPress={visualizarPDF}
-            >
-                <Text style={styles.textoBotao}>visualizar PDF</Text>
-            </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.botao}
+                    onPress={visualizarPDF}
+                >
+                    <TextComponente style='botao'>Visualizar PDF</TextComponente>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
@@ -394,11 +395,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
     botao: {
-        backgroundColor: '#138600',
+        backgroundColor: '#B81100',
         padding: 15,
         borderRadius: 5,
         marginTop: 20,
-        width: '65%',
         textAlign: "center",
         alignContent: 'center',
     },
@@ -408,12 +408,7 @@ const styles = StyleSheet.create({
         width: 'auto',
         borderRadius: 10,
     },
-    textoBotao: {
-        color: '#FFFFFF',
-        fontSize: RFPercentage(2),
-        textAlign: 'center',
-        fontWeight: 'bold',
-    },
+
     tabelaContainer: {
         width: '100%',
         marginTop: 20,

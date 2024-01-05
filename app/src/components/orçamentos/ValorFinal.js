@@ -111,7 +111,7 @@ const ValorFinal = ({ custos, valorPorMetro, metragem }) => {
                 style={styles.botao}
                 onPress={irParaProposta}
             >
-                <Text style={styles.textoBotao}>Fazer Proposta</Text>
+                <TextComponent style='botao'>Fazer Proposta</TextComponent>
             </TouchableOpacity>
         </View >
     );
@@ -166,13 +166,7 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         marginVertical: 50,
     },
-    textoBotao: {
-        color: '#FFFFFF', // Cor do texto
-        fontSize: RFPercentage(3),
-        textAlign: 'center',
-        fontWeight: 'bold',
 
-    },
 });
 
 export default ValorFinal;
