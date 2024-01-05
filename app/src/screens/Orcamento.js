@@ -49,17 +49,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         backgroundColor: '#002B17',
     },
-    containerOpcao: {
-        flexDirection: 'row',
-        backgroundColor: '#fff',
-        width: '95%',
-        borderRadius: 10,
-        padding: 15,
-    },
-    text: {
-        fontSize: 25,
-        color: '#fff',
-    },
+   
 });
 
 export default Orcamento;

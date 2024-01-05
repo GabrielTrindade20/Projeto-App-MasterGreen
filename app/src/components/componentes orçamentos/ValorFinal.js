@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import TextComponent from "../TextComp";
 import Orcamento from "../../screens/Orcamento";
-import Proposta from "../../screens/Proposta";
+import Proposta from "../propostas/PropostaPDF";
 
 const ValorFinal = ({ custos, valorPorMetro, metragem }) => {
     const navigation = useNavigation();

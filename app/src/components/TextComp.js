@@ -24,7 +24,7 @@ const TextComponent = ({ style, children }) => {
         titulo: {
             fontWeight: 'bold',
             marginVertical: 2,
-            fontSize: RFPercentage(4, 680)
+            fontSize: RFPercentage(3, 680)
         }
     };
 

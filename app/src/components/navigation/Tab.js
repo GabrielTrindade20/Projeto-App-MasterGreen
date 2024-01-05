@@ -5,6 +5,8 @@ import Orcamento from "../../screens/Orcamento";
 import Header from "../Header";
 import Campo from "../../screens/Campo";
 import Proposta from "../../screens/Proposta";
+import { RFPercentage } from "react-native-responsive-fontsize";
+
 
 const Tab = createBottomTabNavigator()
 
@@ -15,10 +17,16 @@ export default props => (
       tabBarActiveTintColor: 'red',
       tabBarInactiveTintColor: 'blue',
       tabBarShowLabel: true,
-      tabBarLabelStyle: { fontSize: 18, fontWeight: 'bold' },
+      tabBarLabelStyle: {
+        fontSize: RFPercentage(1.9),
+        fontWeight: 'bold',
+        marginBottom: 5,
+      },
       tabBarStyle: {
         display: "flex",
-        height: 60
+        height: 60,
+        borderTopWidth: 2, // Adiciona uma borda na parte inferior
+        borderBottomColor: '#E2E2E2', // Cor da borda
       },
 
       tabBarIcon: ({ focused, color, size }) => {
