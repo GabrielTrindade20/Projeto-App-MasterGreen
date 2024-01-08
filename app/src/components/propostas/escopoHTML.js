@@ -81,6 +81,7 @@ export const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, f
       #dados-pagamento {
         padding-top: "2%";
         font-style: italic;
+        margin: 30px 0px -5px 0px;
       }
   
       h1 {
@@ -115,7 +116,7 @@ export const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, f
   
     <header class="central">
       <div id="banner-logo">
-      <img src="https://github.com/GabrielTrindade20/Projeto-App-MasterGreen/blob/mastergreen/app/src/imagens/banner.jpeg?raw=true" alt="Banner MasterGreen" width="400" height="100" />
+      <img src="https://github.com/GabrielTrindade20/Projeto-App-MasterGreen/blob/mastergreen/app/src/imagens/banner.jpeg?raw=true" alt="Banner MasterGreen" width="300" height="80" />
       </div>
   
       <div class="texto-empresa">
@@ -158,10 +159,10 @@ export const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, f
 </table>
 
 
+<div class="dados-proposta">
   <h3>
     <span> Dados da Proposta: </span>
   </h3>
-  <div class="dados-proposta">
     <p><span>Prazo de garantia:</span> 1 ano (garantia da fábrica).</p>
     <p><span>Forma de pagamento:</span> 50% de entrada + 50% na entrega.</p>
     <p><span>Frete:</span> ${frete}.</p>
