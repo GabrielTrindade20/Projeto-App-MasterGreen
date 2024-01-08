@@ -326,7 +326,7 @@ const TelaPDF = () => {
                     style={styles.botao}
                     onPress={visualizarPDF}
                 >
-                    <TextComponente style='botao'>Visualizar PDF</TextComponente>
+                    <TextComponente style={'botao'}>Visualizar PDF</TextComponente>
                 </TouchableOpacity>
             </View>
         </View>

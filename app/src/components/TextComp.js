@@ -28,7 +28,7 @@ const TextComponent = ({ style, children }) => {
         },
         botao: {
             color: '#FFFFFF', // Cor do texto
-            fontSize: RFPercentage(3),
+            fontSize: RFPercentage(2.5),
             textAlign: 'center',
             fontWeight: 'bold',
         },

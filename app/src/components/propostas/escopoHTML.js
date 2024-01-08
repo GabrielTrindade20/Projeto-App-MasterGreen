@@ -2,13 +2,15 @@
 export const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, frete, dadosInputs, valorFinalCliente) => {
   // ... Restante do código HTML
 
+
+
   const tabelaItens = dadosInputs.map((item, index) => `
     <tr>
         <td>${index + 1}</td>
         <td>${item.metragem}</td>
         <td>${item.descricao}</td>
-        <td>R$ ${item.valorPorMetro}</td>
-        <td></td>
+        <td>R$ ${(item.valorPorMetro).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+        <td>${(item.valorPorMetro * item.metragem).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
     </tr>
   `).join('');
 
@@ -44,13 +46,24 @@ export const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, f
       span {
         font-weight: bold;
       }
-  
+
+      p {
+        margin: 12px 0;
+        padding: 0;
+      }
+       
       .texto-empresa p,
       .texto-cliente p,
       .dados-proposta p {
         margin-bottom: -10px;
+        font-size: 12px
       }
   
+      #cliente {
+        margin-top: 20px;
+        margin-bottom: 30px;
+      }
+
       h2 {
         font-size: 20px;
         text-align: center;
@@ -58,6 +71,7 @@ export const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, f
   
       #titulo-principal{
         margin-bottom: 0px;
+        font-size: 15px
       }
 
       .texto-cliente {
@@ -72,31 +86,26 @@ export const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, f
       h1 {
         text-align: center;
       }
-  
+
+       
       table {
         max-width: 90%;
         width: 90%;
         margin: auto;
       }
-    
+      
       th,
       td {
-        padding: 8px; /* Adjust the padding for better spacing */
+        padding: 2px 5px 2px 5px;
         text-align: center;
+        font-size: 13px;
       }
-    
-      th {
-        font-weight: bold;
-        font-size: 15px;
-      }
-    
-      tr:nth-child(even) {
-        background-color: #DCEBE6;
-      }
-    
-      tr:hover:nth-child(1n + 2) {
-        background-color: #085F63;
+  
+      .linha-especial {
+        background-color: #298A1E; /* Altere a cor conforme necessário */
         color: #fff;
+        font-weight: bold;
+        font-size: 12px;
       }
   
     </style>
@@ -108,11 +117,9 @@ export const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, f
       <div id="banner-logo">
       <img src="https://github.com/GabrielTrindade20/Projeto-App-MasterGreen/blob/mastergreen/app/src/imagens/banner.jpeg?raw=true" alt="Banner MasterGreen" width="400" height="100" />
       </div>
-
-
   
       <div class="texto-empresa">
-      <p>Razão Social: MasterGreen Grama Sintética</p>
+      <p>Razão Social: Master Green Grama Sintética</p>
       <p>CNPJ: 36.347.491/0001-99</p>
       <p> Endereço: QNN 24 Conjunto E Lote 14, Ceilândia Sul - DF</p>
       <p> Telefone: (61) 98412-4179 </p>
@@ -122,8 +129,8 @@ export const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, f
 
   <h2 id="titulo-principal">PROPOSTA PARA VENDA E INSTALAÇÃO DE GRAMA SINTÉTICA</h2>
 
-  <div class="texto-cliente">
-    <p><span>Ao</span> ${cliente}</p>
+  <div class="texto-cliente" id="cliente">
+    <p><span>Ao:</span> ${cliente}</p>
     <p><span>A/C:</span> ${ac}</p>
     <p><span>Telefone:</span> ${telefone}</p>
     <p><span>Endereço:</span> ${endereco}</p>
@@ -144,8 +151,9 @@ export const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, f
   </thead>
         <tbody>
             ${tabelaItens}
-            <td colspan="4"></td>
-            <td>${valorFinalCliente.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+            <td colspan="3"></td>
+            <td class="linha-especial" id="valor-total"><span>TOTAL:<span></td>
+            <td class="linha-especial">${valorFinalCliente.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
             </tbody>
 </table>
 
@@ -154,7 +162,6 @@ export const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, f
     <span> Dados da Proposta: </span>
   </h3>
   <div class="dados-proposta">
-    <p><span>Descrição do produto:</span> </p>
     <p><span>Prazo de garantia:</span> 1 ano (garantia da fábrica).</p>
     <p><span>Forma de pagamento:</span> 50% de entrada + 50% na entrega.</p>
     <p><span>Frete:</span> ${frete}.</p>
@@ -163,10 +170,11 @@ export const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, f
   </div>
 
   <h3 id="dados-pagamento">Dados para pagamento:</h3>
-  <p><span>PIX:</span> 36.347.491/0001-99 - CNPJ em nome da Rocha Comércio e Instalação de Grama Sintética</p>
+  <p><span>PIX:</span> 36.347.491/0001-99 - CNPJ </p> 
+  <p><span>Em nome de:</span> Rocha Comércio e Instalação de Grama Sintética</p>
 
   <div class="newton">
-    <p>JOSÉ NEWTON DE ALMEIDA ROCHA</p>
+    <p>NEWTON ROCHA</p>
     <p>Administrador</p>
   </div>
 
