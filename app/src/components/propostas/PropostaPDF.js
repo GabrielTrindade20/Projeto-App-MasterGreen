@@ -8,6 +8,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Dimensions } from 'react-native';
 
 
+import Formatacao from './Formatacao';
 import TextComponente from '../TextComp';
 import OpcaoSelecao from '../OpcaoSelecao'
 
@@ -28,26 +29,6 @@ const TelaPDF = () => {
     const [valorFinalCliente, setValorFinalCliente] = useState('')
     const [desconto, setDesconto] = useState('');
 
-
-
-    //criação das tabelas
-    /*  
-    VALOR UNITÁRIO = VALOR POR METRO
-    QUANTIDADE = METRAGEM
-    TOTAL = VALOR POR METRO * QUANTIDADE
-    */
-
-    useEffect(() => {
-        const valorFinalClienteCalculado = valorPorMetro * metragem;
-
-        if (desconto !== "") {
-            const descontoDecimal = parseFloat(desconto) || 0;
-            const valorDesconto = valorFinalClienteCalculado * descontoDecimal / 100;
-            setValorFinalCliente(valorFinalClienteCalculado - valorDesconto)
-        } else {
-            setValorFinalCliente(valorFinalClienteCalculado);
-        }
-    }, [valorPorMetro, metragem, desconto, valorFinalCliente]);
 
 
     const adicionarItem = () => {
@@ -102,12 +83,23 @@ const TelaPDF = () => {
 
     const visualizarPDF = async () => {
         // Atualizar o valorFinalCliente antes de chamar gerarHTML
-        const valorFinalClienteCalculado = dadosInputs.reduce((total, item) => {
-            const subtotal = parseFloat(item.valorPorMetro) * parseFloat(item.metragem);
-            const descontoDecimal = parseFloat(item.desconto) || 0;
-            const valorDesconto = subtotal * descontoDecimal / 100;
-            return total + (subtotal - valorDesconto);
-        }, 0);
+        let valorFinalClienteCalculado = 0;
+
+        if (parseFloat(desconto) > 0) {
+            // Se houver um desconto definido, aplicar o desconto ao valor total
+            valorFinalClienteCalculado = dadosInputs.reduce((total, item) => {
+                const subtotal = parseFloat(item.valorPorMetro) * parseFloat(item.metragem);
+                const descontoDecimal = parseFloat(desconto) || 0;
+                const valorDesconto = subtotal * descontoDecimal / 100;
+                return total + (subtotal - valorDesconto);
+            }, 0);
+        } else {
+            // Se não houver desconto, simplesmente somar os valores finais
+            valorFinalClienteCalculado = dadosInputs.reduce((total, item) => {
+                const subtotal = parseFloat(item.valorPorMetro) * parseFloat(item.metragem);
+                return total + subtotal;
+            }, 0);
+        }
 
         setValorFinalCliente(valorFinalClienteCalculado);
 
@@ -127,13 +119,23 @@ const TelaPDF = () => {
 
 
     const gerarPDF = async () => {
+        let valorFinalClienteCalculado = 0;
 
-        const valorFinalClienteCalculado = dadosInputs.reduce((total, item) => {
-            const subtotal = parseFloat(item.valorPorMetro) * parseFloat(item.metragem);
-            const descontoDecimal = parseFloat(item.desconto) || 0;
-            const valorDesconto = subtotal * descontoDecimal / 100;
-            return total + (subtotal - valorDesconto);
-        }, 0);
+        if (parseFloat(desconto) > 0) {
+            // Se houver um desconto definido, aplicar o desconto ao valor total
+            valorFinalClienteCalculado = dadosInputs.reduce((total, item) => {
+                const subtotal = parseFloat(item.valorPorMetro) * parseFloat(item.metragem);
+                const descontoDecimal = parseFloat(desconto) || 0;
+                const valorDesconto = subtotal * descontoDecimal / 100;
+                return total + (subtotal - valorDesconto);
+            }, 0);
+        } else {
+            // Se não houver desconto, simplesmente somar os valores finais
+            valorFinalClienteCalculado = dadosInputs.reduce((total, item) => {
+                const subtotal = parseFloat(item.valorPorMetro) * parseFloat(item.metragem);
+                return total + subtotal;
+            }, 0);
+        }
 
         setValorFinalCliente(valorFinalClienteCalculado);
         // Use a função gerarHTML do arquivo escopo.js para gerar o HTML com os dados
@@ -169,25 +171,28 @@ const TelaPDF = () => {
                     onChangeText={(text) => setAc(text)}
                     style={styles.input}
                 />
-                <TextInput
+                <Formatacao
                     placeholder="Telefone"
                     value={telefone}
-                    onChangeText={(text) => setTelefone(text)}
-                    style={styles.input}
+                    onChangeText={setTelefone}
                     keyboardType="numeric"
+                    formato="(xx) xxxxx-xxxx"
                 />
                 <TextInput
                     placeholder="Endereço"
                     value={endereco}
                     onChangeText={(text) => setEndereco(text)}
-                    style={styles.input}
+                    style={[styles.inputItens, styles.inputMultiline]} // Adiciona o estilo inputMultiline
+                    keyboardType="default"
+                    multiline={true} // Habilita a digitação de várias linhas
+                    numberOfLines={5}
                 />
-                <TextInput
+                <Formatacao
                     placeholder="CNPJ"
                     value={cnpj}
-                    onChangeText={(text) => setCnpj(text)}
-                    style={styles.input}
-                    keyboardType="numbers-and-punctuation"
+                    onChangeText={setCnpj}
+                    keyboardType="numeric"
+                    formato="xx.xxx.xxx/xxxx-xx"
                 />
 
                 <TouchableOpacity
@@ -242,7 +247,7 @@ const TelaPDF = () => {
                     <View style={styles.containerItensAdd}>
                         <TextComponente style={"textInfo"}>METRAGEM (m²)</TextComponente>
                         <TextInput
-                            placeholder="Metragem"
+                            placeholder="Ex: 10"
                             value={item.metragem}
                             onChangeText={(text) => {
                                 const novosDadosInputs = [...dadosInputs];
@@ -257,7 +262,7 @@ const TelaPDF = () => {
                     <View style={styles.containerItensAdd}>
                         <TextComponente style={"textInfo"}>VALOR POR METRO</TextComponente>
                         <TextInput
-                            placeholder="Valor por Metro"
+                            placeholder="Ex: 80"
                             value={item.valorPorMetro}
                             onChangeText={(text) => {
                                 const novosDadosInputs = [...dadosInputs];
@@ -272,7 +277,7 @@ const TelaPDF = () => {
                     <View style={styles.containerItensAdd}>
                         <TextComponente style={"textInfo"}>DESCRIÇÃO DO PRODUTO</TextComponente>
                         <TextInput
-                            placeholder="Descrição"
+                            placeholder="Ex: grama sintética"
                             value={item.descricao}
                             onChangeText={(text) => {
                                 const novosDadosInputs = [...dadosInputs];
@@ -282,22 +287,8 @@ const TelaPDF = () => {
                             style={[styles.inputItens, styles.inputMultiline]} // Adiciona o estilo inputMultiline
                             keyboardType="default"
                             multiline={true} // Habilita a digitação de várias linhas
-                            numberOfLines={4} // Define o número inicial de linhas (ajuste conforme necessário)
-                        />
-                    </View>
+                            numberOfLines={5} // Define o número inicial de linhas (ajuste conforme necessário)
 
-                    <View style={styles.containerItensAdd}>
-                        <TextComponente style={"textInfo"}>VALOR DO DESCONTO</TextComponente>
-                        <TextInput
-                            placeholder="Desconto"
-                            value={item.desconto}
-                            onChangeText={(text) => {
-                                const novosDadosInputs = [...dadosInputs];
-                                novosDadosInputs[index].desconto = text;
-                                setDadosInputs(novosDadosInputs);
-                            }}
-                            style={styles.inputItens}
-                            keyboardType="numeric"
                         />
                     </View>
                     {/* Outros campos necessários */}
@@ -313,6 +304,18 @@ const TelaPDF = () => {
                     <TextComponente style='botao2'>Remover Item</TextComponente>
                 </TouchableOpacity>
             </View>
+
+            <View style={styles.containnerSections}>
+                <TextComponente style={"textInfo"}>VALOR DO DESCONTO</TextComponente>
+                <TextInput
+                    placeholder="Desconto"
+                    value={desconto}
+                    onChangeText={(text) => setDesconto(text)}
+                    style={styles.inputItens}
+                    keyboardType="numeric"
+                />
+            </View>
+
 
             <View style={{ width: "50%", marginBottom: 20 }}>
                 <TouchableOpacity
@@ -399,7 +402,7 @@ const styles = StyleSheet.create({
     },
     inputMultiline: {
         textAlignVertical: 'top', // Alinha o texto no topo da caixa de texto
-        height: 60, // Altura inicial (ajuste conforme necessário)
+        height: 80, // Altura inicial (ajuste conforme necessário)
         paddingTop: 5,
         paddingHorizontal: 10,
     },
