@@ -1,8 +1,6 @@
 
-export const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, frete, dadosInputs, valorFinalCliente) => {
+export const gerarHTML = (cliente, ac, telefone, endereco, tipoPessoa, dataProposta, frete, dadosInputs, valorFinalCliente) => {
   // ... Restante do código HTML
-
-
 
   const tabelaItens = dadosInputs.map((item, index) => `
     <tr>
@@ -131,11 +129,11 @@ export const gerarHTML = (cliente, ac, telefone, endereco, cnpj, dataProposta, f
   <h2 id="titulo-principal">PROPOSTA PARA VENDA E INSTALAÇÃO DE GRAMA SINTÉTICA</h2>
 
   <div class="texto-cliente" id="cliente">
-    <p><span>Ao:</span> ${cliente}</p>
+    <p><span>Ao(à):</span> ${cliente}</p>
     <p><span>A/C:</span> ${ac}</p>
     <p><span>Telefone:</span> ${telefone}</p>
     <p><span>Endereço:</span> ${endereco}</p>
-    <p><span>CNPJ:</span> ${cnpj}</p>
+    <p><span>CPF/CNPJ:</span> ${tipoPessoa}</p>
     <p><span>Data da Proposta:</span> ${dataProposta}</p>
   </div>
 

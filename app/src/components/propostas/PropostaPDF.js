@@ -8,16 +8,17 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Dimensions } from 'react-native';
 
 
-import Formatacao from './Formatacao';
+import Formatacao from './CpfCnpj';
 import TextComponente from '../TextComp';
 import OpcaoSelecao from '../OpcaoSelecao'
+import Telefone from './Telefone'
 
 const TelaPDF = () => {
     const [cliente, setCliente] = useState("");
     const [ac, setAc] = useState("");
     const [telefone, setTelefone] = useState("");
     const [endereco, setEndereco] = useState("");
-    const [cnpj, setCnpj] = useState("");
+    const [tipoPessoa, setTipoPessoa] = useState("");
     const [dataProposta, setDataProposta] = useState(new Date());
     const [frete, setFrete] = useState("");
     const [dataEscolhida, setDataEscolhida] = useState("Escolha a Data da Proposta");
@@ -103,7 +104,7 @@ const TelaPDF = () => {
 
         setValorFinalCliente(valorFinalClienteCalculado);
 
-        const html = gerarHTML(cliente, ac, telefone, endereco, cnpj, dataEscolhida, frete, dadosInputs, valorFinalClienteCalculado);
+        const html = gerarHTML(cliente, ac, telefone, endereco, tipoPessoa, dataEscolhida, frete, dadosInputs, valorFinalClienteCalculado);
 
         const options = {
             html,
@@ -139,7 +140,7 @@ const TelaPDF = () => {
 
         setValorFinalCliente(valorFinalClienteCalculado);
         // Use a função gerarHTML do arquivo escopo.js para gerar o HTML com os dados
-        const html = gerarHTML(cliente, ac, telefone, endereco, cnpj, dataEscolhida, frete, dadosInputs, valorFinalClienteCalculado);
+        const html = gerarHTML(cliente, ac, telefone, endereco, tipoPessoa, dataEscolhida, frete, dadosInputs, valorFinalClienteCalculado);
 
         const options = {
             html,
@@ -171,13 +172,12 @@ const TelaPDF = () => {
                     onChangeText={(text) => setAc(text)}
                     style={styles.input}
                 />
-                <Formatacao
+                <Telefone
                     placeholder="Telefone"
                     value={telefone}
                     onChangeText={setTelefone}
-                    keyboardType="numeric"
-                    formato="(xx) xxxxx-xxxx"
                 />
+
                 <TextInput
                     placeholder="Endereço"
                     value={endereco}
@@ -188,11 +188,10 @@ const TelaPDF = () => {
                     numberOfLines={5}
                 />
                 <Formatacao
-                    placeholder="CNPJ"
-                    value={cnpj}
-                    onChangeText={setCnpj}
+                    placeholder="CNPJ ou CPF"
+                    value={tipoPessoa}
+                    onChangeText={(text) => setTipoPessoa(text)}
                     keyboardType="numeric"
-                    formato="xx.xxx.xxx/xxxx-xx"
                 />
 
                 <TouchableOpacity
