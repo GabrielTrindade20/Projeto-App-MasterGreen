@@ -20,7 +20,7 @@ export const gerarHTML = (cliente, ac, telefone, endereco, tipoPessoa, dataPropo
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proposta para Venda e Instalação de Grama Sintética</title>
+    <title>Proposta</title>
   
     <style>
       body {
@@ -126,7 +126,7 @@ export const gerarHTML = (cliente, ac, telefone, endereco, tipoPessoa, dataPropo
     </div>
   </header>
 
-  <h2 id="titulo-principal">PROPOSTA PARA VENDA E INSTALAÇÃO DE GRAMA SINTÉTICA</h2>
+  <h2 id="titulo-principal">PROPOSTA</h2>
 
   <div class="texto-cliente" id="cliente">
     <p><span>Ao(à):</span> ${cliente}</p>
