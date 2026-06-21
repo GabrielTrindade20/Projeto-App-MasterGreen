@@ -1,16 +1,16 @@
 # Arquivos gerados acidentalmente na raiz (projeto real está em /app)
-node_modules/
-package.json
-package-lock.json
-tsconfig.json
-app.json
-eas.json
+/node_modules/
+/package.json
+/package-lock.json
+/tsconfig.json
+/app.json
+/eas.json
 
 # IDE
-.idea/
+/.idea/
 
 # Pasta de build antiga
-app-mastergreen/
+/app-mastergreen/
 
 # Expo
-.expo/
+/.expo/
