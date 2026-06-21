@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Button, ScrollView } from 'react-native';
+﻿import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Button, ScrollView, Animated } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { shareAsync } from 'expo-sharing';
 import * as Print from 'expo-print';
+import * as FileSystem from 'expo-file-system';
 import { gerarHTML } from './escopoHTML';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Dimensions } from 'react-native';
 
 
+import { Picker } from '@react-native-picker/picker';
 import Formatacao from './CpfCnpj';
 import TextComponente from '../TextComp';
 import OpcaoSelecao from '../OpcaoSelecao'
@@ -21,42 +23,47 @@ const TelaPDF = () => {
     const [tipoPessoa, setTipoPessoa] = useState("");
     const [dataProposta, setDataProposta] = useState(new Date());
     const [frete, setFrete] = useState("");
+    const [prazoQtd, setPrazoQtd] = useState('');
+    const [prazoUnidade, setPrazoUnidade] = useState('meses');
     const [dataEscolhida, setDataEscolhida] = useState("Escolha a Data da Proposta");
     const [dadosInputs, setDadosInputs] = useState([]);
 
-    const [metragem, setMetragem] = useState('');
-    const [descricao, setDescricao] = useState('');
-    const [valorPorMetro, setValorPorMetro] = useState('');
     const [valorFinalCliente, setValorFinalCliente] = useState('')
     const [desconto, setDesconto] = useState('');
+    const [entrada, setEntrada] = useState('');
 
-
+    const idCounter = useRef(0);
+    const animValues = useRef({});
 
     const adicionarItem = () => {
+        const id = idCounter.current++;
+        const anim = new Animated.Value(0);
+        animValues.current[id] = anim;
 
-        const novoItem = {
-            qtd: metragem,
-            descricao: descricao,
-            valorPorMetro: valorPorMetro,
-        };
+        const novoItem = { id, metragem: '', descricao: '', valorPorMetro: '' };
+        setDadosInputs(prev => [...prev, novoItem]);
 
-        const novosDadosInputs = [...dadosInputs, novoItem];
-        setDadosInputs(novosDadosInputs);
-
-        // Limpar os estados após adicionar o item
-        setMetragem('');
-        setDescricao('');
-        setValorPorMetro('');
-
+        Animated.spring(anim, {
+            toValue: 1,
+            useNativeDriver: true,
+            tension: 50,
+            friction: 50,
+        }).start();
     };
 
-    const removerUltimoItem = () => {
-        if (dadosInputs.length > 0) {
-            const novosDadosInputs = [...dadosInputs];
-            novosDadosInputs.pop(); // Remove o último item do array
-            setDadosInputs(novosDadosInputs);
-        }
-    }
+    const removerItem = (id) => {
+        const anim = animValues.current[id];
+        if (!anim) return;
+
+        Animated.timing(anim, {
+            toValue: 0,
+            duration: 250,
+            useNativeDriver: true,
+        }).start(() => {
+            setDadosInputs(prev => prev.filter(item => item.id !== id));
+            delete animValues.current[id];
+        });
+    };
 
 
     //CONFIGURAÇÃO PARA DATA
@@ -104,7 +111,10 @@ const TelaPDF = () => {
 
         setValorFinalCliente(valorFinalClienteCalculado);
 
-        const html = gerarHTML(cliente, ac, telefone, endereco, tipoPessoa, dataEscolhida, frete, dadosInputs, valorFinalClienteCalculado);
+        const prazoGarantia = `${prazoQtd} ${prazoUnidade}`;
+        const entradaNum = parseFloat(entrada) || 0;
+        const formaPagamento = `${entradaNum}% de entrada + ${100 - entradaNum}% na entrega`;
+        const html = gerarHTML(cliente, ac, telefone, endereco, tipoPessoa, dataEscolhida, frete, dadosInputs, valorFinalClienteCalculado, prazoGarantia, formaPagamento);
 
         const options = {
             html,
@@ -140,20 +150,19 @@ const TelaPDF = () => {
 
         setValorFinalCliente(valorFinalClienteCalculado);
         // Use a função gerarHTML do arquivo escopo.js para gerar o HTML com os dados
-        const html = gerarHTML(cliente, ac, telefone, endereco, tipoPessoa, dataEscolhida, frete, dadosInputs, valorFinalClienteCalculado);
+        const prazoGarantia = `${prazoQtd} ${prazoUnidade}`;
+        const entradaNum = parseFloat(entrada) || 0;
+        const formaPagamento = `${entradaNum}% de entrada + ${100 - entradaNum}% na entrega`;
+        const html = gerarHTML(cliente, ac, telefone, endereco, tipoPessoa, dataEscolhida, frete, dadosInputs, valorFinalClienteCalculado, prazoGarantia, formaPagamento);
 
-        const options = {
-            html,
-            fileName: 'proposta',
-            directory: 'Documents',
-        };
+        const pdf = await Print.printToFileAsync({ html });
 
-        // Imprimir o PDF e obter o caminho do arquivo
-        const pdf = await Print.printToFileAsync(options);
+        const dataFormatada = dataEscolhida.replace(/\//g, '-');
+        const nomeArquivo = 'Proposta - ' + ac + ' ' + dataFormatada + '.pdf';
+        const novoUri = FileSystem.documentDirectory + nomeArquivo;
 
-        // Agora você pode usar o caminho do arquivo para compartilhar ou fazer outras ações
-        // Exemplo de compartilhamento:
-        await shareAsync(pdf.uri);
+        await FileSystem.copyAsync({ from: pdf.uri, to: novoUri });
+        await shareAsync(novoUri, { mimeType: 'application/pdf', dialogTitle: nomeArquivo });
     };
 
     return (
@@ -162,13 +171,11 @@ const TelaPDF = () => {
                 <TextComponente style={'titulo'}>Informações do Cliente</TextComponente>
                 <TextInput
                     placeholder="Cliente"
-                    value={cliente}
                     onChangeText={(text) => setCliente(text)}
                     style={styles.input}
                 />
                 <TextInput
                     placeholder="A/C"
-                    value={ac}
                     onChangeText={(text) => setAc(text)}
                     style={styles.input}
                 />
@@ -180,7 +187,6 @@ const TelaPDF = () => {
 
                 <TextInput
                     placeholder="Endereço"
-                    value={endereco}
                     onChangeText={(text) => setEndereco(text)}
                     style={[styles.inputItens, styles.inputMultiline]} // Adiciona o estilo inputMultiline
                     keyboardType="default"
@@ -239,68 +245,112 @@ const TelaPDF = () => {
                 </View>
             </View>
 
-
-            {dadosInputs.map((item, index) => (
-                <View key={index} style={styles.containnerSections} >
-
-                    <View style={styles.containerItensAdd}>
-                        <TextComponente style={"textInfo"}>METRAGEM (m²)</TextComponente>
-                        <TextInput
-                            placeholder="Ex: 10"
-                            value={item.metragem}
-                            onChangeText={(text) => {
-                                const novosDadosInputs = [...dadosInputs];
-                                novosDadosInputs[index].metragem = text;
-                                setDadosInputs(novosDadosInputs);
-                            }}
-                            style={styles.inputItens}
-                            keyboardType="numeric"
-                        />
+            <View style={styles.containnerSections}>
+                <TextComponente style={'numeros'}>Prazo de Garantia</TextComponente>
+                <View style={styles.prazoContainer}>
+                    <TextInput
+                        placeholder="Ex: 25"
+                        value={prazoQtd}
+                        onChangeText={setPrazoQtd}
+                        style={styles.inputPrazo}
+                        keyboardType="numeric"
+                    />
+                    <View style={styles.pickerWrapper}>
+                        <Picker
+                            selectedValue={prazoUnidade}
+                            onValueChange={(value) => setPrazoUnidade(value)}
+                            style={styles.picker}
+                            dropdownIconColor="#000"
+                        >
+                            <Picker.Item label="meses" value="meses" />
+                            <Picker.Item label="anos" value="anos" />
+                        </Picker>
                     </View>
-
-                    <View style={styles.containerItensAdd}>
-                        <TextComponente style={"textInfo"}>VALOR POR METRO</TextComponente>
-                        <TextInput
-                            placeholder="Ex: 80"
-                            value={item.valorPorMetro}
-                            onChangeText={(text) => {
-                                const novosDadosInputs = [...dadosInputs];
-                                novosDadosInputs[index].valorPorMetro = text;
-                                setDadosInputs(novosDadosInputs);
-                            }}
-                            style={styles.inputItens}
-                            keyboardType="numeric"
-                        />
-                    </View>
-
-                    <View style={styles.containerItensAdd}>
-                        <TextComponente style={"textInfo"}>DESCRIÇÃO DO PRODUTO</TextComponente>
-                        <TextInput
-                            placeholder="Ex: grama sintética"
-                            value={item.descricao}
-                            onChangeText={(text) => {
-                                const novosDadosInputs = [...dadosInputs];
-                                novosDadosInputs[index].descricao = text;
-                                setDadosInputs(novosDadosInputs);
-                            }}
-                            style={[styles.inputItens, styles.inputMultiline]} // Adiciona o estilo inputMultiline
-                            keyboardType="default"
-                            multiline={true} // Habilita a digitação de várias linhas
-                            numberOfLines={5} // Define o número inicial de linhas (ajuste conforme necessário)
-
-                        />
-                    </View>
-                    {/* Outros campos necessários */}
                 </View>
-            ))}
+            </View>
+
+            <View style={styles.containnerSections}>
+                <TextComponente style={'numeros'}>Forma de Pagamento</TextComponente>
+                <TextInput
+                    placeholder="Ex: 50"
+                    value={entrada}
+                    onChangeText={(text) => setEntrada(text)}
+                    style={[styles.inputPrazo, { marginTop: 10 }]}
+                    keyboardType="numeric"
+                />
+                {entrada !== '' && !isNaN(parseFloat(entrada)) && (
+                    <View style={styles.previewPagamento}>
+                        <Text style={styles.previewPagamentoTexto}>
+                            {parseFloat(entrada)}% de entrada + {100 - parseFloat(entrada)}% na entrega
+                        </Text>
+                    </View>
+                )}
+            </View>
+
+            {dadosInputs.map((item, index) => {
+                const anim = animValues.current[item.id];
+                const animStyle = anim ? {
+                    opacity: anim,
+                    transform: [{ scale: anim }],
+                } : {};
+
+                return (
+                    <Animated.View key={item.id} style={[styles.containnerSections, animStyle]}>
+
+                        <View style={styles.itemHeader}>
+                            <TextComponente style={"textInfo"}>Item {index + 1}</TextComponente>
+                            <TouchableOpacity onPress={() => removerItem(item.id)} style={styles.botaoRemoverItem}>
+                                <Text style={styles.botaoRemoverItemTexto}>✕ Remover</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={styles.containerItensAdd}>
+                            <TextComponente style={"textInfo"}>METRAGEM (m²)</TextComponente>
+                            <TextInput
+                                placeholder="Ex: 10"
+                                value={item.metragem}
+                                onChangeText={(text) => {
+                                    setDadosInputs(prev => prev.map(i => i.id === item.id ? { ...i, metragem: text } : i));
+                                }}
+                                style={styles.inputItens}
+                                keyboardType="numeric"
+                            />
+                        </View>
+
+                        <View style={styles.containerItensAdd}>
+                            <TextComponente style={"textInfo"}>VALOR POR METRO</TextComponente>
+                            <TextInput
+                                placeholder="Ex: 80"
+                                value={item.valorPorMetro}
+                                onChangeText={(text) => {
+                                    setDadosInputs(prev => prev.map(i => i.id === item.id ? { ...i, valorPorMetro: text } : i));
+                                }}
+                                style={styles.inputItens}
+                                keyboardType="numeric"
+                            />
+                        </View>
+
+                        <View style={styles.containerItensAdd}>
+                            <TextComponente style={"textInfo"}>DESCRIÇÃO DO PRODUTO</TextComponente>
+                            <TextInput
+                                placeholder="Ex: grama sintética"
+                                onChangeText={(text) => {
+                                    setDadosInputs(prev => prev.map(i => i.id === item.id ? { ...i, descricao: text } : i));
+                                }}
+                                style={[styles.inputItens, styles.inputMultiline]}
+                                keyboardType="default"
+                                multiline={true}
+                                numberOfLines={5}
+                            />
+                        </View>
+
+                    </Animated.View>
+                );
+            })}
 
             <View style={styles.containerItem}>
                 <TouchableOpacity onPress={adicionarItem} style={styles.botaoItem}>
                     <TextComponente style='botao2'>Adicionar Item</TextComponente>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={removerUltimoItem} style={styles.botaoItem}>
-                    <TextComponente style='botao2'>Remover Item</TextComponente>
                 </TouchableOpacity>
             </View>
 
@@ -357,6 +407,24 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
         marginVertical: 10,
     },
+    itemHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        marginBottom: 8,
+    },
+    botaoRemoverItem: {
+        backgroundColor: '#B81100',
+        paddingHorizontal: 18,
+        paddingVertical: 10,
+        borderRadius: 10,
+    },
+    botaoRemoverItemTexto: {
+        color: '#FFF',
+        fontWeight: 'bold',
+        fontSize: RFPercentage(2),
+    },
     containerItensAdd: {
         width: "100%",
         alignItems: "center",
@@ -366,6 +434,50 @@ const styles = StyleSheet.create({
     itens: {
         alignItems: "center",
         width: "80%",
+    },
+    previewPagamento: {
+        marginTop: 12,
+        backgroundColor: '#f0f7ee',
+        borderRadius: 10,
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+        borderWidth: 1,
+        borderColor: '#138600',
+        width: '100%',
+        alignItems: 'center',
+    },
+    previewPagamentoTexto: {
+        color: '#138600',
+        fontWeight: 'bold',
+        fontSize: RFPercentage(2.2),
+    },
+    prazoContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 10,
+        gap: 12,
+    },
+    inputPrazo: {
+        height: 40,
+        borderWidth: 2,
+        borderRadius: 10,
+        textAlign: 'center',
+        fontSize: 20,
+        fontWeight: 'bold',
+        width: 90,
+        paddingHorizontal: 10,
+    },
+    pickerWrapper: {
+        borderWidth: 2,
+        borderRadius: 10,
+        overflow: 'hidden',
+        flex: 1,
+        height: 40,
+        justifyContent: 'center',
+    },
+    picker: {
+        height: 40,
+        width: '100%',
     },
     inputItens: {
         height: 40,

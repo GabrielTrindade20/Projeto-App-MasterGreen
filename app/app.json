@@ -2,7 +2,7 @@
   "expo": {
     "name": "MasterGreen",
     "slug": "AppMasterGreen",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "orientation": "portrait",
     "icon": "./assets/logoSemFundo.png",
     "userInterfaceStyle": "light",
@@ -20,10 +20,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/logoSemFundo.png",
-        "backgroundColor": "#ffffff",
-        "blockedPermissions": [
-          "android.permission.RECORD_AUDIO"
-        ]
+        "backgroundColor": "#ffffff"
       },
       "permissions": [
         "READ_EXTERNAL_STORAGE",
@@ -31,40 +28,10 @@
       ],
       "package": "com.gab_roch.AppMasterGreen"
     },
-    "package": "com.gab_roch.MasterGreen",
     "extra": {
       "eas": {
         "projectId": "17ee6e08-809f-43e3-9d61-3cc78e06ea52"
       }
     }
-  },
-  "web": {
-    "favicon": "./assets/favicon.png"
-  },
-  "extra": {
-    "eas": {
-      "projectId": "17ee6e08-809f-43e3-9d61-3cc78e06ea52"
-    }
-  },
-  "plugins": [
-    [
-      "expo-media-library",
-      {
-        "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
-        "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos."
-      }
-    ],
-    [
-      "expo-image-picker",
-      {
-        "photosPermission": "The app accesses your photos to let you share them with your friends."
-      }
-    ],
-    [
-      "expo-document-picker",
-      {
-        "iCloudContainerEnvironment": "Production"
-      }
-    ]
-  ]
+  }
 }

@@ -3,7 +3,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Orcamento from "../../screens/Orcamento";
 import Header from "../Header";
-import Campo from "../../screens/Campo";
 import Proposta from "../../screens/Proposta";
 import { RFPercentage } from "react-native-responsive-fontsize";
 
@@ -38,11 +37,6 @@ export default props => (
               ? 'clipboard'
               : 'clipboard-outline';
             break;
-          case 'Campo':
-            iconName = focused
-              ? 'ios-football'
-              : 'ios-football-outline';
-            break;
           case 'Proposta':
             iconName = focused
               ? 'reader'
@@ -63,16 +57,6 @@ export default props => (
         title: 'Orçamento',
         header: ({ navigation, route }) => (
           <Header title='Orçamento' navigation={navigation} route={route} />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="Campo"
-      component={Campo}
-      options={{
-        title: 'Campo',
-        header: ({ navigation, route }) => (
-          <Header title='Orçamento Campo' navigation={navigation} route={route} />
         ),
       }}
     />

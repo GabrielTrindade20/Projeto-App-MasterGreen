@@ -4,8 +4,6 @@ import { RFPercentage } from "react-native-responsive-fontsize";
 import { useNavigation } from '@react-navigation/native';
 
 import TextComponent from "../TextComp";
-import Orcamento from "../../screens/Orcamento";
-import Proposta from "../propostas/PropostaPDF";
 
 const ValorFinal = ({ custos, valorPorMetro, metragem }) => {
     const navigation = useNavigation();

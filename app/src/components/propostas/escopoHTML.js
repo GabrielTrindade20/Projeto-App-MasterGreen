@@ -1,5 +1,5 @@
-
-export const gerarHTML = (cliente, ac, telefone, endereco, tipoPessoa, dataProposta, frete, dadosInputs, valorFinalCliente) => {
+﻿
+export const gerarHTML = (cliente, ac, telefone, endereco, tipoPessoa, dataProposta, frete, dadosInputs, valorFinalCliente, prazoGarantia, formaPagamento) => {
   // ... Restante do código HTML
 
   const tabelaItens = dadosInputs.map((item, index) => `
@@ -118,7 +118,7 @@ export const gerarHTML = (cliente, ac, telefone, endereco, tipoPessoa, dataPropo
       </div>
   
       <div class="texto-empresa">
-      <p>Razão Social: Master Green Grama Sintética</p>
+      <p>Razão Social: Rocha Comércio e Instalação de Grama Sintética</p>
       <p>CNPJ: 36.347.491/0001-99</p>
       <p> Endereço: QNN 24 Conjunto E Lote 14, Ceilândia Sul - DF</p>
       <p> Telefone: (61) 98412-4179 </p>
@@ -161,16 +161,16 @@ export const gerarHTML = (cliente, ac, telefone, endereco, tipoPessoa, dataPropo
   <h3>
     <span> Dados da Proposta: </span>
   </h3>
-    <p><span>Prazo de garantia:</span> 1 ano (garantia da fábrica).</p>
-    <p><span>Forma de pagamento:</span> 50% de entrada + 50% na entrega.</p>
+    <p><span>Prazo de garantia:</span> ${prazoGarantia}.</p>
+    <p><span>Forma de pagamento:</span> ${formaPagamento}.</p>
     <p><span>Frete:</span> ${frete}.</p>
     <p><span>Tributos:</span> incluso no preço.</p>
     <p><span>Validade desta proposta:</span> 30 dias.</p>
   </div>
 
   <h3 id="dados-pagamento">Dados para pagamento:</h3>
-  <p><span>PIX:</span> 36.347.491/0001-99 - CNPJ </p> 
-  <p><span>Em nome de:</span> Rocha Comércio e Instalação de Grama Sintética</p>
+  <p><span>PIX CNPJ:</span> 36.347.491/0001-99</p> 
+  <p><span>Em nome de:</span> Master Green Grama Sintética</p>
 
   <div class="newton">
     <p>NEWTON ROCHA</p>

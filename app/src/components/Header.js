@@ -5,11 +5,6 @@ import { useNavigation } from "@react-navigation/native";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 
-import Menu from './componentes orçamentos/Menu';
-import Screens from './navigation/Screens'
-import Icon from 'react-native-vector-icons/Ionicons';
-// No seu arquivo onde está definido o componente Header
-// No seu componente Header
 const Header = ({ route }) => {
   const navigation = useNavigation(); // Obtenha a referência à navegação usando useNavigation
   const title = route.name;
