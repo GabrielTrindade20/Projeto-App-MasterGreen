@@ -1,3 +1,16 @@
+# MasterGreen — aplicativo ativo
+
+Este é o projeto Expo SDK 57 em uso. Inicie com `../iniciar-app.cmd` ou
+`npm start` nesta pasta. As abas Orçamento e Proposta geram PDF localmente;
+a aba Sistema faz login no web e lê produtos, clientes autorizados e o
+percentual de nota fiscal. Propostas ainda não são salvas no web.
+
+Para conectar pelo celular, configure `EXPO_PUBLIC_API_URL=http://IP_DO_PC:5001`
+em `.env.local` (ignorado pelo Git) e reinicie o Expo. PC e celular precisam
+estar na mesma rede. Não coloque senhas ou URLs de PostgreSQL no aplicativo.
+
+O restante abaixo é a documentação original do template Expo.
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
