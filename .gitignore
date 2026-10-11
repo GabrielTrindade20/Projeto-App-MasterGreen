@@ -9,9 +9,6 @@
 # IDE
 /.idea/
 
-# Pasta de build antiga
-/app-mastergreen/
-
 # Expo
 /.expo/
 
