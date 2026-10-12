@@ -14,6 +14,10 @@ Read the exact versioned docs at https://docs.expo.dev/versions/v57.0.0/ before 
   itens; item manual e cálculo legado continuam disponíveis offline.
 - PDF e compartilhamento usam Expo Print, FileSystem e Sharing; validar no
   aparelho real. O navegador serve para testar telas e cálculos.
+- Compartilhamento nativo: solicitar `base64: true` ao Print e gravar com
+  `File.write(..., { encoding: 'base64' })` no `Paths.cache`. Não copiar a URI
+  temporária retornada pelo Print: no Expo Go ela pode estar fora do escopo de
+  leitura do FileSystem. Testes de orquestração: `tests/export-proposal.test.cjs`.
 - Login obrigatório na primeira abertura, sessão de 30 dias em SecureStore.
   Senha nunca persistida. Expiração não apaga rascunhos nem bloqueia o cálculo
   local; exige renovação para sincronizar. Logout explícito exige novo login.

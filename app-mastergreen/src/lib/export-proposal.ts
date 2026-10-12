@@ -17,12 +17,15 @@ export async function exportProposal(html: string, filename: string, preview: bo
   if (!(await Sharing.isAvailableAsync())) {
     throw new Error('O compartilhamento não está disponível neste aparelho. Use Visualizar PDF.');
   }
-  const pdf = await Print.printToFileAsync({ html });
+  // Expo Go can place Print's temporary file outside FileSystem's scoped cache.
+  // Receive the bytes from Print instead of copying a URI without READ permission.
+  const pdf = await Print.printToFileAsync({ html, base64: true });
+  if (!pdf.base64) throw new Error('Não foi possível preparar o PDF. Tente gerar novamente.');
   // Um diretório por exportação evita sobrescrever propostas com o mesmo nome.
   const folder = new Directory(Paths.cache, `proposta-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
   folder.create();
   const destination = new File(folder, filename);
-  await new File(pdf.uri).copy(destination);
+  destination.write(pdf.base64, { encoding: 'base64' });
   await onPrepared?.();
   await Sharing.shareAsync(destination.uri, { mimeType: 'application/pdf', UTI: 'com.adobe.pdf', dialogTitle: filename });
 }
