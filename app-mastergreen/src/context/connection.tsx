@@ -4,6 +4,7 @@ import * as Network from 'expo-network';
 import { createContext, type PropsWithChildren, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { AppState, Platform } from 'react-native';
 import { addToQueue, initialState, localDate, parseStoredState, sessionValid, type LocalState, type MobileData, type MobileReport, type ProposalDraft, type QuickProposal, type Session } from '@/lib/mobile-state';
+import { proposalItems } from '@/lib/quotation';
 import { clearSession, readSession, writeSession } from '@/lib/session-store';
 import { enableBackgroundSync } from '@/lib/background-sync';
 
@@ -90,12 +91,13 @@ export function ConnectionProvider({children}:PropsWithChildren) {
         setError('Aguardando Wi-Fi. Você pode liberar dados móveis nas configurações.');return;
       }
       await writeChain.current;
-      const pending = stateRef.current.queue.filter(row=>!row.sentAt);
+      const pending = stateRef.current.queue.filter(row=>!row.sentAt || (!row.itemsSynced&&!row.payload.items&&proposalItems(row.document)));
       for (const row of pending) {
         if (sessionRef.current?.token!==current.token) return;
         try {
-          const result = await request('/proposals',current.token,row.payload);
-          await change(state=>({...state,queue:state.queue.map(item=>item.payload.clientId===row.payload.clientId?{...item,sentAt:new Date().toISOString(),serverId:result.id,error:undefined}:item)}));
+          const items=row.payload.items||proposalItems(row.document);
+          const result = await request('/proposals',current.token,items?{...row.payload,items}:row.payload);
+          await change(state=>({...state,queue:state.queue.map(item=>item.payload.clientId===row.payload.clientId?{...item,sentAt:item.sentAt||new Date().toISOString(),serverId:result.id,itemsSynced:!!items,error:undefined}:item)}));
         } catch(cause) {
           if (cause instanceof ApiError && (cause.status===400 || cause.status===409)) {
             await change(state=>({...state,queue:state.queue.map(item=>item.payload.clientId===row.payload.clientId?{...item,error:cause.message}:item)}));
@@ -107,7 +109,10 @@ export function ConnectionProvider({children}:PropsWithChildren) {
       const data = await request('/data?month='+localDate().slice(0,7),current.token) as MobileData;
       if (!Array.isArray(data.customers) || !Array.isArray(data.history) || !data.summary) throw new Error('Resposta incompleta do sistema.');
       if (sessionRef.current?.token!==current.token) return;
-      await change(state=>({...state,data,lastSync:new Date().toISOString()}));
+      await change(state=>({...state,data,lastSync:new Date().toISOString(),
+        // Costs and commission rates can change without changing history totals.
+        // Refresh only the focused summary; keep other periods available offline.
+        reportsVersion:new Date().toISOString()}));
       setError(stateRef.current.queue.some(row=>!row.sentAt&&row.error)?'Algumas propostas precisam de atenção. Veja Configurações.':'');setNeedsLogin(false);
     } catch(cause) {
       if (cause instanceof ApiError && cause.status===401) setNeedsLogin(true);
@@ -150,9 +155,14 @@ export function ConnectionProvider({children}:PropsWithChildren) {
     } finally {authLock.current=false;setLoading(false);}
   }
   async function finalize(payload:Omit<QuickProposal,'clientId'>, document:ProposalDraft) {
+    const items=proposalItems(document);
+    if(!items) throw new Error('Confira os itens: até 100 produtos, descrição de até 500 caracteres, quantidade e valor válidos.');
+    const legacySignature=JSON.stringify(payload);
+    payload={...payload,items};
     const signature=JSON.stringify(payload);
     const previous=stateRef.current.lastFinalized;
-    const clientId=previous?.signature===signature?previous.clientId:Crypto.randomUUID();
+    const unchangedLegacy=previous?.signature===legacySignature&&stateRef.current.queue.some(row=>row.payload.clientId===previous.clientId&&JSON.stringify(row.document)===JSON.stringify(document));
+    const clientId=previous&&(previous.signature===signature||unchangedLegacy)?previous.clientId:Crypto.randomUUID();
     await change(state=>addToQueue(state,{...payload,clientId},signature,document));
     void sync();
   }

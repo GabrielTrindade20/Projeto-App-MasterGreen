@@ -19,7 +19,7 @@ export default function SettingsScreen(){
       <Text style={ui.muted}>Ao recuperar a conexão, abrir o app garante uma nova tentativa de envio.</Text>
     </Card>
     <Section title="Dados no celular" summary={`${local.queue.length} propostas · ${pending.length} pendentes`}><Text style={ui.label}>{local.data?.customers.length||0} clientes disponíveis para consulta</Text>
-      <Text style={ui.muted}>Não desinstale nem limpe os dados do app antes de sincronizar. As cópias dos PDFs e os itens ficam apenas neste aparelho.</Text>
+      <Text style={ui.muted}>Não desinstale nem limpe os dados do app antes de sincronizar. Rascunhos e cópias originais ficam neste aparelho. Propostas enviadas, incluindo seus itens, ficam disponíveis no sistema web.</Text>
       {pending.filter(row=>row.error).map(row=><Text key={row.payload.clientId} style={ui.message}>{row.payload.customer.name}: {row.error}</Text>)}
     </Section>
     <Card title="Leitura e aparência"><Text style={ui.label}>Prévia: textos grandes e botões fáceis de tocar.</Text>

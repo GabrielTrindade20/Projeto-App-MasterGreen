@@ -16,6 +16,7 @@ test('filtro de histórico inclusivo, origem, situação e valor',()=>{
 });
 test('selecionar cliente preserva itens e versões antigas do cache continuam legíveis',()=>{
   const state=initialState();state.proposal.items=[{id:1,descricao:'Grama',metragem:'2',valorPorMetro:'10'}];
-  const next=applyCustomer(state.proposal,{id:'1',name:'Teste',phone:'61',city:'Brasília'});
+  const next=applyCustomer(state.proposal,{id:'1',name:'Teste',phone:'61',address:'Rua Teste',number:'42',neighborhood:'Centro',city:'Brasília',state:'DF',zipCode:'70000-000'});
+  assert.equal(next.customerId,'1');assert.equal(next.address,'Rua Teste, 42 · Centro · Brasília · DF · 70000-000');
   assert.equal(next.items,state.proposal.items);assert.equal(next.customer,'Teste');assert.equal(parseStoredState(JSON.stringify(state)).version,1);
 });

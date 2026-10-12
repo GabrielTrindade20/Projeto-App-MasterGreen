@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { router } from 'expo-router';
+import { useAppNavigation } from '@/context/navigation-feedback';
 import { useConnection } from '@/context/connection';
 import { type PropsWithChildren, type Ref, type RefObject, useState } from 'react';
 import { Image, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text as NativeText, type TextProps, TextInput, type TextInputProps, View, type ViewProps } from 'react-native';
@@ -33,7 +33,8 @@ export function Field({ label, inputRef, ...props }: TextInputProps & { label: s
     placeholderTextColor="#67746A" {...props} style={[ui.input, props.multiline && { minHeight: 88, textAlignVertical: 'top' }, props.style,{fontSize:22*local.preferences.fontScale},local.preferences.highContrast&&{color:'#000',borderColor:'#000'}]} /></View>;
 }
 
-export function Screen({ title, children, onReset, back=false, settings=true, scroll=true, footer, subtitle, scrollRef }: PropsWithChildren<{ title: string; onReset?:()=>void; back?:boolean; settings?:boolean; scroll?:boolean; footer?:React.ReactNode; subtitle?:string;scrollRef?:RefObject<ScrollView|null> }>) {
+export function Screen({ title, children, onReset, back=false, settings=true, scroll=true, footer, subtitle, scrollRef, topAction }: PropsWithChildren<{ title: string; onReset?:()=>void; back?:boolean; settings?:boolean; scroll?:boolean; footer?:React.ReactNode; subtitle?:string;scrollRef?:RefObject<ScrollView|null>;topAction?:React.ReactNode }>) {
+  const router=useAppNavigation();
   const [revision, setRevision] = useState(0);
   const [confirmReset, setConfirmReset] = useState(false);
   return <View style={ui.screen}>
@@ -44,6 +45,7 @@ export function Screen({ title, children, onReset, back=false, settings=true, sc
       <View style={{flex:1}}><Text style={ui.eyebrow}>MASTERGREEN</Text><Text accessibilityRole="header" style={ui.title}>{title}</Text></View>
       {settings?<Pressable accessibilityRole="button" accessibilityLabel="Configurações" style={ui.reset} onPress={()=>router.navigate('/configuracoes')}><Ionicons name="settings-outline" size={28} color="#fff" /></Pressable>:<Image accessibilityLabel="MasterGreen" source={require('../../assets/mastergreen/logo.png')} style={ui.logo} resizeMode="contain" />}
     </View>
+    {!!topAction&&<View style={{paddingHorizontal:16,paddingBottom:12,width:'100%',maxWidth:680,alignSelf:'center'}}>{topAction}</View>}
     {!!subtitle&&<Text style={[ui.muted,{paddingHorizontal:20,paddingBottom:12}]}>{subtitle}</Text>}
     {confirmReset && <View style={ui.confirm}>
       <Text style={ui.label}>Limpar os campos desta tela?</Text>

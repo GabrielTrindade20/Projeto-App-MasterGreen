@@ -1,0 +1,22 @@
+# Explicit allow-by-exclusion: do not upload local credentials or test data.
+node_modules/
+.expo/
+dist/
+web-build/
+.git/
+.env
+.env.*
+credentials.json
+*.jks
+*.keystore
+*.p8
+*.p12
+*.key
+*.pem
+*.mobileprovision
+*.log
+*.tsbuildinfo
+/android
+/ios
+tests/
+docs/

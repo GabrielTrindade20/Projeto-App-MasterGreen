@@ -1,18 +1,23 @@
-import type { ProposalItem } from './quotation';
+import type { ProposalItem, MobileProposalItem } from './quotation';
+import type { CompanyProfile } from './company-profile';
 
 export type Session = { token: string; expiresAt: string; user: { id: string; name: string; email: string } };
 export type QuickProposal = {
   clientId: string;
+  customerId?: string;
   customer: { name: string; contact: string; phone: string; document: string; address: string };
   proposalDate: string; freight: string; warranty: string; payment: string; discountPercent: number; totalCents: number;
+  items?: MobileProposalItem[];
 };
-export type QueueEntry = { payload: QuickProposal; savedAt: string; document?: ProposalDraft; sentAt?: string; serverId?: string; error?: string };
-export type ProposalDraft = { customer: string; contact: string; phone: string; address: string; document: string; date: string; freight: string; warranty: string; unit: string; entry: string; discount: string; items: ProposalItem[] };
+export type QueueEntry = { payload: QuickProposal; savedAt: string; document?: ProposalDraft; sentAt?: string; serverId?: string; error?: string; itemsSynced?:boolean };
+export type ProposalDraft = { customerId?: string; customer: string; contact: string; phone: string; address: string; document: string; date: string; freight: string; warranty: string; unit: string; entry: string; discount: string; items: ProposalItem[] };
 export type BudgetDraft = { cost: string; price: string; area: string; discount: string };
-export type HistoryRow = { id: string; clientId?: string; customer: { name: string }; date: string; totalCents: number; source: string; status: string };
+export type HistoryRow = { id: string; clientId?: string; serverId?:string; customer: { name: string }; date: string; totalCents: number; source: string; status: string };
 export type MobileData = {
-  customers: { id: string; name: string; phone: string; email?: string; document?: string; address?: string; city?: string; state?: string }[];
+  customers: { id: string; name: string; phone: string; email?: string; document?: string; address?: string; number?:string; neighborhood?:string; zipCode?:string; city?: string; state?: string }[];
   products?: { id: string; name: string; category: string | null; description: string | null; pricePerM2: string }[];
+  costs?: {id:string;name:string;description:string|null;value:string}[];
+  company?: CompanyProfile;
   history: HistoryRow[];
   summary: { month: string; quickCount: number; quickTotalCents: number; approvedCount: number; approvedRevenue: number };
   updatedAt: string;
@@ -22,6 +27,7 @@ export type LocalState = {
   preferences: { mobileData: boolean; fontScale: number; highContrast: boolean };
   lastSync: string | null; lastFinalized: { signature: string; clientId: string } | null;
   reports?: Record<string, MobileReport>;
+  reportsVersion?: string;
 };
 export type MobileReport = {
   from:string;to:string;approvedCount:number;approvedCents:number;averageCents:number;
@@ -53,7 +59,7 @@ export function historyWithLocal(state: LocalState): HistoryRow[] {
   const remote = state.data?.history || [];
   const ids = new Set(remote.map(row => row.clientId));
   return [...remote,...state.queue.filter(row => !ids.has(row.payload.clientId)).map(row => ({
-    id:row.payload.clientId,clientId:row.payload.clientId,customer:row.payload.customer,date:row.payload.proposalDate,
+    id:row.payload.clientId,serverId:row.serverId,clientId:row.payload.clientId,customer:row.payload.customer,date:row.payload.proposalDate,
     totalCents:row.payload.totalCents,source:'mobile',status:row.sentAt?'Enviada':row.error?'Requer atenção':'Aguardando envio',
   }))].sort((a,b)=>b.date.localeCompare(a.date));
 }

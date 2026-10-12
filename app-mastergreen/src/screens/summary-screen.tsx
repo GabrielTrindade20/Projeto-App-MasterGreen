@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { router } from 'expo-router';
+import { useCallback, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useAppNavigation } from '@/context/navigation-feedback';
 import { Pressable, View } from 'react-native';
 import { Action, Card, Screen, Section, Sheet, Text, colors, ui } from '@/components/mastergreen-ui';
 import { PeriodPicker } from '@/components/period-picker';
@@ -8,11 +9,12 @@ import { displayDate, presetPeriod } from '@/lib/consultation';
 import { currency } from '@/lib/quotation';
 
 export default function SummaryScreen(){
+  const router=useAppNavigation();
   const {local,refreshReport}=useConnection();const [period,setPeriod]=useState(()=>presetPeriod('month'));
   const [result,setResult]=useState({key:'',error:''}),[team,setTeam]=useState(false),[revision,setRevision]=useState(0);
-  const key=`${period.from}/${period.to}/${revision}`,loading=result.key!==key,error=result.key===key?result.error:'';
+  const key=`${period.from}/${period.to}/${revision}/${local.reportsVersion||''}`,loading=result.key!==key,error=result.key===key?result.error:'';
   const report=local.reports?.[`${period.from}/${period.to}`];
-  useEffect(()=>{let active=true;void refreshReport(period.from,period.to).then(()=>{if(active)setResult({key,error:''});},cause=>{if(active)setResult({key,error:cause.message});});return ()=>{active=false;};},[period.from,period.to,refreshReport,key]);
+  useFocusEffect(useCallback(()=>{let active=true;setResult({key:'',error:''});void refreshReport(period.from,period.to).then(()=>{if(active)setResult({key,error:''});},cause=>{if(active)setResult({key,error:cause.message});});return ()=>{active=false;};},[period.from,period.to,refreshReport,key]));
   const history=(source:string,status='')=>router.navigate({pathname:'/historico',params:{from:period.from,to:period.to,source,status,request:String(Date.now())}});
   const pending=local.queue.filter(row=>!row.sentAt&&row.payload.proposalDate>=period.from&&row.payload.proposalDate<=period.to);
   const chartMonths=report?.months.slice(-12)||[];

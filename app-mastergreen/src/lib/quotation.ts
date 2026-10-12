@@ -1,4 +1,10 @@
-export type ProposalItem = { id: number; metragem: string; valorPorMetro: string; descricao: string };
+export type ProposalItem = { id: number; productId?: string; metragem: string; valorPorMetro: string; descricao: string; unit?: string; costReference?: string };
+export type MobileProposalItem = {productId:string|null;name:string;quantity:number;unitPrice:number;unit:'m²'|'un'|'m'|'serviço'};
+export function proposalItems(document?: {items:ProposalItem[]}): MobileProposalItem[]|undefined {
+  if(!document?.items.length || document.items.length>100) return undefined;
+  const items=document.items.map(item=>({productId:item.productId||null,name:item.descricao.trim(),quantity:numberFromInput(item.metragem),unitPrice:numberFromInput(item.valorPorMetro),unit:(item.unit||'m²') as MobileProposalItem['unit']}));
+  return items.every(item=>item.name.length>0&&item.name.length<=500&&item.quantity>0&&item.quantity<=10_000_000&&item.unitPrice>0&&item.unitPrice<=10_000_000&&['m²','un','m','serviço'].includes(item.unit))?items:undefined;
+}
 
 export function numberFromInput(value: string | number): number {
   const normalized = String(value).trim().replace(/\s/g, '');

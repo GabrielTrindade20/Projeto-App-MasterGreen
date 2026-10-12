@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { useAppNavigation } from '@/context/navigation-feedback';
 import { View } from 'react-native';
 import { Action, Card, Field, Screen, Section, Text, ui } from '@/components/mastergreen-ui';
 import { calculateBudget, currency } from '@/lib/quotation';
@@ -27,6 +27,7 @@ function BudgetForm() {
 }
 
 export default function BudgetScreen() {
+  const router=useAppNavigation();
   const {change}=useConnection();
   return <Screen title="Orçar" footer={<Action title="Fazer proposta" onPress={()=>router.navigate('/proposta')}/>} onReset={()=>void change(state=>({...state,budget:emptyBudget()})).catch(()=>{})}><SyncStatus/><BudgetForm /></Screen>;
 }

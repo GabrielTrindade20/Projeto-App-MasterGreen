@@ -28,7 +28,7 @@ export function filterCustomers(rows: Customer[], query: string, city='', descen
     .sort((a,b)=>(descending?-1:1)*a.name.localeCompare(b.name,'pt-BR'));
 }
 export function applyCustomer(draft:ProposalDraft, customer:Customer):ProposalDraft {
-  return {...draft,customer:customer.name,contact:'',phone:customer.phone||'',document:customer.document||'',address:[customer.address,customer.city,customer.state].filter(Boolean).join(' · ')};
+  return {...draft,customerId:customer.id,customer:customer.name,contact:'',phone:customer.phone||'',document:customer.document||'',address:[[customer.address,customer.number].filter(Boolean).join(', '),customer.neighborhood,customer.city,customer.state,customer.zipCode].filter(Boolean).join(' · ')};
 }
 export const historyStatus:Record<string,string>={pending:'Pendente',approved:'Aprovada',rejected:'Rejeitada',cancelled:'Cancelada',Enviada:'Enviada ao sistema'};
 export function filterHistory(rows:HistoryRow[], query:string, period:Period, source='',status='',sort='recent') {

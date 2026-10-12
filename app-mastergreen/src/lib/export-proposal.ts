@@ -4,9 +4,9 @@ import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 
 export async function getBannerUri() {
-  const asset = Asset.fromModule(require('../../assets/mastergreen/banner.jpeg'));
+  const asset = Asset.fromModule(require('../../assets/mastergreen/logo.png'));
   await asset.downloadAsync();
-  return `data:image/jpeg;base64,${await new File(asset.localUri ?? asset.uri).base64()}`;
+  return `data:image/png;base64,${await new File(asset.localUri ?? asset.uri).base64()}`;
 }
 
 export async function exportProposal(html: string, filename: string, preview: boolean, onPrepared?:()=>Promise<void>) {

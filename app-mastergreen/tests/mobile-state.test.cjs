@@ -1,7 +1,14 @@
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const {initialState,parseStoredState,addToQueue,historyWithLocal,sessionValid}=require('../src/lib/mobile-state.ts');
+const {proposalItems}=require('../src/lib/quotation.ts');
 const payload={clientId:'one',customer:{name:'Cliente'},proposalDate:'2026-10-12',totalCents:10000};
+test('envio de itens conserva produto, texto, unidade e preço histórico sem custo interno',()=>{
+  const draft={items:[{id:1,productId:'bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbbb',descricao:' Grama ',metragem:'2,5',valorPorMetro:'80,50',costReference:'R$ 40'},{id:2,descricao:'Instalação',metragem:'1',valorPorMetro:'100',unit:'serviço'}]};
+  assert.deepEqual(proposalItems(draft),[{productId:draft.items[0].productId,name:'Grama',quantity:2.5,unitPrice:80.5,unit:'m²'},{productId:null,name:'Instalação',quantity:1,unitPrice:100,unit:'serviço'}]);
+  assert.equal(proposalItems(),undefined);assert.equal(proposalItems({items:[]}),undefined);
+  assert.equal(proposalItems({items:[{...draft.items[0],metragem:'0'}]}),undefined);
+});
 test('fila persiste, reenvio mantém identificador e não duplica histórico',()=>{
   let state=addToQueue(initialState(),payload,'signature');
   state=addToQueue(state,payload,'signature');

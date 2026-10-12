@@ -1,7 +1,7 @@
 import { Asset } from 'expo-asset';
 
 export async function getBannerUri() {
-  return Asset.fromModule(require('../../assets/mastergreen/banner.jpeg')).uri;
+  return Asset.fromModule(require('../../assets/mastergreen/logo.png')).uri;
 }
 
 export async function exportProposal(html: string, _filename: string, _preview: boolean, onPrepared?:()=>Promise<void>) {

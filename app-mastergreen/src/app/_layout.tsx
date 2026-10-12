@@ -6,16 +6,25 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, Card, Screen, Text, ui } from '@/components/mastergreen-ui';
 import { ConnectionProvider, useConnection } from '@/context/connection';
 import LoginScreen from '@/screens/login-screen';
+import { LoadingNotice, NavigationFeedbackProvider, useNavigationFeedback } from '@/context/navigation-feedback';
 
 export default function TabLayout() {
-  return <ConnectionProvider><AppContent /></ConnectionProvider>;
+  return <ConnectionProvider><NavigationFeedbackProvider><AppContent /></NavigationFeedbackProvider></ConnectionProvider>;
 }
 function AppContent() {
   const {ready,fatal,session}=useConnection();
+  const {start,finish}=useNavigationFeedback();
   return <ThemeProvider value={DefaultTheme}>
     <StatusBar style="dark" />
     <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: colors.background }}>
-      {!ready||fatal?<Screen title="MasterGreen" settings={false}><Card><Text style={ui.label}>{fatal||'Abrindo seus dados…'}</Text></Card></Screen>:!session?<LoginScreen />:<Tabs initialRouteName="index" screenOptions={{
+      {!ready||fatal?<Screen title="MasterGreen" settings={false}>{fatal?<Card><Text style={ui.label}>{fatal}</Text></Card>:<LoadingNotice label="Abrindo seus dados…"/>}</Screen>:!session?<LoginScreen />:<Tabs initialRouteName="index" screenListeners={({navigation,route})=>({
+        tabPress:event=>{
+          const state=navigation.getState();
+          if(state.routes[state.index]?.key===route.key)return;
+          event.preventDefault();start(()=>navigation.navigate(route.name));
+        },
+        focus:finish,
+      })} screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: '#167341',
         tabBarInactiveTintColor: '#59675D',
