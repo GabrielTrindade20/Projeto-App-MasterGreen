@@ -9,7 +9,7 @@ export async function getBannerUri() {
   return `data:image/jpeg;base64,${await new File(asset.localUri ?? asset.uri).base64()}`;
 }
 
-export async function exportProposal(html: string, filename: string, preview: boolean) {
+export async function exportProposal(html: string, filename: string, preview: boolean, onPrepared?:()=>Promise<void>) {
   if (preview) {
     await Print.printAsync({ html });
     return;
@@ -23,5 +23,6 @@ export async function exportProposal(html: string, filename: string, preview: bo
   folder.create();
   const destination = new File(folder, filename);
   await new File(pdf.uri).copy(destination);
+  await onPrepared?.();
   await Sharing.shareAsync(destination.uri, { mimeType: 'application/pdf', UTI: 'com.adobe.pdf', dialogTitle: filename });
 }

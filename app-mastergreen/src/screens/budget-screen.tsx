@@ -1,16 +1,17 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
-import { Text, View } from 'react-native';
-import { Action, Card, Field, Screen, ui } from '@/components/mastergreen-ui';
+import { View } from 'react-native';
+import { Action, Card, Field, Screen, Text, ui } from '@/components/mastergreen-ui';
 import { calculateBudget, currency } from '@/lib/quotation';
 import { useConnection } from '@/context/connection';
+import { emptyBudget, type BudgetDraft } from '@/lib/mobile-state';
+import { SyncStatus } from './consultation-screens';
 
 function BudgetForm() {
-  const { invoicePercent } = useConnection();
-  const [cost, setCost] = useState('');
-  const [price, setPrice] = useState('');
-  const [area, setArea] = useState('');
-  const [discount, setDiscount] = useState('');
+  const { local,change } = useConnection();
+  const invoicePercent=4.5;
+  const {cost,price,area,discount}=local.budget;
+  const set=(field:keyof BudgetDraft)=>(value:string)=>void change(state=>({...state,budget:{...state.budget,[field]:value}})).catch(()=>{});
+  const setCost=set('cost'),setPrice=set('price'),setArea=set('area'),setDiscount=set('discount');
   const result = calculateBudget(cost, price, area, discount, invoicePercent);
   const rows = [
     ['CUSTOS', result.costs, '#BE1701'],
@@ -32,5 +33,6 @@ function BudgetForm() {
 }
 
 export default function BudgetScreen() {
-  return <Screen title="Orçamento"><BudgetForm /></Screen>;
+  const {change}=useConnection();
+  return <Screen title="Orçamento" onReset={()=>void change(state=>({...state,budget:emptyBudget()})).catch(()=>{})}><BudgetForm /><SyncStatus /></Screen>;
 }

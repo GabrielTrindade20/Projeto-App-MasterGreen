@@ -1,13 +1,22 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { router } from 'expo-router';
+import { useConnection } from '@/context/connection';
 import { type PropsWithChildren, useState } from 'react';
-import { Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, type TextInputProps, View } from 'react-native';
+import { Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text as NativeText, type TextProps, TextInput, type TextInputProps, View } from 'react-native';
+
+export function Text({style,...props}:TextProps) {
+  const {local}=useConnection();
+  const flat=StyleSheet.flatten(style)||{};
+  return <NativeText {...props} style={[style,{fontSize:(flat.fontSize||20)*local.preferences.fontScale},local.preferences.highContrast&&flat.color!=='#fff'&&{color:'#000'}]} />;
+}
 
 export const green = '#002B17';
 export const actionGreen = '#138600';
 
 export function Action({ title, onPress, disabled = false, danger = false }: { title: string; onPress: () => void; disabled?: boolean; danger?: boolean }) {
+  const {local}=useConnection();
   return <Pressable accessibilityRole="button" accessibilityState={{ disabled }} disabled={disabled} onPress={onPress}
-    style={({ pressed }) => [ui.button, danger && { backgroundColor: '#B81100' }, { opacity: disabled ? 0.5 : pressed ? 0.75 : 1 }]}>
+    style={({ pressed }) => [ui.button, local.preferences.highContrast&&{backgroundColor:green}, danger && { backgroundColor: '#B81100' }, { opacity: disabled ? 0.5 : pressed ? 0.75 : 1 }]}>
     <Text style={ui.buttonText}>{title}</Text>
   </Pressable>;
 }
@@ -17,24 +26,25 @@ export function Card({ children, title }: PropsWithChildren<{ title?: string }>)
 }
 
 export function Field({ label, ...props }: TextInputProps & { label: string }) {
+  const {local}=useConnection();
   return <View style={ui.field}><Text style={ui.label}>{label}</Text><TextInput accessibilityLabel={label}
-    placeholderTextColor="#67746A" {...props} style={[ui.input, props.multiline && { minHeight: 88, textAlignVertical: 'top' }, props.style]} /></View>;
+    placeholderTextColor="#67746A" {...props} style={[ui.input, props.multiline && { minHeight: 88, textAlignVertical: 'top' }, props.style,{fontSize:22*local.preferences.fontScale},local.preferences.highContrast&&{color:'#000',borderColor:'#000'}]} /></View>;
 }
 
-export function Screen({ title, children }: PropsWithChildren<{ title: string }>) {
+export function Screen({ title, children, onReset, back=false, settings=true }: PropsWithChildren<{ title: string; onReset?:()=>void; back?:boolean; settings?:boolean }>) {
   const [revision, setRevision] = useState(0);
   const [confirmReset, setConfirmReset] = useState(false);
   return <View style={ui.screen}>
     <View style={ui.header}>
-      <Pressable accessibilityRole="button" accessibilityLabel={`Limpar ${title.toLowerCase()}`} onPress={() => setConfirmReset(true)} style={ui.reset}>
-        <Ionicons name="refresh-outline" size={30} color="#fff" />
-      </Pressable>
+      {(onReset||back)&&<Pressable accessibilityRole="button" accessibilityLabel={back?'Voltar ao orçamento':`Limpar ${title.toLowerCase()}`} onPress={() => back?router.navigate('/'):setConfirmReset(true)} style={ui.reset}>
+        <Ionicons name={back?'arrow-back':'refresh-outline'} size={30} color="#fff" />
+      </Pressable>}
       <Text accessibilityRole="header" style={ui.title}>{title}</Text>
-      <Image accessibilityLabel="MasterGreen" source={require('../../assets/mastergreen/logo.png')} style={ui.logo} resizeMode="contain" />
+      {settings?<Pressable accessibilityRole="button" accessibilityLabel="Configurações" style={ui.reset} onPress={()=>router.navigate('/configuracoes')}><Ionicons name="settings-outline" size={28} color="#fff" /></Pressable>:<Image accessibilityLabel="MasterGreen" source={require('../../assets/mastergreen/logo.png')} style={ui.logo} resizeMode="contain" />}
     </View>
     {confirmReset && <View style={ui.confirm}>
       <Text style={ui.label}>Limpar os campos desta tela?</Text>
-      <Action title="Sim, limpar" danger onPress={() => { setRevision((value) => value + 1); setConfirmReset(false); }} />
+      <Action title="Sim, limpar" danger onPress={() => { onReset?.();setRevision((value) => value + 1); setConfirmReset(false); }} />
       <Action title="Continuar preenchendo" onPress={() => setConfirmReset(false)} />
     </View>}
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>

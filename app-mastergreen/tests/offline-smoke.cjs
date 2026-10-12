@@ -1,0 +1,60 @@
+const {chromium}=require(process.argv[2]||'playwright');
+const assert=require('node:assert/strict');
+(async()=>{
+  const browser=await chromium.launch({headless:true,channel:'msedge'});
+  try {
+    const page=await browser.newPage({viewport:{width:390,height:844}});
+    const errors=[];page.on('pageerror',error=>errors.push(error.message));
+    let online=true,deliveries=0;const saved=new Map();
+    const month=new Date().toISOString().slice(0,7);
+    await page.addInitScript(()=>{window.print=()=>{};});
+    await page.route('**/api/mobile/**',async route=>{
+      const request=route.request();const path=new URL(request.url()).pathname;
+      const headers={'Access-Control-Allow-Origin':'http://127.0.0.1:8081','Access-Control-Allow-Headers':'Content-Type,Authorization','Access-Control-Allow-Methods':'GET,POST,OPTIONS'};
+      if(request.method()==='OPTIONS')return route.fulfill({status:204,headers});
+      if(!online)return route.abort('internetdisconnected');
+      let body;
+      if(path.endsWith('/auth/login'))body={token:'a'.repeat(64),expiresAt:new Date(Date.now()+30*86400000).toISOString(),user:{id:'test-owner',name:'Proprietário',email:'owner@example.com'}};
+      else if(path.endsWith('/proposals')){deliveries++;const payload=request.postDataJSON();saved.set(payload.clientId,payload);body={id:payload.clientId,clientId:payload.clientId};}
+      else if(path.endsWith('/data'))body={customers:[{id:'c1',name:'Cliente do sistema',phone:'11999990000'}],history:[...saved.values()].map(row=>({id:row.clientId,clientId:row.clientId,customer:row.customer,date:row.proposalDate,totalCents:row.totalCents,source:'mobile',status:'Enviada'})),summary:{month,quickCount:saved.size,quickTotalCents:0,approvedCount:0,approvedRevenue:0},updatedAt:new Date().toISOString()};
+      else body={ok:true};
+      await route.fulfill({status:200,headers,contentType:'application/json',body:JSON.stringify(body)});
+    });
+    await page.goto('http://127.0.0.1:8081',{waitUntil:'networkidle'});
+    await page.getByLabel('E-mail',{exact:true}).fill('owner@example.com');await page.getByLabel('Senha',{exact:true}).fill('test-only');
+    await page.getByRole('button',{name:'Entrar',exact:true}).click();
+    await page.getByLabel('CUSTOS POR m²',{exact:true}).fill('10');await page.getByLabel('VALOR POR METRO',{exact:true}).fill('80');await page.getByLabel('METRAGEM (m²)',{exact:true}).fill('10');
+    await page.getByText('VALOR DA NOTA FISCAL (4.5%)',{exact:true}).waitFor();
+    await page.reload({waitUntil:'networkidle'});assert.equal(await page.getByLabel('VALOR POR METRO',{exact:true}).inputValue(),'80');
+    online=false;
+    await page.getByRole('button',{name:'Fazer Proposta',exact:true}).click();
+    await page.getByLabel('Cliente',{exact:true}).fill('Cliente offline');await page.getByRole('button',{name:'Adicionar Item',exact:true}).click();
+    await page.getByLabel('Metragem do item 1 (m²)',{exact:true}).fill('10');await page.getByLabel('Valor por metro do item 1',{exact:true}).fill('80');
+    await page.getByLabel('Descrição do produto 1',{exact:true}).fill('Grama sintética');
+    await page.getByRole('textbox',{name:'DESCONTO %',exact:true}).fill('10');
+    await page.reload({waitUntil:'networkidle'});assert.equal(await page.getByLabel('Cliente',{exact:true}).inputValue(),'Cliente offline');
+    await page.getByRole('button',{name:'Gerar PDF',exact:true}).click();
+    await page.getByText('Proposta salva no celular.',{exact:false}).waitFor();
+    assert.equal(deliveries,0);
+    await page.getByRole('tab',{name:/Histórico/}).click();await page.getByText('Cliente offline',{exact:true}).waitFor();
+    await page.getByText('Aguardando envio',{exact:true}).filter({visible:true}).waitFor();
+    await page.evaluate(()=>{const key='mastergreen.mobile.session.v1';const session=JSON.parse(sessionStorage.getItem(key));session.expiresAt=new Date(Date.now()-1000).toISOString();sessionStorage.setItem(key,JSON.stringify(session));});
+    await page.reload({waitUntil:'networkidle'});
+    await page.getByRole('button',{name:'Configurações',exact:true}).click();
+    await page.getByRole('button',{name:'Entrar',exact:true}).waitFor();assert.equal(deliveries,0);
+    online=true;
+    await page.getByLabel('Senha',{exact:true}).fill('test-only');
+    await page.getByRole('button',{name:'Entrar',exact:true}).click();
+    await page.getByText('Nenhuma proposta pendente',{exact:true}).first().waitFor();assert.equal(saved.size,1);assert.equal([...saved.values()][0].totalCents,72000);assert.equal('items' in [...saved.values()][0],false);
+    await page.getByRole('button',{name:'Sincronizar agora',exact:true}).click();
+    await page.getByRole('button',{name:'Sincronizar agora',exact:true}).waitFor();assert.equal(deliveries,1);
+    await page.getByRole('button',{name:'Usar texto extragrande',exact:true}).click();await page.getByRole('button',{name:'Texto: extragrande (selecionado)',exact:true}).waitFor();
+    await page.getByRole('tab',{name:/Clientes/}).click();await page.getByText('Cliente do sistema',{exact:true}).waitFor();
+    await page.getByRole('button',{name:'Configurações',exact:true}).click();await page.getByRole('button',{name:'Sair da conta',exact:true}).click();await page.getByRole('button',{name:'Confirmar saída',exact:true}).click();
+    await page.getByRole('button',{name:'Entrar',exact:true}).waitFor();
+    await page.getByLabel('E-mail',{exact:true}).fill('owner@example.com');await page.getByLabel('Senha',{exact:true}).fill('test-only');await page.getByRole('button',{name:'Entrar',exact:true}).click();
+    await page.getByRole('tab',{name:/Histórico/}).click();await page.getByText('Cliente offline',{exact:true}).waitFor();assert.equal(saved.size,1);
+    assert.deepEqual(errors,[]);
+    console.log('PASS: login, cálculo preservado, rascunho após reload, proposta offline, expiração/renovação, fila, reenvio único, clientes, fonte, logout e reentrada sem perda.');
+  }finally{await browser.close();}
+})().catch(error=>{console.error(error);process.exit(1);});
