@@ -112,8 +112,7 @@ function ProposalForm() {
       <Field label={`Descrição do produto ${index + 1}`} placeholder="Ex: grama sintética" multiline value={item.descricao} onChangeText={(value) => updateItem(item.id, 'descricao', value)} />
       <Action title={`Remover item ${index + 1}`} danger onPress={() => setItems((current) => current.filter((row) => row.id !== item.id))} />
     </Card>)}
-    <Action title="Adicionar item do sistema" onPress={() => {setCatalogSearch('');setCatalogItem(-1);}} />
-    <Action title="Adicionar item manualmente" onPress={() => {
+    <Action title="Adicionar item" onPress={() => {
       const id = Math.max(0,...items.map(row=>row.id))+1;
       setItems((current) => [...current, { id, metragem: '', valorPorMetro: '', descricao: '' }]);
     }} />
@@ -136,8 +135,7 @@ function ProposalForm() {
         {!products.length && <Card><Text style={ui.label}>Nenhum produto em cache. Conecte-se ao Wi-Fi e sincronize; você pode continuar preenchendo o item manualmente.</Text><Action title={syncing?'Sincronizando…':'Sincronizar agora'} disabled={syncing} onPress={() => void sync()} /></Card>}
         <View style={{gap:12}}>
           {matchingProducts.map(product => <Pressable key={product.id} accessibilityRole="button" accessibilityLabel={`Selecionar ${product.name}, ${currency(numberFromInput(product.pricePerM2))} por metro quadrado`} onPress={() => {
-            if(catalogItem === -1) setItems(current=>[...current,{id:Math.max(0,...current.map(row=>row.id))+1,descricao:product.name,valorPorMetro:product.pricePerM2,metragem:''}]);
-            else if(catalogItem !== null) setItems(current=>current.map(item=>item.id===catalogItem?{...item,descricao:product.name,valorPorMetro:product.pricePerM2}:item));
+            if(catalogItem !== null) setItems(current=>current.map(item=>item.id===catalogItem?{...item,descricao:product.name,valorPorMetro:product.pricePerM2}:item));
             setCatalogItem(null);
           }}><Card><Text style={ui.label}>{product.name}</Text><Text style={ui.value}>{currency(numberFromInput(product.pricePerM2))}/m²</Text>{!!product.description&&<Text style={ui.label}>{product.description}</Text>}</Card></Pressable>)}
           {!!products.length&&!matchingProducts.length&&<Text style={ui.label}>Nenhum produto encontrado. Feche a lista para escrever o item manualmente.</Text>}
