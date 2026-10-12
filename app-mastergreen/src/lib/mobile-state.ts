@@ -21,6 +21,16 @@ export type LocalState = {
   version: 1; budget: BudgetDraft; proposal: ProposalDraft; queue: QueueEntry[]; data: MobileData | null;
   preferences: { mobileData: boolean; fontScale: number; highContrast: boolean };
   lastSync: string | null; lastFinalized: { signature: string; clientId: string } | null;
+  reports?: Record<string, MobileReport>;
+};
+export type MobileReport = {
+  from:string;to:string;approvedCount:number;approvedCents:number;averageCents:number;
+  quick:{count:number;totalCents:number};
+  previous:{from:string;to:string;approvedCents:number;changePercent:number|null};
+  financial:{covered:number;total:number;costsCents:number|null;profitCents:number|null};
+  months:{month:string;totalCents:number}[];
+  team:{id:string;name:string;count:number;totalCents:number;commissionCents:number|null}[];
+  updatedAt:string;
 };
 export const localDate = (date = new Date()) => `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
 export const emptyProposal = (): ProposalDraft => ({ customer:'',contact:'',phone:'',address:'',document:'',date:localDate(),freight:'',warranty:'',unit:'meses',entry:'',discount:'',items:[] });

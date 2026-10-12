@@ -28,6 +28,11 @@ Read the exact versioned docs at https://docs.expo.dev/versions/v57.0.0/ before 
   Android pode adiar; retomada do app confirma envios idempotentes. Expo Go/web
   não substituem teste do APK no aparelho físico.
 - Configurações: sincronização Wi-Fi padrão, dados locais, fonte, contraste e conta.
+- UI/UX: fundo claro/verde, listas virtuais de clientes/histórico, filtros de
+  período/origem/situação e cliente reutilizável na proposta. Resumo consulta
+  `/api/mobile/summary?from=YYYY-MM-DD&to=YYYY-MM-DD`, com cache opcional
+  `reports` no estado v1; nunca substituir um período offline por outro.
+  Documento e homologação: `docs/UI-UX-PLAN.md`; prévia web: `tests/ux-smoke.cjs`.
 - APK preview tem package .develop para não substituir o app em uso. Produção
   reutiliza o package legado, mas exige conferir assinatura/versionCode antes.
 - `EXPO_PUBLIC_API_URL` aponta para a API acessível pelo celular (IP do PC na

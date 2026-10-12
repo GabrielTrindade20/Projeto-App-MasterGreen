@@ -3,7 +3,7 @@ import * as Crypto from 'expo-crypto';
 import * as Network from 'expo-network';
 import { createContext, type PropsWithChildren, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { AppState, Platform } from 'react-native';
-import { addToQueue, initialState, localDate, parseStoredState, sessionValid, type LocalState, type MobileData, type ProposalDraft, type QuickProposal, type Session } from '@/lib/mobile-state';
+import { addToQueue, initialState, localDate, parseStoredState, sessionValid, type LocalState, type MobileData, type MobileReport, type ProposalDraft, type QuickProposal, type Session } from '@/lib/mobile-state';
 import { clearSession, readSession, writeSession } from '@/lib/session-store';
 import { enableBackgroundSync } from '@/lib/background-sync';
 
@@ -13,6 +13,7 @@ type Connection = {
   change: (update: (state: LocalState) => LocalState) => Promise<void>;
   finalize: (payload: Omit<QuickProposal,'clientId'>, document:ProposalDraft) => Promise<void>;
   sync: () => Promise<void>; login: (email:string,password:string) => Promise<void>; logout: () => Promise<void>;
+  refreshReport:(from:string,to:string)=>Promise<void>;
 };
 const Context = createContext<Connection | null>(null);
 const storageKey = (userId:string) => '@mastergreen/v1/' + API_URL + '/' + userId;
@@ -155,6 +156,19 @@ export function ConnectionProvider({children}:PropsWithChildren) {
     await change(state=>addToQueue(state,{...payload,clientId},signature,document));
     void sync();
   }
-  return <Context.Provider value={{local,session,ready,loading,syncing,error,fatal,needsLogin,backgroundStatus,change,finalize,sync,login,logout}}>{children}</Context.Provider>;
+  const refreshReport=useCallback(async(from:string,to:string)=>{
+    const current=sessionRef.current;
+    if(!sessionValid(current)){setNeedsLogin(true);throw new Error('Renove o login para atualizar este período.');}
+    const network=await Network.getNetworkStateAsync();
+    if(network.isConnected===false)throw new Error('Sem internet. Exibindo apenas o período salvo neste aparelho.');
+    if(!stateRef.current.preferences.mobileData&&Platform.OS!=='web'&&network.type!==Network.NetworkStateType.WIFI&&network.type!==Network.NetworkStateType.ETHERNET)throw new Error('Conecte ao Wi-Fi ou permita dados móveis nas configurações.');
+    try{
+      const report=await request(`/summary?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`,current!.token) as MobileReport;
+      if(report.from!==from||report.to!==to||!Array.isArray(report.months)||!Array.isArray(report.team)||!report.financial)throw new Error('Resumo incompleto. Tente atualizar novamente.');
+      if(sessionRef.current?.token!==current!.token)return;
+      await change(state=>{const entries=Object.entries(state.reports||{}).filter(([key])=>key!==`${from}/${to}`).slice(-23);return {...state,reports:{...Object.fromEntries(entries),[`${from}/${to}`]:report}};});
+    }catch(cause){if(sessionRef.current?.token===current?.token&&cause instanceof ApiError&&cause.status===401)setNeedsLogin(true);throw cause;}
+  },[change]);
+  return <Context.Provider value={{local,session,ready,loading,syncing,error,fatal,needsLogin,backgroundStatus,change,finalize,sync,login,logout,refreshReport}}>{children}</Context.Provider>;
 }
 export function useConnection() { const value=useContext(Context);if(!value)throw new Error('ConnectionProvider ausente.');return value; }

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Constants from 'expo-constants';
-import { Action, Card, Screen, Text, ui } from '@/components/mastergreen-ui';
+import { Switch, View } from 'react-native';
+import { Action, Card, Choice, Screen, Section, Text, ui } from '@/components/mastergreen-ui';
 import { API_URL, useConnection } from '@/context/connection';
 import { LoginForm } from './login-screen';
 import { SyncStatus } from './consultation-screens';
@@ -14,22 +15,18 @@ export default function SettingsScreen(){
     <Card title="Minha conta"><Text style={ui.label}>{session?.user.name}</Text><Text style={ui.label}>{session?.user.email}</Text><Text style={ui.label}>Acesso até {session?new Date(session.expiresAt).toLocaleDateString('pt-BR'):''}</Text></Card>
     {needsLogin&&<LoginForm />}
     <Card title="Sincronização"><Action title={syncing?'Sincronizando…':'Sincronizar agora'} disabled={syncing||loading||needsLogin} onPress={()=>void sync()} />
-      <Text style={ui.label}>Rede permitida: {prefs.mobileData?'Wi-Fi e dados móveis':'Somente Wi-Fi'}</Text>
-      <Action title={prefs.mobileData?'Usar somente Wi-Fi':'Permitir dados móveis'} onPress={()=>changePref({mobileData:!prefs.mobileData})} />
-      <Text style={ui.label}>Envio em segundo plano: {backgroundStatus}</Text>
-      <Text style={ui.label}>Ao recuperar a conexão, abrir o app garante uma nova tentativa. O Android pode adiar ou impedir tarefas com o app fechado.</Text>
-      <Text style={ui.label}>Conectado ao sistema: {API_URL||'Não configurado'}</Text>
+      <View style={ui.row}><View style={{flex:1,gap:6}}><Text style={ui.label}>Permitir dados móveis</Text><Text style={ui.muted}>{prefs.mobileData?'Wi-Fi e dados móveis':'Somente Wi-Fi'}</Text></View><Switch accessibilityLabel="Permitir dados móveis" value={prefs.mobileData} onValueChange={value=>changePref({mobileData:value})} trackColor={{true:'#167341'}}/></View>
+      <Text style={ui.muted}>Ao recuperar a conexão, abrir o app garante uma nova tentativa de envio.</Text>
     </Card>
-    <Card title="Dados no celular"><Text style={ui.label}>{local.queue.length} propostas guardadas · {pending.length} pendentes</Text><Text style={ui.label}>{local.data?.customers.length||0} clientes disponíveis para consulta</Text>
-      <Text style={ui.label}>O banco oficial é acessado pelo sistema web, nunca diretamente pelo celular. Não desinstale nem limpe os dados do app antes de sincronizar.</Text>
+    <Section title="Dados no celular" summary={`${local.queue.length} propostas · ${pending.length} pendentes`}><Text style={ui.label}>{local.data?.customers.length||0} clientes disponíveis para consulta</Text>
+      <Text style={ui.muted}>Não desinstale nem limpe os dados do app antes de sincronizar. As cópias dos PDFs e os itens ficam apenas neste aparelho.</Text>
       {pending.filter(row=>row.error).map(row=><Text key={row.payload.clientId} style={ui.message}>{row.payload.customer.name}: {row.error}</Text>)}
-    </Card>
+    </Section>
     <Card title="Leitura e aparência"><Text style={ui.label}>Prévia: textos grandes e botões fáceis de tocar.</Text>
-      <Action title={prefs.fontScale===1?'Texto: grande (selecionado)':'Usar texto grande'} onPress={()=>changePref({fontScale:1})} />
-      <Action title={prefs.fontScale===1.2?'Texto: extragrande (selecionado)':'Usar texto extragrande'} onPress={()=>changePref({fontScale:1.2})} />
-      <Action title={prefs.highContrast?'Desativar alto contraste':'Ativar alto contraste'} onPress={()=>changePref({highContrast:!prefs.highContrast})} />
+      <View style={ui.wrap}><Choice title="Grande" selected={prefs.fontScale===1} onPress={()=>changePref({fontScale:1})}/><Choice title="Extragrande" selected={prefs.fontScale===1.2} onPress={()=>changePref({fontScale:1.2})}/></View>
+      <View style={ui.row}><Text style={[ui.label,{flex:1}]}>Alto contraste</Text><Switch accessibilityLabel="Alto contraste" value={prefs.highContrast} onValueChange={value=>changePref({highContrast:value})} trackColor={{true:'#167341'}}/></View>
     </Card>
-    <Card title="Sobre e suporte"><Text style={ui.label}>MasterGreen · versão {Constants.expoConfig?.version||'1.0.0'}</Text><Text style={ui.label}>Para suporte, informe a versão, o horário e a mensagem de erro à Lumitech. Nunca envie sua senha.</Text></Card>
+    <Section title="Sobre e suporte" summary={'MasterGreen · versão '+(Constants.expoConfig?.version||'1.0.0')}><Text style={ui.muted}>Para suporte, informe a versão, o horário e a mensagem de erro à Lumitech. Nunca envie sua senha.</Text><Text style={ui.muted}>Servidor: {API_URL||'Não configurado'}</Text><Text style={ui.muted}>Segundo plano: {backgroundStatus}. O Android pode adiar tarefas com o app fechado.</Text><Text style={ui.muted}>O banco é acessado pelo web; o celular não armazena credenciais do PostgreSQL.</Text></Section>
     {!!error&&<Card><Text style={ui.message}>{error}</Text></Card>}
     {confirm?<Card title="Sair desta conta?"><Text style={ui.label}>{pending.length} proposta(s) pendente(s) permanecerão neste celular. Será necessário entrar novamente com a mesma conta e internet.</Text>
       <Action title="Confirmar saída" danger disabled={loading||syncing} onPress={()=>void logout().catch(cause=>setError(cause.message))} />

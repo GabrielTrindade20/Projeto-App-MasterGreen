@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { Action, Card, Field, Screen, Text, ui } from '@/components/mastergreen-ui';
+import { Action, Card, Field, Screen, Section, Text, ui } from '@/components/mastergreen-ui';
 import { calculateBudget, currency } from '@/lib/quotation';
 import { useConnection } from '@/context/connection';
 import { emptyBudget, type BudgetDraft } from '@/lib/mobile-state';
@@ -15,24 +15,18 @@ function BudgetForm() {
   const result = calculateBudget(cost, price, area, discount, invoicePercent);
   const rows = [
     ['CUSTOS', result.costs, '#BE1701'],
-    ['VALOR FINAL DO CLIENTE', result.total, '#0002B8'],
     [`VALOR DA NOTA FISCAL (${invoicePercent}%)`, result.tax, '#905000'],
     ['TOTAL DO DESCONTO', result.reduction, '#905000'],
-    ['VALOR DO LUCRO DA EMPRESA', result.profit, '#138600'],
+    ['LUCRO ESTIMADO', result.profit, '#167341'],
   ] as const;
   return <>
-    <Card><Field label="CUSTOS POR m²" placeholder="Ex: 10" keyboardType="decimal-pad" value={cost} onChangeText={setCost} /></Card>
-    <Card><Field label="VALOR POR METRO" placeholder="Ex: 80" keyboardType="decimal-pad" value={price} onChangeText={setPrice} /></Card>
-    <Card><Field label="METRAGEM (m²)" placeholder="Ex: 10" keyboardType="decimal-pad" value={area} onChangeText={setArea} /></Card>
-    <Card>{rows.map(([label, value, color]) => <View key={label} style={ui.result}>
-      <Text style={ui.label}>{label}</Text><Text style={[ui.value, { color }]}>{currency(value)}</Text>
-    </View>)}</Card>
-    <Card><Field label="DESCONTO %" placeholder="Ex: 10" keyboardType="decimal-pad" value={discount} onChangeText={setDiscount} /></Card>
-    <Action title="Fazer Proposta" onPress={() => router.navigate('/proposta')} />
+    <View style={ui.hero}><Text style={ui.heroLabel}>Valor final do cliente</Text><Text style={ui.heroValue}>{currency(result.total)}</Text></View>
+    <Card title="Cálculo rápido"><Field label="Preço por m² (R$)" placeholder="Ex: 80" keyboardType="decimal-pad" value={price} onChangeText={setPrice}/><Field label="Metragem (m²)" placeholder="Ex: 10" keyboardType="decimal-pad" value={area} onChangeText={setArea}/><Field label="Custo por m² (R$)" placeholder="Ex: 10" keyboardType="decimal-pad" value={cost} onChangeText={setCost}/><Field label="Desconto (%)" placeholder="Ex: 10" keyboardType="decimal-pad" value={discount} onChangeText={setDiscount}/></Card>
+    <Section title="Detalhes do cálculo" summary="Custos, nota fiscal e lucro">{rows.map(([label, value, color]) => <View key={label} style={ui.result}><Text style={ui.muted}>{label}</Text><Text style={[ui.value,{color,fontSize:26}]}>{currency(value)}</Text></View>)}</Section>
   </>;
 }
 
 export default function BudgetScreen() {
   const {change}=useConnection();
-  return <Screen title="Orçamento" onReset={()=>void change(state=>({...state,budget:emptyBudget()})).catch(()=>{})}><BudgetForm /><SyncStatus /></Screen>;
+  return <Screen title="Orçar" footer={<Action title="Fazer proposta" onPress={()=>router.navigate('/proposta')}/>} onReset={()=>void change(state=>({...state,budget:emptyBudget()})).catch(()=>{})}><SyncStatus/><BudgetForm /></Screen>;
 }

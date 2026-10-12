@@ -3,7 +3,7 @@ import { DefaultTheme, ThemeProvider } from 'expo-router';
 import { Tabs } from 'expo-router/js-tabs';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { green, Card, Screen, Text, ui } from '@/components/mastergreen-ui';
+import { colors, Card, Screen, Text, ui } from '@/components/mastergreen-ui';
 import { ConnectionProvider, useConnection } from '@/context/connection';
 import LoginScreen from '@/screens/login-screen';
 
@@ -13,11 +13,11 @@ export default function TabLayout() {
 function AppContent() {
   const {ready,fatal,session}=useConnection();
   return <ThemeProvider value={DefaultTheme}>
-    <StatusBar style="light" />
-    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: green }}>
+    <StatusBar style="dark" />
+    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: colors.background }}>
       {!ready||fatal?<Screen title="MasterGreen" settings={false}><Card><Text style={ui.label}>{fatal||'Abrindo seus dados…'}</Text></Card></Screen>:!session?<LoginScreen />:<Tabs initialRouteName="index" screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#138600',
+        tabBarActiveTintColor: '#167341',
         tabBarInactiveTintColor: '#59675D',
         tabBarLabelStyle: { fontSize: 16, fontWeight: 'bold' },
         tabBarItemStyle: { minHeight: 64, paddingVertical: 5 },
