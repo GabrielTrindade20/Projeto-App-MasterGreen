@@ -1,6 +1,6 @@
 import { Picker } from '@react-native-picker/picker';
 import { useRef, useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Modal, Pressable, View } from 'react-native';
 import { Action, Card, Field, Screen, Text, ui } from '@/components/mastergreen-ui';
 import { useConnection } from '@/context/connection';
 import { emptyProposal, localDate, type ProposalDraft } from '@/lib/mobile-state';
@@ -20,7 +20,7 @@ function documentMask(value: string) {
 }
 
 function ProposalForm() {
-  const {local,change,finalize}=useConnection();
+  const {local,change,finalize,sync,syncing}=useConnection();
   const {customer,contact,phone,address,document,freight,warranty,unit,entry,discount,items}=local.proposal;
   const date=new Date(local.proposal.date+'T12:00:00');
   const set=(field:keyof Omit<ProposalDraft,'items'>)=>(value:string)=>void change(state=>({...state,proposal:{...state.proposal,[field]:value}})).catch(()=>{});
@@ -32,13 +32,17 @@ function ProposalForm() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [notice,setNotice]=useState('');
+  const [catalogItem,setCatalogItem]=useState<number|null>(null);
+  const [catalogSearch,setCatalogSearch]=useState('');
   const total = proposalTotal(items, discount);
+  const products=local.data?.products || [];
+  const matchingProducts=products.filter(product=>`${product.name} ${product.category || ''} ${product.description || ''}`.toLocaleLowerCase('pt-BR').includes(catalogSearch.trim().toLocaleLowerCase('pt-BR')));
 
   const updateItem = (id: number, field: keyof Omit<ProposalItem, 'id'>, value: string) => {
     setItems((current) => current.map((item) => item.id === id ? { ...item, [field]: value } : item));
   };
 
-  async function generate(preview: boolean) {
+  async function generate(mode: 'save' | 'preview' | 'share') {
     if (exporting.current) return;
     setError('');
     setNotice('');
@@ -56,14 +60,16 @@ function ProposalForm() {
     try {
       const formattedDate = formatDate(date);
       const payment = `${percentFromInput(entry)}% de entrada + ${100 - percentFromInput(entry)}% na entrega`;
-      const html = gerarHTML(customer, contact, phone, address, document, formattedDate, freight || 'Não informado', items, total,
-        warranty ? `${warranty} ${unit}` : 'Não informado', payment, await getBannerUri(), String(percentFromInput(discount)));
-      await exportProposal(html, safePdfName(contact || customer, formattedDate), preview,async()=>{
+      const save = async () => {
         await finalize({customer:{name:customer.trim(),contact:contact.trim(),phone,document,address},proposalDate:local.proposal.date,
           freight:freight||'Não informado',warranty:warranty?`${warranty} ${unit}`:'Não informado',payment,
-          discountPercent:percentFromInput(discount),totalCents:Math.round(total*100)});
+          discountPercent:percentFromInput(discount),totalCents:Math.round(total*100)},local.proposal);
         setNotice('Proposta salva no celular. O envio ao sistema é automático quando houver conexão permitida.');
-      });
+      };
+      if (mode === 'save') { await save(); return; }
+      const html = gerarHTML(customer, contact, phone, address, document, formattedDate, freight || 'Não informado', items, total,
+        warranty ? `${warranty} ${unit}` : 'Não informado', payment, await getBannerUri(), String(percentFromInput(discount)));
+      await exportProposal(html, safePdfName(contact || customer, formattedDate), mode === 'preview', mode === 'share' ? save : undefined);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Não foi possível gerar o PDF. Tente novamente.');
     } finally {
@@ -100,12 +106,14 @@ function ProposalForm() {
       {entry !== '' && <Text style={ui.label}>{percentFromInput(entry)}% de entrada + {100 - percentFromInput(entry)}% na entrega</Text>}
     </Card>
     {items.map((item, index) => <Card key={item.id} title={`Item ${index + 1}`}>
+      <Action title="Escolher produto do sistema" onPress={() => {setCatalogSearch('');setCatalogItem(item.id);}} />
       <Field label={`Metragem do item ${index + 1} (m²)`} placeholder="Ex: 10" keyboardType="decimal-pad" value={item.metragem} onChangeText={(value) => updateItem(item.id, 'metragem', value)} />
       <Field label={`Valor por metro do item ${index + 1}`} placeholder="Ex: 80" keyboardType="decimal-pad" value={item.valorPorMetro} onChangeText={(value) => updateItem(item.id, 'valorPorMetro', value)} />
       <Field label={`Descrição do produto ${index + 1}`} placeholder="Ex: grama sintética" multiline value={item.descricao} onChangeText={(value) => updateItem(item.id, 'descricao', value)} />
       <Action title={`Remover item ${index + 1}`} danger onPress={() => setItems((current) => current.filter((row) => row.id !== item.id))} />
     </Card>)}
-    <Action title="Adicionar Item" onPress={() => {
+    <Action title="Adicionar item do sistema" onPress={() => {setCatalogSearch('');setCatalogItem(-1);}} />
+    <Action title="Adicionar item manualmente" onPress={() => {
       const id = Math.max(0,...items.map(row=>row.id))+1;
       setItems((current) => [...current, { id, metragem: '', valorPorMetro: '', descricao: '' }]);
     }} />
@@ -117,9 +125,25 @@ function ProposalForm() {
       {!!error && <Card><Text accessibilityRole="alert" accessibilityLiveRegion="assertive" style={ui.message}>{error}</Text></Card>}
       {!!notice&&<Card><Text accessibilityLiveRegion="polite" style={ui.label}>{notice}</Text></Card>}
       {busy && <ActivityIndicator accessibilityLabel="Preparando PDF" size="large" color="#fff" />}
-      <Action title={busy ? 'Preparando PDF…' : 'Gerar PDF'} disabled={busy} onPress={() => void generate(false)} />
-      <Action title="Visualizar PDF" disabled={busy} onPress={() => void generate(true)} />
+      <Action title="Salvar proposta" disabled={busy} onPress={() => void generate('save')} />
+      <Action title={busy ? 'Preparando PDF…' : 'Gerar e compartilhar PDF' } disabled={busy} onPress={() => void generate('share')} />
+      <Action title="Visualizar PDF" disabled={busy} onPress={() => void generate('preview')} />
     </View>
+    <Modal visible={catalogItem !== null} animationType="slide" onRequestClose={() => setCatalogItem(null)}>
+      <Screen title="Produtos do sistema">
+        <Field label="Pesquisar produto" placeholder="Nome ou categoria" value={catalogSearch} onChangeText={setCatalogSearch} />
+        <Action title="Fechar lista" onPress={() => setCatalogItem(null)} />
+        {!products.length && <Card><Text style={ui.label}>Nenhum produto em cache. Conecte-se ao Wi-Fi e sincronize; você pode continuar preenchendo o item manualmente.</Text><Action title={syncing?'Sincronizando…':'Sincronizar agora'} disabled={syncing} onPress={() => void sync()} /></Card>}
+        <View style={{gap:12}}>
+          {matchingProducts.map(product => <Pressable key={product.id} accessibilityRole="button" accessibilityLabel={`Selecionar ${product.name}, ${currency(numberFromInput(product.pricePerM2))} por metro quadrado`} onPress={() => {
+            if(catalogItem === -1) setItems(current=>[...current,{id:Math.max(0,...current.map(row=>row.id))+1,descricao:product.name,valorPorMetro:product.pricePerM2,metragem:''}]);
+            else if(catalogItem !== null) setItems(current=>current.map(item=>item.id===catalogItem?{...item,descricao:product.name,valorPorMetro:product.pricePerM2}:item));
+            setCatalogItem(null);
+          }}><Card><Text style={ui.label}>{product.name}</Text><Text style={ui.value}>{currency(numberFromInput(product.pricePerM2))}/m²</Text>{!!product.description&&<Text style={ui.label}>{product.description}</Text>}</Card></Pressable>)}
+          {!!products.length&&!matchingProducts.length&&<Text style={ui.label}>Nenhum produto encontrado. Feche a lista para escrever o item manualmente.</Text>}
+        </View>
+      </Screen>
+    </Modal>
   </>;
 }
 

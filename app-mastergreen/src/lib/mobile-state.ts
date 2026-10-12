@@ -6,12 +6,13 @@ export type QuickProposal = {
   customer: { name: string; contact: string; phone: string; document: string; address: string };
   proposalDate: string; freight: string; warranty: string; payment: string; discountPercent: number; totalCents: number;
 };
-export type QueueEntry = { payload: QuickProposal; savedAt: string; sentAt?: string; serverId?: string; error?: string };
+export type QueueEntry = { payload: QuickProposal; savedAt: string; document?: ProposalDraft; sentAt?: string; serverId?: string; error?: string };
 export type ProposalDraft = { customer: string; contact: string; phone: string; address: string; document: string; date: string; freight: string; warranty: string; unit: string; entry: string; discount: string; items: ProposalItem[] };
 export type BudgetDraft = { cost: string; price: string; area: string; discount: string };
 export type HistoryRow = { id: string; clientId?: string; customer: { name: string }; date: string; totalCents: number; source: string; status: string };
 export type MobileData = {
   customers: { id: string; name: string; phone: string; email?: string; document?: string; address?: string; city?: string; state?: string }[];
+  products?: { id: string; name: string; category: string | null; description: string | null; pricePerM2: string }[];
   history: HistoryRow[];
   summary: { month: string; quickCount: number; quickTotalCents: number; approvedCount: number; approvedRevenue: number };
   updatedAt: string;
@@ -32,9 +33,11 @@ export function parseStoredState(raw: string | null): LocalState {
   return state;
 }
 export function sessionValid(session: Session | null, now = Date.now()) { return !!session && new Date(session.expiresAt).getTime() > now; }
-export function addToQueue(state: LocalState, payload: QuickProposal, signature: string): LocalState {
-  if (state.queue.some(item => item.payload.clientId === payload.clientId)) return state;
-  return { ...state, queue:[...state.queue,{payload,savedAt:new Date().toISOString()}],lastFinalized:{signature,clientId:payload.clientId} };
+export function addToQueue(state: LocalState, payload: QuickProposal, signature: string, document?: ProposalDraft): LocalState {
+  if (state.queue.some(item => item.payload.clientId === payload.clientId)) {
+    return {...state,queue:state.queue.map(item=>item.payload.clientId===payload.clientId&&document&&!item.document?{...item,document}:item),lastFinalized:{signature,clientId:payload.clientId}};
+  }
+  return { ...state, queue:[...state.queue,{payload,savedAt:new Date().toISOString(),document}],lastFinalized:{signature,clientId:payload.clientId} };
 }
 export function historyWithLocal(state: LocalState): HistoryRow[] {
   const remote = state.data?.history || [];

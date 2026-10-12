@@ -3,7 +3,9 @@ import { router } from 'expo-router';
 import { Action, Card, Field, Screen, Text, ui } from '@/components/mastergreen-ui';
 import { useConnection } from '@/context/connection';
 import { historyWithLocal, localDate } from '@/lib/mobile-state';
-import { currency } from '@/lib/quotation';
+import { currency, formatDate, safePdfName } from '@/lib/quotation';
+import { exportProposal, getBannerUri } from '@/lib/export-proposal';
+import { gerarHTML } from '@/lib/proposal-html';
 
 export function SyncStatus() {
   const {local,needsLogin,syncing,error}=useConnection();
@@ -28,12 +30,31 @@ export function CustomersScreen(){
 }
 export function HistoryScreen(){
   const {local}=useConnection();const [search,setSearch]=useState('');const [limit,setLimit]=useState(30);
+  const [sharing,setSharing]=useState<string|null>(null);const [shareError,setShareError]=useState('');
   const rows=historyWithLocal(local).filter(row=>row.customer.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
   const status:Record<string,string>={pending:'Pendente',approved:'Aprovada',rejected:'Rejeitada',cancelled:'Cancelada'};
+  async function shareSaved(clientId:string){
+    const saved=local.queue.find(entry=>entry.payload.clientId===clientId);
+    if(!saved?.document)return;
+    setSharing(clientId);setShareError('');
+    try{
+      const draft=saved.document;
+      const date=formatDate(new Date(draft.date+'T12:00:00'));
+      const html=gerarHTML(draft.customer,draft.contact,draft.phone,draft.address,draft.document,date,
+        saved.payload.freight,draft.items,saved.payload.totalCents/100,saved.payload.warranty,saved.payload.payment,
+        await getBannerUri(),String(saved.payload.discountPercent));
+      await exportProposal(html,safePdfName(draft.contact||draft.customer,date),false);
+    }catch(cause){setShareError(cause instanceof Error?cause.message:'Não foi possível compartilhar o PDF.');}
+    finally{setSharing(null);}
+  }
   return <Screen title="Histórico"><SyncStatus /><Card><Field label="Buscar no histórico" value={search} onChangeText={value=>{setSearch(value);setLimit(30);}} /><Text style={ui.label}>Consulta de valores e informações gerais. Sem edição ou exclusão.</Text></Card>
+    {!!shareError&&<Card><Text accessibilityRole="alert" style={ui.message}>{shareError}</Text></Card>}
     {!rows.length&&<Card><Text style={ui.label}>Ainda não há propostas salvas.</Text></Card>}
     {rows.slice(0,limit).map(row=><Card key={row.source+row.id} title={row.customer.name}><Text style={ui.value}>{currency(row.totalCents/100)}</Text>
-      <Text style={ui.label}>{row.date.split('-').reverse().join('/')+' · '+(row.source==='mobile'?'Aplicativo':'Web')}</Text><Text style={ui.label}>{status[row.status]||row.status}</Text></Card>)}
+      <Text style={ui.label}>{row.date.split('-').reverse().join('/')+' · '+(row.source==='mobile'?'Aplicativo':'Web')}</Text><Text style={ui.label}>{status[row.status]||row.status}</Text>
+      {row.clientId&&local.queue.some(entry=>entry.payload.clientId===row.clientId&&entry.document)&&
+        <Action title={sharing===row.clientId?'Preparando PDF…':'Compartilhar PDF salvo'} disabled={!!sharing} onPress={()=>void shareSaved(row.clientId!)} />}
+    </Card>)}
     {rows.length>limit&&<Action title="Mostrar mais propostas" onPress={()=>setLimit(value=>value+30)} />}
   </Screen>;
 }

@@ -3,7 +3,7 @@ import * as Crypto from 'expo-crypto';
 import * as Network from 'expo-network';
 import { createContext, type PropsWithChildren, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { AppState, Platform } from 'react-native';
-import { addToQueue, initialState, localDate, parseStoredState, sessionValid, type LocalState, type MobileData, type QuickProposal, type Session } from '@/lib/mobile-state';
+import { addToQueue, initialState, localDate, parseStoredState, sessionValid, type LocalState, type MobileData, type ProposalDraft, type QuickProposal, type Session } from '@/lib/mobile-state';
 import { clearSession, readSession, writeSession } from '@/lib/session-store';
 import { enableBackgroundSync } from '@/lib/background-sync';
 
@@ -11,7 +11,7 @@ export const API_URL = (process.env.EXPO_PUBLIC_API_URL ?? '').replace(/\/$/, ''
 type Connection = {
   local: LocalState; session: Session | null; ready: boolean; loading: boolean; syncing: boolean; error: string; fatal: string; needsLogin: boolean; backgroundStatus:string;
   change: (update: (state: LocalState) => LocalState) => Promise<void>;
-  finalize: (payload: Omit<QuickProposal,'clientId'>) => Promise<void>;
+  finalize: (payload: Omit<QuickProposal,'clientId'>, document:ProposalDraft) => Promise<void>;
   sync: () => Promise<void>; login: (email:string,password:string) => Promise<void>; logout: () => Promise<void>;
 };
 const Context = createContext<Connection | null>(null);
@@ -148,11 +148,11 @@ export function ConnectionProvider({children}:PropsWithChildren) {
       await clearSession();sessionRef.current=null;setSession(null);stateRef.current=initialState();setLocal(stateRef.current);setError('');setNeedsLogin(false);
     } finally {authLock.current=false;setLoading(false);}
   }
-  async function finalize(payload:Omit<QuickProposal,'clientId'>) {
+  async function finalize(payload:Omit<QuickProposal,'clientId'>, document:ProposalDraft) {
     const signature=JSON.stringify(payload);
     const previous=stateRef.current.lastFinalized;
     const clientId=previous?.signature===signature?previous.clientId:Crypto.randomUUID();
-    await change(state=>addToQueue(state,{...payload,clientId},signature));
+    await change(state=>addToQueue(state,{...payload,clientId},signature,document));
     void sync();
   }
   return <Context.Provider value={{local,session,ready,loading,syncing,error,fatal,needsLogin,backgroundStatus,change,finalize,sync,login,logout}}>{children}</Context.Provider>;

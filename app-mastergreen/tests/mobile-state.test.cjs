@@ -12,6 +12,15 @@ test('fila persiste, reenvio mantém identificador e não duplica histórico',()
   state.data={history:[{id:'server',clientId:'one',customer:{name:'Cliente'},date:'2026-10-12',totalCents:10000,source:'mobile',status:'Enviada'}]};
   assert.equal(historyWithLocal(state).length,1);
 });
+test('salvar conserva os itens locais para compartilhar PDF depois, sem duplicar envio',()=>{
+  const draft={...initialState().proposal,customer:'Cliente',items:[{id:1,metragem:'10',valorPorMetro:'80',descricao:'Grama'}]};
+  let state=addToQueue(initialState(),payload,'signature',draft);
+  state=addToQueue(state,payload,'signature',draft);
+  state=parseStoredState(JSON.stringify(state));
+  assert.equal(state.queue.length,1);
+  assert.deepEqual(state.queue[0].document.items,draft.items);
+  assert.equal(state.lastFinalized.clientId,payload.clientId);
+});
 test('sessão vence no limite de 30 dias sem apagar dados',()=>{
   const expires=Date.now()+30*86400000; const session={expiresAt:new Date(expires).toISOString()};
   assert.equal(sessionValid(session,expires-1),true);
