@@ -1,7 +1,8 @@
 {
   "expo": {
     "name": "MasterGreen",
-    "slug": "app-mastergreen",
+    "slug": "AppMasterGreen",
+    "owner": "gab_roch",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/mastergreen/logo.png",
@@ -46,6 +47,11 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "17ee6e08-809f-43e3-9d61-3cc78e06ea52"
+      }
     }
   }
 }
