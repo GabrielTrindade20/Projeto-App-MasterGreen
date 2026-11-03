@@ -15,7 +15,8 @@ function setup({available=true,base64='JVBERi0xLjQK',writeError=false}={}){
     write(value,options){assert.equal(value,base64);assert.equal(options.encoding,'base64');if(writeError)throw new Error('Disco cheio');events.push('write');}
   }
   const adapters={
-    'expo-asset':{},'expo-file-system':{Directory,File,Paths:{cache:'file:///scoped-cache'}},
+    './logo-base64':{MASTERGREEN_LOGO_BASE64:'AAAA'},
+    'expo-file-system':{Directory,File,Paths:{cache:'file:///scoped-cache'}},
     'expo-print':{printAsync:async()=>events.push('preview'),printToFileAsync:async options=>{assert.equal(options.base64,true);events.push('render');return {uri:'file:///outside-scoped-cache/print.pdf',base64};}},
     'expo-sharing':{isAvailableAsync:async()=>available,shareAsync:async(uri,options)=>{assert.match(uri,/^file:\/\/\/scoped-cache\/proposta-.*\/proposta.pdf$/);assert.equal(options.mimeType,'application/pdf');events.push('share');}},
   };

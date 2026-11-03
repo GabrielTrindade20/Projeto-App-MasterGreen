@@ -1,26 +1,13 @@
-import { Asset } from 'expo-asset';
 import { Directory, File, Paths } from 'expo-file-system';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
+import { MASTERGREEN_LOGO_BASE64 } from './logo-base64';
 
 export async function getBannerUri() {
-  const asset = Asset.fromModule(require('../../assets/mastergreen/logo.png'));
-  await asset.downloadAsync();
-  const uri = asset.localUri ?? asset.uri;
-  // Android production bundle may expose the asset through a non-absolute URI
-  // (e.g. "asset:///…"), which FileSystem SDK 57 rejects. Fetch bytes instead.
-  if (uri.startsWith('file://')) {
-    return `data:image/png;base64,${await new File(uri).base64()}`;
-  }
-  const response = await fetch(uri);
-  const blob = await response.blob();
-  const base64 = await new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve((reader.result as string).split(',')[1] ?? '');
-    reader.onerror = () => reject(reader.error ?? new Error('Falha ao ler logo.'));
-    reader.readAsDataURL(blob);
-  });
-  return `data:image/png;base64,${base64}`;
+  // Logo embutido como base64: evita resolução de asset em runtime, que no build
+  // de produção Android expõe uma URI sem protocolo (ex.: "assets_mastergreen_logo")
+  // e quebra o fetch. O PDF recebe a imagem direto, sem I/O nem rede.
+  return `data:image/png;base64,${MASTERGREEN_LOGO_BASE64}`;
 }
 
 export async function exportProposal(html: string, filename: string, preview: boolean, onPrepared?:()=>Promise<void>) {
