@@ -84,6 +84,14 @@ Read the exact versioned docs at https://docs.expo.dev/versions/v57.0.0/ before 
   sem credenciais/query/localhost. Roteiro: sistema-web/docs/RELEASE-CHECKLIST.md.
 - Em 12/10/2026 Gabriel decidiu gerar o APK pessoalmente. Passo a passo:
   docs/GERAR-APK.md. Não gerar builds/alterar assinatura sem novo pedido.
+- 03/11/2026: logo da proposta embutido em `src/lib/logo-base64.ts` e
+  `getBannerUri()` retorna `data:image/png;base64,...`. Antes usava
+  `Asset.fromModule().downloadAsync()`, que no APK release devolve URI sem
+  protocolo (`assets_mastergreen_logo`) e quebra o fetch do PDF.
+- EAS Build via GitHub: **Base directory = `app-mastergreen`** (sem prefixo
+  `app-mobile/`, sem barra). **Platform = Android** — iOS falha sem credenciais.
+- Quick-proposals vindos do app agora carregam `proposalDateReason` editável
+  pela web; no PDF/Detalhes aparece em bloco âmbar quando preenchido.
 - Segurança de links: query-string 7 usa decode-uri-component 0.5 via override
   e patches/query-string+7.1.3.patch (interop ESM). npm ci deve aplicar postinstall;
   não omitir scripts nem o diretório patches na build. xcode usa uuid 11.1.1.
